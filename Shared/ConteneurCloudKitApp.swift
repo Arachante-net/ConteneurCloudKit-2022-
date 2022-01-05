@@ -8,14 +8,36 @@
 
 import SwiftUI
 
+//let truc = ""
 @main
 struct ConteneurCloudKitApp: App {
-    let persistenceController = PersistenceController.shared
+    @Environment(\.scenePhase) private var scenePhase
+    let controleurDePersistance = ControleurPersistance.shared
+    let utilisateur = Utilisateur()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            VuePrincipale()
+                .environment(\.managedObjectContext, controleurDePersistance.conteneur.viewContext)
+                // 'ControleurPersistance' doit être conforme à 'ObservableObject'
+                .environmentObject(controleurDePersistance)
+                .environmentObject(utilisateur)
+
+//                .environment(\.persistence, persistenceController)
+
         }
+        
+        .onChange(of: scenePhase) { phase in
+          switch phase {
+              case .background:
+//            persistenceController.sauverContext() // à écrire
+              controleurDePersistance.sauverContexte()
+              break
+          default:
+            break
+          }
+        }
+
+        
     }
 }
