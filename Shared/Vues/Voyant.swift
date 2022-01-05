@@ -1,7 +1,6 @@
 //Arachante
 // michel  le 21/12/2021
 // pour le projet  ConteneurCloudKit
-// Swift  5.0  sur macOS  12.1
 //
 //  2021
 //
