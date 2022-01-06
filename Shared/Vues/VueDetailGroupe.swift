@@ -109,10 +109,11 @@ struct VueDetailGroupe: View {
 //            Etiquette( "Item principal", valeur: groupe.principal?.titre).padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
             Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
-            // , id: \.titre
-            Etiquette( "Valeur principale \(groupe.principal?.titre ?? "..")" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
-            Etiquette( "Valeur principale",                                     valeur: groupe.valeurPrincipale).padding(.leading)
-//            Etiquette( "Valeur intégré",                                        valeur: Int(groupe.integration )).padding(.leading)
+
+//            Etiquette( "Principal \(groupe.principal?.titre ?? "..")" , valeur: Int(groupe.principal?.valeur ?? 0))
+//                .padding(.leading)
+            Etiquette( "Principal \(groupe.principal?.titre ?? "..")" , valeur: groupe.valeurPrincipale)
+                .padding(.leading)
 
             ForEach(Array(groupe.lesItems)) { item in
                 Etiquette("⚬ \(item.titre ?? "..")" , valeur : Int(item.valeur)).padding(.leading)
@@ -120,9 +121,9 @@ struct VueDetailGroupe: View {
             Etiquette( "Valeur globale", valeur: groupe.valeur).padding(.leading)
             Etiquette( "Créateur"      , valeur: groupe.createur).padding(.leading)
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString).padding(.leading)
-//            Etiquette( "Valide"        , valeur: groupe.valide).padding(.leading)
-//            Etiquette( "Suppression"   , valeur: groupe.isDeleted).padding(.leading)
-//            Etiquette( "En erreur"     , valeur: groupe.isFault).padding(.leading)
+            Etiquette( "Valide"        , valeur: groupe.valide).padding(.leading)
+            Etiquette( "Suppression"   , valeur: groupe.isDeleted).padding(.leading)
+            Etiquette( "En erreur"     , valeur: groupe.isFault).padding(.leading)
             }
         
 //        Stepper("Valeur locale : \(groupe.valeurPrincipale)", value: $groupe.valeurPrincipale)

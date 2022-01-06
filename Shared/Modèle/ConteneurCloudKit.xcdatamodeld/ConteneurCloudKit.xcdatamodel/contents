@@ -4,7 +4,7 @@
         <attribute name="collaboratif" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="createur" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="integration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="integration" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="nom" optional="YES" attributeType="String"/>
         <attribute name="nombre" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="items.@count" usesScalarValueType="YES"/>
         <attribute name="ordre" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

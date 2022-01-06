@@ -173,7 +173,7 @@ extension Groupe {
             print("☑️AVANT", principal?.valeur)
             print("☑️NOUVELLE", newValue)
             principal?.valeur = Int64(newValue)
-            integration = Int64(newValue)
+//            integration = Int64(newValue)
             print("☑️APRES", principal?.valeur)
         }
     }

@@ -153,6 +153,8 @@ struct VueDetailItem: View {
                 .padding(.horizontal)
             
             VStack(alignment: .leading , spacing: 2) {
+                Etiquette("Principal", valeur: item.principal?.nom ?? "")
+
                 Text("Membre de")
                     .foregroundColor(.secondary)
                 + Text(" \(item.lesGroupes.count) ")

@@ -50,6 +50,20 @@ extension Item {
 
         return requette
         }
+    
+    static var extractionIsolés: NSFetchRequest<Item> {
+        let requette: NSFetchRequest<Item> = Item.fetchRequest()
+            requette.sortDescriptors = [NSSortDescriptor(keyPath: \Item.titre, ascending: true)]
+            requette.predicate = NSPredicate(format: "principal.@count == 0")
+
+//            requette.predicate = NSPredicate(format: "")
+
+//            requette.predicate = NSPredicate(format: "groupes[SIZE] == 0")
+            // "groupes == nil"
+            // "groupes[SIZE] == 0"
+
+        return requette
+        }
 }
 
 
@@ -202,6 +216,8 @@ extension Item {
           couleur = encodée
           }
       }
+    
+        
     }
 
 
@@ -217,8 +233,15 @@ extension Item {
         set {modeBin = newValue.rawValue}
         }
     
+    
     /// Convertion  de .groupes:NSSet? en .lesGroupes:Set<Groupe>
-    var lesGroupes:Set<Groupe> { return groupes as? Set<Groupe> ?? [] }
+    var lesGroupes:Set<Groupe> {
+        get { return groupes as? Set<Groupe> ?? [] }
+        set {
+            print("CHANGEMENT DES GROUPES", newValue.count)
+            groupes = newValue as NSSet
+            }
+    }
     
     /// Convertir Set<Groupe> en NSSet
     func grouper(   groupes : Set<Groupe>) { self.groupes = groupes as NSSet }

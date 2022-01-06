@@ -17,6 +17,12 @@ struct Reglages: View {
         fetchRequest: Item.extractionOrphelins,
         animation: .default)
     var orphelins: FetchedResults<Item>
+    
+    @FetchRequest(
+        fetchRequest: Item.extractionIsolés,
+        animation: .default)
+    var isolés: FetchedResults<Item>
+    
       
     @EnvironmentObject private var persistance: ControleurPersistance
     @Environment(\.managedObjectContext) private var contexte
@@ -67,6 +73,8 @@ struct Reglages: View {
     
                 Divider()
 //                Spacer()
+                Text("\(isolés.count) isolés").bold()
+                
                 Text("\(orphelins.count) Orphelins").bold()
                 Button("Enlever les items orphelins") {
                     orphelins.forEach() { orphelin in
@@ -76,6 +84,11 @@ struct Reglages: View {
                 List {
                     ForEach(orphelins) {orphelin in
                         Text("° \(orphelin.titre ?? ".") ")
+                        }
+                    }
+                List {
+                    ForEach(isolés) {isolé in
+                        Text("° \(isolé.titre ?? ".") ")
                         }
                     }
                 }
