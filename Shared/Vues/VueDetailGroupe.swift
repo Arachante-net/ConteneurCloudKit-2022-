@@ -33,7 +33,7 @@ struct VueDetailGroupe: View {
 
     @State var collaboration = false
     @State var nom           = ""
-    @State var rafraichir    = false
+//    @State var rafraichir    = false
             
 //    @State var valeurLocale:    Int    = 0
 //
@@ -104,7 +104,7 @@ struct VueDetailGroupe: View {
     var body: some View {
 
     VStack(alignment: .leading, spacing: 2) {
-        Text("\(rafraichir.description)").font(.system(size: 1)).hidden()
+//        Text("\(rafraichir.description)").font(.system(size: 1)).hidden()
         VStack(alignment: .leading, spacing: 2)  {
 //            Etiquette( "Item principal", valeur: groupe.principal?.titre).padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
@@ -112,7 +112,7 @@ struct VueDetailGroupe: View {
             // , id: \.titre
             Etiquette( "Valeur principale \(groupe.principal?.titre ?? "..")" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
             Etiquette( "Valeur principale",                                     valeur: groupe.valeurPrincipale).padding(.leading)
-            Etiquette( "Valeur intégré",                                        valeur: Int(groupe.integration )).padding(.leading)
+//            Etiquette( "Valeur intégré",                                        valeur: Int(groupe.integration )).padding(.leading)
 
             ForEach(Array(groupe.lesItems)) { item in
                 Etiquette("⚬ \(item.titre ?? "..")" , valeur : Int(item.valeur)).padding(.leading)
@@ -156,8 +156,8 @@ struct VueDetailGroupe: View {
         
         VueModifGroupe(groupe: groupe, principal: groupe.principal!) { valeur in
                         feuilleModificationPresentée = false
-                        rafraichir.toggle()
-                        ListeGroupe.rafraichir.toggle()
+//                        rafraichir.toggle()
+//                        ListeGroupe.rafraichir.toggle()
                         }
             .environment(\.managedObjectContext, persistance.conteneur.viewContext)
         

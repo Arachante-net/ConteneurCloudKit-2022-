@@ -35,9 +35,9 @@ struct VueValeurItemPrincipal: View {
             .padding(.leading)
             .onChange(of: item.valeur) { val in
                 print("☑️ ----\(val)----")
-                groupe.integration += 1
+                groupe.integration += 1 // pour se rafraichir
                 persistance.sauverContexte("Item")
-                ListeGroupe.rafraichir.toggle()
+//                ListeGroupe.rafraichir.toggle()
                 }
     }
 }
