@@ -26,6 +26,7 @@ struct VueDetailGroupe: View {
 
 //    var groupe: Groupe
     @ObservedObject var groupe:    Groupe
+    @ObservedObject var item: Item
 //    @State var principal: Item
 
 
@@ -105,18 +106,22 @@ struct VueDetailGroupe: View {
     VStack(alignment: .leading, spacing: 2) {
         Text("\(rafraichir.description)").font(.system(size: 1)).hidden()
         VStack(alignment: .leading, spacing: 2)  {
-            Etiquette( "Item principal", valeur: groupe.principal?.titre).padding(.leading)
+//            Etiquette( "Item principal", valeur: groupe.principal?.titre).padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
             Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
             // , id: \.titre
-            ForEach(Array(groupe.lesItems)) {item in
-            Etiquette("⚬ \(item.titre ?? "..")" , valeur : Int(item.valeur)).padding(.leading) }
+            Etiquette( "Valeur principale \(groupe.principal?.titre ?? "..")" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
+            Etiquette( "Valeur principale",                                     valeur: groupe.valeurPrincipale).padding(.leading)
+            Etiquette( "Valeur intégré",                                        valeur: Int(groupe.integration )).padding(.leading)
+
+            ForEach(Array(groupe.lesItems)) { item in
+                Etiquette("⚬ \(item.titre ?? "..")" , valeur : Int(item.valeur)).padding(.leading)
+                }
             Etiquette( "Valeur globale", valeur: groupe.valeur).padding(.leading)
-            Etiquette( "Valeur principale", valeur: groupe.valeurPrincipale).padding(.leading)
             Etiquette( "Créateur"      , valeur: groupe.createur).padding(.leading)
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString).padding(.leading)
-            Etiquette( "Valide"        , valeur: groupe.valide).padding(.leading)
-            Etiquette( "Suppression"   , valeur: groupe.isDeleted).padding(.leading)
+//            Etiquette( "Valide"        , valeur: groupe.valide).padding(.leading)
+//            Etiquette( "Suppression"   , valeur: groupe.isDeleted).padding(.leading)
 //            Etiquette( "En erreur"     , valeur: groupe.isFault).padding(.leading)
             }
         

@@ -143,6 +143,9 @@ extension Groupe {
 //MARK: Proprietés
 extension Groupe {
     
+    var vide:Groupe {
+        Groupe()
+        }
     /// Convertir .items:NSSet? en .lesItems:Set<Item>
     var lesItems:Set<Item> { return items as? Set<Item> ?? [] }
     

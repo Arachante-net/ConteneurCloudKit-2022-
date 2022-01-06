@@ -13,6 +13,8 @@ struct VueValeurItemPrincipal: View {
 @EnvironmentObject private var persistance : ControleurPersistance
 
 @ObservedObject var item: Item
+@ObservedObject var groupe: Groupe
+
  
     func incrementer() {
         item.valeur += 1
@@ -33,6 +35,7 @@ struct VueValeurItemPrincipal: View {
             .padding(.leading)
             .onChange(of: item.valeur) { val in
                 print("☑️ ----\(val)----")
+                groupe.integration += 1
                 persistance.sauverContexte("Item")
                 ListeGroupe.rafraichir.toggle()
                 }

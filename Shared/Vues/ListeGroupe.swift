@@ -47,7 +47,7 @@ struct ListeGroupe: View {
           Text("\(ListeGroupe.rafraichir.description)") // .font(.system(size: 1)).hidden()
 
           ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in // , id: \.id
-              NavigationLink(destination: VueDetailGroupe(groupe: groupe),
+              NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
                              tag: groupe.nom ?? "",
                              selection: $courant) {
               HStack {

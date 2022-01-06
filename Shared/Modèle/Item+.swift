@@ -159,6 +159,10 @@ extension Item {
     
     /// Pour le Fun
     var signature: String      { return "arach" }
+    
+//    var vide: <# Type #> {
+//        Item()
+//        }
 
     /// Fourni une valeur par defaut facilement identifiable (1 janvier 1970) si  Item.timestamp n'est pas défini
     var horodatage : Date {
