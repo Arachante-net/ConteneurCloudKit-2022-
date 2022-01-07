@@ -21,7 +21,10 @@ class Utilisateur : ObservableObject {
     
     
     
-    func obtenirID () -> String {
+    func obtenirID() -> String  {
+        
+        //throw Nimbus.trucQuiVaPas(num: 5)
+
         let nom         = NSUserName()
         let nomComplet  = NSFullUserName()
         let _           = UIDevice.current.systemName

@@ -67,6 +67,13 @@ struct Reglages: View {
                     Text("Statut : ") .bold().foregroundColor(.secondary)
                     + Text("\(utilisateur.leStatut)")
                     let _ = utilisateur.isICloudContainerAvailable()
+                    
+//                    do { let ID = try utilisateur.obtenirID() }
+//                    catch Stratus.invalide(let invalid) {
+//                        print("Invalid character: '\(invalid)'")
+//                        }
+//                    Text( try utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
+
                     Text( utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
 
                 }.padding()
@@ -87,14 +94,12 @@ struct Reglages: View {
                         }
                     }
                 List {
-                    ForEach(isolés) {isolé in
-                        Text("° \(isolé.titre ?? ".") ")
-                        }
+                    ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
                     }
                 }
             VStack {
-                Text("⭕️Historique").bold()
-                Button("⭕️Ménage") {
+                Text("⭕️ Historique").bold()
+                Button("⭕️ Ménage") {
                     let backgroundContext = persistance.conteneur.newBackgroundContext()
                     backgroundContext.performAndWait {
                         let recupererHistorique = NSPersistentHistoryChangeRequest

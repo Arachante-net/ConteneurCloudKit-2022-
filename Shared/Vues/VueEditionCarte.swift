@@ -14,7 +14,7 @@ import CoreData
 ///
 ///     VueEditionCarte(
 ///        item: item,
-///        sectionGéographique: $mapRegion_2,
+///        sectionGéographique: $mapRegion,
 ///        lesLieux: $locations_,
 ///        lieuEnCoursEdition: $selectedPlace )
 ///
@@ -44,8 +44,6 @@ struct VueEditionCarte: View {
                     
                     MapAnnotation(coordinate: location.wrappedValue.coordonnées) {
                         
-//                        let _ = print("🚩🚩 ", location.coordonnées.latitude, location.coordonnées.longitude)
-
                         VStack {
                             Text(location.wrappedValue.libellé)
                                 .fixedSize()
@@ -74,6 +72,7 @@ struct VueEditionCarte: View {
                     HStack {
                         Spacer()
                         Button {
+                            // positionnement du lieu de l'item
                             let nouveauLieu = Lieu(
                                 id: UUID(),
                                 libellé: "Nouveau Lieu",
@@ -85,11 +84,7 @@ struct VueEditionCarte: View {
                             
                             item.longitude = nouveauLieu.longitude
                             item.latitude  = nouveauLieu.latitude
-//                            print("🚩🚩🚩 ajout de ",
-//                                  lesLieux.last?.libellé ?? "...",
-//                                  lesLieux.last?.latitude ?? 0,
-//                                  lesLieux.last?.longitude ?? 0,
-//                                  lesLieux.count)
+//
 
                         } label: {
                             Image(systemName: "plus")

@@ -78,6 +78,8 @@
 		D0E893C827561FBB0054951E /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E893C527561FBB0054951E /* Item+CoreDataClass.swift */; };
 		D0E893CC27562E210054951E /* Groupe+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E893CB27562E210054951E /* Groupe+.swift */; };
 		D0E893CD27562E210054951E /* Groupe+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E893CB27562E210054951E /* Groupe+.swift */; };
+		D0E8972427877D7000A82214 /* Erreurs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8972327877D7000A82214 /* Erreurs.swift */; };
+		D0E8972527877D7000A82214 /* Erreurs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8972327877D7000A82214 /* Erreurs.swift */; };
 		D0FF9C2C277A4C0D00902CF2 /* VueModifItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */; };
 		D0FF9C2D277A4C0D00902CF2 /* VueModifItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */; };
 		D0FF9C2E277CEDE200902CF2 /* VueCarte.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018307C274556DE000889E2 /* VueCarte.swift */; };
@@ -97,8 +99,6 @@
 		D018308527466129000889E2 /* Item+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+.swift"; sourceTree = "<group>"; };
 		D0203D0D2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueValeurItemPrincipal.swift; sourceTree = "<group>"; };
 		D0385A232771BEF10063E926 /* Vues+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Vues+.swift"; path = "Vues/Vues+.swift"; sourceTree = "<group>"; };
-		D0385A262771C1560063E926 /* Groupe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Groupe+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		D0385A272771C1560063E926 /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		D0385A2C277211010063E926 /* Reglages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reglages.swift; sourceTree = "<group>"; };
 		D0385A2F27724D010063E926 /* Voyant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voyant.swift; sourceTree = "<group>"; };
 		D04A0D552732DF2900EFDCAC /* Historien.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Historien.swift; sourceTree = "<group>"; };
@@ -131,6 +131,7 @@
 		D0E22A2B278058D700F4F89C /* ConteneurCloudKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ConteneurCloudKit.xcdatamodel; sourceTree = "<group>"; };
 		D0E893C527561FBB0054951E /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
 		D0E893CB27562E210054951E /* Groupe+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Groupe+.swift"; sourceTree = "<group>"; };
+		D0E8972327877D7000A82214 /* Erreurs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erreurs.swift; sourceTree = "<group>"; };
 		D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +172,7 @@
 				D0385A232771BEF10063E926 /* Vues+.swift */,
 				D04B2595277869BD00AD171D /* Coordonnees+.swift */,
 				D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */,
+				D0E8972327877D7000A82214 /* Erreurs.swift */,
 				D085AA2E276DC6A500535552 /* NOTES.md */,
 				D01830762743DDE4000889E2 /* VuePrincipale.swift */,
 				D06D875827567DDA0038C955 /* Utilisateur.swift */,
@@ -203,17 +205,15 @@
 		D0A7BB7B274977DD00E2073D /* Modèle */ = {
 			isa = PBXGroup;
 			children = (
-				D04B25CC2779C44D00AD171D /* Lieu.swift */,
-				D04B258F27747C5800AD171D /* Groupe+CoreDataProperties.swift */,
-				D04B259027747C5800AD171D /* Item+CoreDataProperties.swift */,
 				D061AEE327805B8E00B19ED6 /* ConteneurCloudKit.xcdatamodel */,
 				D0E22A2A278058D700F4F89C /* ConteneurCloudKit.xcdatamodeld */,
-				D0385A262771C1560063E926 /* Groupe+CoreDataProperties.swift */,
-				D0385A272771C1560063E926 /* Item+CoreDataProperties.swift */,
+				D04B259027747C5800AD171D /* Item+CoreDataProperties.swift */,
 				D0E893C527561FBB0054951E /* Item+CoreDataClass.swift */,
 				D018308527466129000889E2 /* Item+.swift */,
+				D04B258F27747C5800AD171D /* Groupe+CoreDataProperties.swift */,
 				D05AFAA727561DF8001CCA52 /* Groupe+CoreDataClass.swift */,
 				D0E893CB27562E210054951E /* Groupe+.swift */,
+				D04B25CC2779C44D00AD171D /* Lieu.swift */,
 			);
 			name = "Modèle";
 			path = "Modèle";
@@ -385,6 +385,7 @@
 				D01830712743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
 				D018308627466129000889E2 /* Item+.swift in Sources */,
 				D04B25D32779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
+				D0E8972427877D7000A82214 /* Erreurs.swift in Sources */,
 				D04B25CD2779C44E00AD171D /* Lieu.swift in Sources */,
 				D04B25D02779C48F00AD171D /* VueEditionCarte.swift in Sources */,
 				D0E893C727561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
@@ -428,6 +429,7 @@
 				D01830722743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
 				D018308727466129000889E2 /* Item+.swift in Sources */,
 				D04B25D42779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
+				D0E8972527877D7000A82214 /* Erreurs.swift in Sources */,
 				D04B25CE2779C44E00AD171D /* Lieu.swift in Sources */,
 				D04B25D12779C48F00AD171D /* VueEditionCarte.swift in Sources */,
 				D0E893C827561FBB0054951E /* Item+CoreDataClass.swift in Sources */,

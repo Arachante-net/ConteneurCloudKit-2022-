@@ -155,7 +155,7 @@ struct VueDetailGroupe: View {
         
 //        let t = self.principal
         
-        VueModifGroupe(groupe: groupe, principal: groupe.principal!) { valeur in
+        VueModifGroupe(groupe: groupe, principal: groupe.lePrincipal) { valeur in
                         feuilleModificationPresentée = false
 //                        rafraichir.toggle()
 //                        ListeGroupe.rafraichir.toggle()

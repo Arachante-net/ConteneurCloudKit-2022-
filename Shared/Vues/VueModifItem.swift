@@ -28,15 +28,7 @@ struct VueModifItem: View {
     @EnvironmentObject private var persistance: ControleurPersistance
     
     // si @ObservedObject pas besoin de State ?
-//    @State var titre:     String = ""
-//    @State var valeurLocale:    Int    = 0     /////////
-//    @State var ordre:     Int    = 0
-//    @State var latitude:  Double = 0 //////////
-//    @State var longitude: Double = 0
-//
-//    @State var couleur  = Color.secondary
-//    @State var instant  = Date()
-//    @State var valide   = false
+//TODO: @StateObject vs. @ObservedObject  ??
 
     /// La région géographique entourant l'item en cours d'édition
     @State private var régionItem = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: Lieu.exemple.latitude, longitude: Lieu.exemple.longitude), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
@@ -117,7 +109,7 @@ struct VueModifItem: View {
                 }
                 .padding(.horizontal)
             
-            // Définir un lieu sur la carte
+            // Définir le lieu de l'item sur la carte
             VueEditionCarte(
                 item: item,
                 sectionGéographique: $régionItem,

@@ -14,6 +14,8 @@ struct ConteneurCloudKitApp: App {
     @Environment(\.scenePhase) private var scenePhase
     let controleurDePersistance = ControleurPersistance.shared
     let utilisateur = Utilisateur()
+    var appError: ErrorType? = nil
+
 
     var body: some Scene {
         WindowGroup {
@@ -22,6 +24,8 @@ struct ConteneurCloudKitApp: App {
                 // 'ControleurPersistance' doit être conforme à 'ObservableObject'
                 .environmentObject(controleurDePersistance)
                 .environmentObject(utilisateur)
+//                .environmentObject(appError)
+
 
 //                .environment(\.persistence, persistenceController)
 

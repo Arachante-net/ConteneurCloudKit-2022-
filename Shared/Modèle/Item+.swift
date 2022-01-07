@@ -71,6 +71,23 @@ extension Item {
 //MARK: Manipulation
 extension Item {
     
+    
+    static func vide() { Item() }
+    
+    static func bidon() -> Item {
+        let nouvelItem = Item()
+            nouvelItem.timestamp = Date()
+            nouvelItem.titre     = ""
+            nouvelItem.id        = UUID()
+            nouvelItem.valeur    = 0
+            nouvelItem.latitude  = 0
+            nouvelItem.longitude = 0
+            nouvelItem.coloris   = .secondary
+            nouvelItem.createur  = ""
+            nouvelItem.valide    = false
+         return nouvelItem
+        }
+    
     /// Creer un nouvel Item et le sauver en coreData
     /// - Parameters:
     ///   - titre: de l'Item
@@ -290,7 +307,11 @@ extension Item {
             }
         }
     
-    override public func prepareForDeletion() {print("🔘 Suppresion imminente de", titre ?? "...")}
+    override public func prepareForDeletion() {
+        print("🔘 Suppresion imminente de l'item ", titre ?? "...",
+              "délégué du groupe", principal?.nom,
+              "membre de", groupes?.count, "autres groupes")
+        }
 
 }
 

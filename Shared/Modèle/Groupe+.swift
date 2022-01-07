@@ -146,6 +146,16 @@ extension Groupe {
     var vide:Groupe {
         Groupe()
         }
+    
+    // principal: Item?
+    var lePrincipal:Item {
+        if principal != nil { return principal! }
+        else {
+            // plutot generer une erreur ?
+            print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
+            return Item.bidon() }
+        }
+    
     /// Convertir .items:NSSet? en .lesItems:Set<Item>
     var lesItems:Set<Item> { return items as? Set<Item> ?? [] }
     
@@ -197,9 +207,24 @@ extension Groupe {
 
         toutesLesCoordonnées.forEach() {coord in print("🏁 º", coord.longitude, coord.latitude)}
         print("🏁")
+        
+        if toutesLesCoordonnées.isEmpty {
+            return  MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(
+                        latitude:  0,
+                        longitude: 0),
+                    span: MKCoordinateSpan(
+                        latitudeDelta:  180,
+                        longitudeDelta: 360
+                        )
+                    )
+            }
+        
         let lesLongitudes = toutesLesCoordonnées.map {$0.longitude}
         let lesLatitudes  = toutesLesCoordonnées.map {$0.latitude}
-            
+        
+      
+        
         let P1 = CLLocationCoordinate2D(latitude: lesLatitudes.min()!, longitude: lesLongitudes.min()!)
         let P2 = CLLocationCoordinate2D(latitude: lesLatitudes.max()!, longitude: lesLongitudes.max()!)
         print("🏁 Min Min", P1.longitude, P1.latitude)
@@ -319,7 +344,11 @@ extension Groupe {
 
     func estContenu(dans groupes : Set<Groupe>) -> Bool { groupes.contains(self)}
     
-    
+    override public func prepareForDeletion() {
+        print("🔘 Suppresion imminente du groupe ", nom ?? "...",
+              ", maitre de l'item principal", principal?.titre,
+              "et de", items?.count, "autres items.")
+        }
 
     }
 

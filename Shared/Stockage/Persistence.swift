@@ -14,6 +14,7 @@ import os.log
 
 //struct ControleurPersistance  {
 class ControleurPersistance : ObservableObject {
+    @Published var appError: ErrorType? = nil
     // Singleton
     static let shared = ControleurPersistance()
 
@@ -69,6 +70,7 @@ class ControleurPersistance : ObservableObject {
         // (permet à un NSPersistentCloudKitContainer d'etre chargé en tant que NSPersistentContainer)
         // (donc inutile si on utilise uniquement un NSPersistentCloudKitContainer ??)
         guard let description = conteneur.persistentStoreDescriptions.first else {
+            appError = ErrorType(error: .erreurInterne)
             fatalError("PAS TROUVÉ DE DESCRIPTION")
             }
         
@@ -378,7 +380,13 @@ class ControleurPersistance : ObservableObject {
     
     func supprimerObjets(_ objects: [NSManagedObject]) {
         conteneur.viewContext.perform { [context = conteneur.viewContext] in
-            objects.forEach(context.delete)
+            
+//            objects.forEach(context.delete)
+            objects.forEach {objet in
+                objet.entity
+                objet.prepareForDeletion()
+            }
+
             self.sauverContexte()
             }
         }

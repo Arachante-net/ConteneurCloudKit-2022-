@@ -34,6 +34,12 @@ struct Lieu: Identifiable, Codable, Equatable {
     static func ==(lhs: Lieu, rhs: Lieu) -> Bool { lhs.id == rhs.id }
 }
 
+
+
+
+
+
+
 //FIXME: Une Annotation c'est different d'un Lieu
 struct AnnotationGeographique: Identifiable, Hashable {
   let id = UUID()

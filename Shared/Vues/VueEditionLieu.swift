@@ -19,6 +19,7 @@ struct VueEditionLieu: View {
     @State private var nom: String
     @State private var description: String
     
+    // pour récuperer des infos en retour de Vue
     var informationARetourner: (Lieu) -> Void
 
     

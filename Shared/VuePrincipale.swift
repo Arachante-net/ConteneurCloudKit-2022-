@@ -29,8 +29,11 @@ struct VuePrincipale: View {
     
   let uid = UserDefaults.standard.string(forKey: "UID")
     
-  var body: some View {
+  @State var appError: ErrorType? = nil
 
+    
+  var body: some View {
+      
       VStack {
 //          let _ = utilisateur.isICloudContainerAvailable()
 //          Text( utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
@@ -46,7 +49,7 @@ struct VuePrincipale: View {
 //            .badge("G")
 
         
-            ListeItem().tabItem {
+              ListeItem(appError: $appError).tabItem {
                 VStack {
                     Image(systemName: "sun.max.fill")
                     Text("Items")
@@ -65,7 +68,16 @@ struct VuePrincipale: View {
   
           } // tab view
       }
-  } // body
+//      .environmentObject(appError ?? <#default value#>)
+      .alert(item: $appError) {appError in
+          Alert(title: Text("!!!!!"),
+                message: Text(appError.error.localizedDescription)//,
+  //              dismissButton: <#T##Alert.Button?#>
+          )
+          
+      }
+  }
+        // body
 }
 
 

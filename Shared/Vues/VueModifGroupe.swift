@@ -59,7 +59,7 @@ struct VueModifGroupe: View {
 //        Stepper("Valeur locale : \(groupe.valeurPrincipale)", value: $groupe.valeurPrincipale)
 //            .padding(.leading)
         
-        VueValeurItemPrincipal(item: groupe.principal!, groupe: groupe )
+        VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
         
         Toggle("Collaboratif", isOn: $groupe.collaboratif)///   collaboration)
         Toggle("Valide",       isOn: $groupe.valide)
