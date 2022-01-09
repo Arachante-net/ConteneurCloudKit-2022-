@@ -12,6 +12,7 @@ struct Etiquette: View {
     
     var libellé:String
     var valeur:String
+    var neutre:Bool = false
     
     init (_ libellé:String, valeur:String) {
         self.libellé = libellé
@@ -37,7 +38,9 @@ struct Etiquette: View {
         HStack {
             Text(" \(libellé) : ")
                 .foregroundColor(.secondary)
-            Text(valeur).padding(.horizontal)
+            Text(valeur)
+                .foregroundColor( neutre ? .secondary : .accentColor)
+                .padding(.horizontal)
                 
         } .clipShape(Capsule() )
             .overlay( Capsule()

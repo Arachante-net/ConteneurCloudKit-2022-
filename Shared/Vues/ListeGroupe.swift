@@ -95,7 +95,9 @@ struct ListeGroupe: View {
             }
       )
     }.searchable(text: $recherche)
-          .onChange(of: recherche) {valeurCherchée in groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool }}
+          .onChange(of: recherche) {valeurCherchée in
+              groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool }
+            }
   }
 
         

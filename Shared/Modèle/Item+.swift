@@ -140,6 +140,7 @@ extension Item {
         guard // mes groupes actuels sont bien tous collaboratifs
             (lesGroupes.reduce(true) {$0 && $1.collaboratif} ) else {
                 print("⚾︎ ERREUR un des groupes actuels de l'item", titre ?? "" ,"n'est pas collaboratif")
+//                appError = ErrorType(error: .trucQuiVaPas(num: 666))
                 lesGroupes.forEach { print("⚾︎", $0.nom ?? "..." , $0.collaboratif) }
                 return
                 }
@@ -148,6 +149,7 @@ extension Item {
             ( communauté.reduce(true) {$0 && $1.collaboratif} ) else {
             
                 print("⚾︎ ERREUR un des groupes visés n'est pas collaboratif")
+//                appError = ErrorType(error: .trucQuiVaPas(num: 666))
                 communauté.forEach { print("⚾︎", $0.nom ?? "..." , $0.collaboratif) }
                 return
                 }
@@ -308,6 +310,7 @@ extension Item {
         }
     
     override public func prepareForDeletion() {
+//        super.prepareForDeletion()
         print("🔘 Suppresion imminente de l'item ", titre ?? "...",
               "délégué du groupe", principal?.nom,
               "membre de", groupes?.count, "autres groupes")

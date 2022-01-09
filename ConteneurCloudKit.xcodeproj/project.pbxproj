@@ -80,6 +80,10 @@
 		D0E893CD27562E210054951E /* Groupe+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E893CB27562E210054951E /* Groupe+.swift */; };
 		D0E8972427877D7000A82214 /* Erreurs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8972327877D7000A82214 /* Erreurs.swift */; };
 		D0E8972527877D7000A82214 /* Erreurs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8972327877D7000A82214 /* Erreurs.swift */; };
+		D0E897272789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
+		D0E897282789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
+		D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
+		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0FF9C2C277A4C0D00902CF2 /* VueModifItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */; };
 		D0FF9C2D277A4C0D00902CF2 /* VueModifItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */; };
 		D0FF9C2E277CEDE200902CF2 /* VueCarte.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018307C274556DE000889E2 /* VueCarte.swift */; };
@@ -132,6 +136,8 @@
 		D0E893C527561FBB0054951E /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
 		D0E893CB27562E210054951E /* Groupe+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Groupe+.swift"; sourceTree = "<group>"; };
 		D0E8972327877D7000A82214 /* Erreurs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erreurs.swift; sourceTree = "<group>"; };
+		D0E897262789957B00A82214 /* Etat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Etat.swift; path = Shared/Etat.swift; sourceTree = SOURCE_ROOT; };
+		D0E8974D278ACD0600A82214 /* Binding+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Binding+.swift"; path = "Shared/Binding+.swift"; sourceTree = SOURCE_ROOT; };
 		D0FF9C2B277A4C0D00902CF2 /* VueModifItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,6 +219,8 @@
 				D04B258F27747C5800AD171D /* Groupe+CoreDataProperties.swift */,
 				D05AFAA727561DF8001CCA52 /* Groupe+CoreDataClass.swift */,
 				D0E893CB27562E210054951E /* Groupe+.swift */,
+				D0E897262789957B00A82214 /* Etat.swift */,
+				D0E8974D278ACD0600A82214 /* Binding+.swift */,
 				D04B25CC2779C44D00AD171D /* Lieu.swift */,
 			);
 			name = "Modèle";
@@ -369,6 +377,7 @@
 				D0FF9C2C277A4C0D00902CF2 /* VueModifItem.swift in Sources */,
 				D01830832746446E000889E2 /* VueCelluleItemGroupe.swift in Sources */,
 				D0203D0E2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
+				D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA427510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
 				D06D875927567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D04B259127747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
@@ -382,6 +391,7 @@
 				D04A0D562732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0385A2D277211010063E926 /* Reglages.swift in Sources */,
+				D0E897272789957B00A82214 /* Etat.swift in Sources */,
 				D01830712743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
 				D018308627466129000889E2 /* Item+.swift in Sources */,
 				D04B25D32779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
@@ -413,6 +423,7 @@
 				D0FF9C2D277A4C0D00902CF2 /* VueModifItem.swift in Sources */,
 				D01830842746446E000889E2 /* VueCelluleItemGroupe.swift in Sources */,
 				D0203D0F2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
+				D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA527510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
 				D06D875A27567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D04B259227747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
@@ -426,6 +437,7 @@
 				D04A0D572732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0385A2E277211010063E926 /* Reglages.swift in Sources */,
+				D0E897282789957B00A82214 /* Etat.swift in Sources */,
 				D01830722743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
 				D018308727466129000889E2 /* Item+.swift in Sources */,
 				D04B25D42779C4BC00AD171D /* VueEditionLieu.swift in Sources */,

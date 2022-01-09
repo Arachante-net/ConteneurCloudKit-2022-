@@ -115,10 +115,11 @@ struct VueDetailItem: View {
     var body: some View {
         
         VStack(alignment: .leading , spacing: 2) {
-            VStack { // (alignment: .leading , spacing: 2)
+            VStack(alignment: .leading , spacing: 2) { // (alignment: .leading , spacing: 2)
 
-                Text("Identifiant :").foregroundColor(.secondary)
-                + Text(" \(item.id?.uuidString ?? "sans ID")")
+//                Text("Identifiant :").foregroundColor(.secondary)
+//                + Text(" \(item.id?.uuidString ?? "❌")")
+                Etiquette("Identifiant", valeur: item.id?.uuidString ?? "❌")
                 Text("Crée le ").foregroundColor(.secondary)
                 + Text(" \( formatDate.string(from: item.horodatage )) ")
                 + Text(" à")
@@ -153,7 +154,7 @@ struct VueDetailItem: View {
                 .padding(.horizontal)
             
             VStack(alignment: .leading , spacing: 2) {
-                Etiquette("Principal", valeur: item.principal?.nom ?? "")
+                Etiquette("Principal", valeur: item.principal?.nom ?? "❌")
 
                 Text("Membre de")
                     .foregroundColor(.secondary)
@@ -173,7 +174,7 @@ struct VueDetailItem: View {
 //                       lieuCartographique.longitude,
 //                       lieuCartographique.latitude
 //                    )
-            
+            Spacer()
             let régionCarte_ = MKCoordinateRegion(
                 center:  CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude),
                 span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)

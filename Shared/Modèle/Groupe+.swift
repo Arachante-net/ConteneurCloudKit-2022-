@@ -94,6 +94,7 @@ extension Groupe {
     ///   - titre: de l'item
     func enrôler(contexte:NSManagedObjectContext , titre:String) {
         guard self.collaboratif else {
+//            appError = ErrorType(error: .trucQuiVaPas(num: 666))
             print("ERREUR le groupe", self.nom ?? "?" , "n'est pas collaboratif")
             return
             }
@@ -152,6 +153,7 @@ extension Groupe {
         if principal != nil { return principal! }
         else {
             // plutot generer une erreur ?
+//            appError = ErrorType(error: .trucQuiVaPas(num: 666))
             print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
             return Item.bidon() }
         }
@@ -344,11 +346,12 @@ extension Groupe {
 
     func estContenu(dans groupes : Set<Groupe>) -> Bool { groupes.contains(self)}
     
-    override public func prepareForDeletion() {
-        print("🔘 Suppresion imminente du groupe ", nom ?? "...",
-              ", maitre de l'item principal", principal?.titre,
-              "et de", items?.count, "autres items.")
-        }
+//    override public func prepareForDeletion() {
+//        super.prepareForDeletion()
+//        print("🔘 Suppresion imminente du groupe ", nom ?? "...",
+//              ", maitre de l'item principal", principal?.titre,
+//              "et de", items?.count, "autres items.")
+//        }
 
     }
 

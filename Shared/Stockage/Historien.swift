@@ -16,6 +16,7 @@ import os.log
 public class Historien {
     
 //    var persistance: ControleurPersistance
+    var appError: ErrorType? // = nil
 
     var abonnements: Set<AnyCancellable> = []
 //    private lazy
@@ -92,6 +93,7 @@ public class Historien {
                             }
                         catch {
                             let nserror = error as NSError
+                            self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
                             fatalError("🔹 ERREUR DE RÉCUPERATION SUITE À NOTIFICATION \(nserror), \(nserror.userInfo)")
                             }
         
@@ -112,6 +114,7 @@ public class Historien {
 //                                try self.persistance.sauverContexte() ///////// DANGER
                             } catch {
                                 let nserror = error as NSError
+                                self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
                                 fatalError("🔹 ERREUR DE MÀJ SUITE À NOTIFICATION \(nserror), \(nserror.userInfo)")
                             }
                         } // contexte
@@ -207,6 +210,7 @@ public class Historien {
             }
           } catch {
             let nsError = error as NSError
+              self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
             os_log(
               .error,
               log: .default,

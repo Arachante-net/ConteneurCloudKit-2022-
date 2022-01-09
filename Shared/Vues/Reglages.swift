@@ -28,16 +28,21 @@ struct Reglages: View {
     @Environment(\.managedObjectContext) private var contexte
 
     @State var transacs : [NSPersistentHistoryTransaction] = []
-    
-    var T2 = (Text("ITALIC ============================================================================").italic()
-              + Text("GRAS ------------------------------------").bold()).foregroundColor(.red)
-   
+       
     let utilisateur = Utilisateur()
 
     var body: some View {
 
         HStack {
             VStack(alignment: .leading) {
+                Section(header: Text("Utilisateur").font(.title)) {
+                    Text("Statut : ") .bold().foregroundColor(.secondary)
+                    + Text("\(utilisateur.leStatut)")
+                    let _ = utilisateur.isICloudContainerAvailable()
+                    Text( utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
+
+                }.padding(.horizontal)
+
                 Section(header: Text("Base de Données").font(.title)) {
                     Text("Conteneur local : ").bold().foregroundColor(.secondary)
                     + Text("\(persistance.nomConteneur)")
@@ -60,43 +65,36 @@ struct Reglages: View {
                     
                 }.padding(.horizontal)
                 
-                Section(header: Text("Utilisateur").font(.title)) {
-                    
-                    //             let identifiantConteneur = storeDescription.cloudKitContainerOptions!.containerIdentifier
-
-                    Text("Statut : ") .bold().foregroundColor(.secondary)
-                    + Text("\(utilisateur.leStatut)")
-                    let _ = utilisateur.isICloudContainerAvailable()
-                    
-//                    do { let ID = try utilisateur.obtenirID() }
-//                    catch Stratus.invalide(let invalid) {
-//                        print("Invalid character: '\(invalid)'")
-//                        }
-//                    Text( try utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
-
-                    Text( utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
-
-                }.padding()
     
                 Divider()
 //                Spacer()
-                Text("\(isolés.count) isolés").bold()
                 
                 Text("\(orphelins.count) Orphelins").bold()
-                Button("Enlever les items orphelins") {
-                    orphelins.forEach() { orphelin in
-                      supprimer(contexte: contexte, objet: orphelin as Item)
-                      }
-                    }
                 List {
                     ForEach(orphelins) {orphelin in
                         Text("° \(orphelin.titre ?? ".") ")
                         }
                     }
+                Button("Enlever les items orphelins") {
+                    orphelins.forEach() { orphelin in
+                      supprimer(contexte: contexte, objet: orphelin as Item)
+                      }
+                    }
+                
+                Text("\(isolés.count) isolés").bold()
                 List {
                     ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
                     }
+                Button("Enlever les items isolés") {
+                    isolés.forEach() { isolé in
+                      supprimer(contexte: contexte, objet: isolé as Item)
+                      }
+                    }
                 }
+            
+            
+            
+            
             VStack {
                 Text("⭕️ Historique").bold()
                 Button("⭕️ Ménage") {

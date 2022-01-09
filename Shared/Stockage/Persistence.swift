@@ -112,7 +112,7 @@ class ControleurPersistance : ObservableObject {
                  
                  Vérifier le message d'erreur pour déterminer quel était le problème réel.
                 */
-            
+                self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
                 fatalError("ERREUR AU CHARGEMENT DU MAGASIN \(error), \(error.userInfo)")
             }
             
@@ -215,6 +215,7 @@ class ControleurPersistance : ObservableObject {
             // existe aussi .dryRun :  Valider le modèle et génèrer les enregistrements, SANS les télécharger vers CloudKit.
             print("\nPUBLICATION DU SCHEMA\n\n")
             }
+//        appError = ErrorType(error: .trucQuiVaPas(num: 666))
         catch {print("\nERREUR À LA PUBLICATION DU SCHEMA\n")}
         }
     
@@ -374,18 +375,21 @@ class ControleurPersistance : ObservableObject {
           // You should not use this function in a shipping application, although it may be useful during development.
        
         let nsError = error as NSError
+        appError = ErrorType(error: .trucQuiVaPas(num: 666))
         os_log(.error, log: .default, "Erreur lors de l'enregistrement de %@", nsError)
         }
       }
     
     func supprimerObjets(_ objects: [NSManagedObject]) {
         conteneur.viewContext.perform { [context = conteneur.viewContext] in
+            objects.forEach {objet in
+                print("🔘 supprimer objet ", objet.entity, objet.debugDescription)
+//              objet.prepareForDeletion() // automatique
+                context.delete(objet)
+            }
             
 //            objects.forEach(context.delete)
-            objects.forEach {objet in
-                objet.entity
-                objet.prepareForDeletion()
-            }
+
 
             self.sauverContexte()
             }

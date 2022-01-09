@@ -50,6 +50,7 @@ struct VuePrincipale: View {
 
         
               ListeItem(appError: $appError).tabItem {
+//              ListeItem().tabItem {
                 VStack {
                     Image(systemName: "sun.max.fill")
                     Text("Items")
