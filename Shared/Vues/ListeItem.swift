@@ -46,7 +46,7 @@ struct ListeItem: View {
     
   @State private var alerteAffichée = false
   @State private var itemEnCours: Item?
-  @State private var itemsSupprimables: IndexSet? //SetIndex<Item>?
+  @State private var itemsEnCourDeSuppression: IndexSet? //SetIndex<Item>?
   @Binding var appError: ErrorType? // = nil
 
 
@@ -56,7 +56,7 @@ struct ListeItem: View {
         List {
         ForEach(items) { item in // , id: \.timestamp
             let _ = print("👁 ", item.titre ?? "-")
-            NavigationLink(destination: VueDetailItem(item: item )) {
+            NavigationLink(destination: VueDetailItem(item: item, itemsSupprimables: $itemsEnCourDeSuppression )) {
                 Text("")
                 + Text(item.titre ?? "-")
                 }
@@ -69,49 +69,55 @@ struct ListeItem: View {
       .navigationBarItems(
         leading:
             HStack {
-                Button(action: ajouterItem)      { Label("Ajouter un Item",        systemImage: "plus"                 )} .help("OUI")
-                Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.square.dashed"   )}
-                Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
-                Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}
+                Spacer()
+                Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.circle.fill"   )
+                    .hoverEffect()
+                    .scaleEffect(1.5)
+//                    .symbolRenderingMode(.hierarchical)
+                    .symbolRenderingMode(.multicolor)
+                    .saturation(1)
 
+                }
+                Spacer()
+                Spacer()
+                Button(role: .destructive, action: ajouterItem)
+                    { Label("Ajouter un Item", systemImage: "plus")}
+                    .foregroundColor(.red).opacity(0.5)
+//              Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
+                Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}.opacity(0.7)
                 },
-        trailing: Button(action: { let _ = Item.extractionItems }) { Image(systemName: "arrow.2.circlepath")}
+        trailing: Button(action: { let _ = Item.extractionItems }) { Image(systemName: "arrow.2.circlepath")}.opacity(0.7)
        )
         
         
         
     }
       
-    .alert(item: $itemsSupprimables) { truc in
-        let titres = truc.map {items[$0].titre}
-        let t = (titres.first ?? "")!
-        var description = Text("Truc \(t)")
-        var description_ = ""
+    .alert(item: $itemsEnCourDeSuppression) { jeuIndices in
+        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+//        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
         
-        truc.forEach {
+        let titre = (jeuIndices.map {items[$0].titre}.first ?? "")!
+
+        var description:String=""
+        
+        //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
+        jeuIndices.forEach {
             let item = items[$0]
-//            description_ = description_ + "\(item.titre ?? " ") "
-            description_ = description_ + "\($0 + 1)° de la liste, valeur : \(item.valeur), membre de \(item.groupes?.count ?? 0) groupes"
-            item.groupes?.forEach {
-                description_ = description_ + " \( ($0 as! Groupe).nom ?? "")   "
-                }
+            description = item.description
             }
 
         return Alert(
-            title: Text("Suppression de l'item ") + Text("'\(t)'").foregroundColor(.accentColor),
-            message: Text(description_),
-//            dismissButton: .cancel())
+            title: Text("Suppression de l'item ") + Text("'\(titre)'").foregroundColor(.accentColor),
+            message: Text(description),
             primaryButton: .default(
                             Text("NON, je dois réfléchir un peu."),
                             action: abandoner
                         ),
             secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
-                print("🔘 YO \(truc)")
-                print("🔘 Suppression de :", items[truc.first ?? 0].titre)
-                supprimerVraimentItems(positions: truc)
-                //itemsSupprimables.map { items[$0].titre ?? ""} )
+                supprimerVraimentItems(positions: jeuIndices)
             })
-            ) //accepter(positions: i) )
+            ) 
 
     }
 
@@ -182,10 +188,26 @@ struct ListeItem: View {
     
     private func proposerSuppressionItems(positions: IndexSet) {
         print("🔘 Proposition de suppression de :", positions.map { items[$0].titre ?? ""} )
-        itemsSupprimables = positions
+        itemsEnCourDeSuppression = positions
         }
     
-    private func supprimerItems(positions: IndexSet) {
+
+    private func supprimerVraimentItems(positions: IndexSet) {
+        print("🔘 Suppression réeel de :", positions.map { items[$0].titre ?? ""} )
+        positions.forEach {
+//            let item = items[$0]
+            print("\t🔘 Suppression de :", items[$0].titre ?? "" )
+            items[$0].removeFromGroupes(items[$0].groupes ?? [])
+            persistance.sauverContexte()
+            }
+                    
+        withAnimation {
+            persistance.supprimerObjets(positions.map { items[$0] })
+            }
+        }
+
+    // Pas utilisé
+    private func supprimerItems_(positions: IndexSet) {
     //TODO: on pourrait utiliser  item.prepareForDeletion()
         print("🔘 Suppression de :", positions.map { items[$0].titre ?? ""} )
         alerteAffichée = true
@@ -207,20 +229,7 @@ struct ListeItem: View {
             }
         }
 
-    private func supprimerVraimentItems(positions: IndexSet) {
-        print("🔘 Suppression réeel de :", positions.map { items[$0].titre ?? ""} )
-        positions.forEach {
-//            let item = items[$0]
-            print("\t🔘 Suppression de :", items[$0].titre ?? "" )
-            items[$0].removeFromGroupes(items[$0].groupes ?? [])
-            persistance.sauverContexte()
-            }
-                    
-        withAnimation {
-            persistance.supprimerObjets(positions.map { items[$0] })
-            }
-        }
-
+    
     
     private func GenererErreur() {
         appError = ErrorType(error: .trucQuiVaPas(num: 666))

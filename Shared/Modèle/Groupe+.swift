@@ -149,13 +149,19 @@ extension Groupe {
         }
     
     // principal: Item?
-    var lePrincipal:Item {
-        if principal != nil { return principal! }
-        else {
-            // plutot generer une erreur ?
-//            appError = ErrorType(error: .trucQuiVaPas(num: 666))
-            print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
-            return Item.bidon() }
+    var lePrincipal:Item  {
+//        get throws {
+        get  {
+            if principal != nil { return principal! }
+            else {
+                // plutot generer une erreur ?
+    //            appError = ErrorType(error: .groupeSansPrincipal)
+//                throw Nimbus.groupeSansPrincipal
+                // donc la suite n'est pas executée
+                fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!")
+                print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
+                return Item.bidon() }
+        }
         }
     
     /// Convertir .items:NSSet? en .lesItems:Set<Item>

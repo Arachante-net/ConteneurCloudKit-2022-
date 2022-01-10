@@ -102,7 +102,7 @@ struct VueDetailGroupe: View {
 
     @ViewBuilder
     var body: some View {
-
+    let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
     VStack(alignment: .leading, spacing: 2) {
 //        Text("\(rafraichir.description)").font(.system(size: 1)).hidden()
         VStack(alignment: .leading, spacing: 2)  {
@@ -149,8 +149,8 @@ struct VueDetailGroupe: View {
         
         
 //        let t = self.principal
-        
         VueModifGroupe(groupe: groupe, principal: groupe.lePrincipal) { valeur in
+//        VueModifGroupe(groupe: groupe, principal: groupe.principal) { valeur in
                         feuilleModificationPresentée = false
 //                        rafraichir.toggle()
 //                        ListeGroupe.rafraichir.toggle()

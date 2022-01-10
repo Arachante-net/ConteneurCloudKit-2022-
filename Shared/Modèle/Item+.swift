@@ -76,16 +76,20 @@ extension Item {
     
     static func bidon() -> Item {
         let nouvelItem = Item()
-            nouvelItem.timestamp = Date()
-            nouvelItem.titre     = ""
-            nouvelItem.id        = UUID()
-            nouvelItem.valeur    = 0
-            nouvelItem.latitude  = 0
-            nouvelItem.longitude = 0
-            nouvelItem.coloris   = .secondary
-            nouvelItem.createur  = ""
-            nouvelItem.valide    = false
-         return nouvelItem
+            nouvelItem.valide           = false
+            nouvelItem.timestamp        = Date(timeIntervalSince1970:0)
+            nouvelItem.titre            = "␀"
+            nouvelItem.id               = nil //UUID()
+            nouvelItem.valeur           = 0
+            nouvelItem.latitude         = 0
+            nouvelItem.longitude        = 0
+            nouvelItem.coloris          = .secondary // => couleur
+            nouvelItem.createur         = "␀"
+            nouvelItem.caracteristique  = "␀"
+            nouvelItem.mode             = .bien
+            nouvelItem.ordre            = 0
+            nouvelItem.valeur           = 0
+     return nouvelItem
         }
     
     /// Creer un nouvel Item et le sauver en coreData
@@ -197,6 +201,15 @@ extension Item {
 //        Item()
 //        }
 
+    public override var description: String {
+//        let tg = Array(groupes
+//        let g = lesGroupes.map {$0.nom ?? "..."}.joined(separator: ",")
+//        let lg = g.joined(separator: ",") //reduce("Groupes : ", { $0 ?? "" + $1 ?? "" })
+//        let lg = groupes?.reduce("G ", {$0 + $1})
+        "\(leTitre),  Valeur: \(valeur), Principal: \(principal?.leNom ?? ""), Membre de : \(lesGroupes.map {$0.nom ?? "..."}.joined(separator: ","))."
+//        return ""
+    }
+    
     /// Fourni une valeur par defaut facilement identifiable (1 janvier 1970) si  Item.timestamp n'est pas défini
     var horodatage : Date {
         get { timestamp ?? Date(timeIntervalSince1970:0) }

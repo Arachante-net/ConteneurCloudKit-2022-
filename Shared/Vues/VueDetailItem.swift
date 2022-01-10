@@ -17,17 +17,10 @@ struct VueDetailItem: View {
 
     @EnvironmentObject private var persistance: ControleurPersistance
     @ObservedObject var item: Item
-
-//    @State var titre:     String = ""
-//    @State var valeurLocale:    Int    = 0
-//    @State var ordre:     Int    = 0
-//    @State var latitude:  Double = 0
-//    @State var longitude: Double = 0
-//    @State var couleur  = Color.secondary
-//    @State var instant  = Date()
     
     @State var itemMémoire = Item.Memoire(titre: "", valeur: 0,  longitude:0, latitude:0)
-    
+    @Binding var itemsSupprimables: IndexSet? //SetIndex<Item>?
+
     
 
     //  @State ??? non car Property wrapper ne peut être appliqué a une propriété calculée
@@ -113,7 +106,7 @@ struct VueDetailItem: View {
 
 
     var body: some View {
-        
+        let _ = assert(item.principal != nil, "❌ Item isolé")
         VStack(alignment: .leading , spacing: 2) {
             VStack(alignment: .leading , spacing: 2) { // (alignment: .leading , spacing: 2)
 
@@ -210,8 +203,15 @@ struct VueDetailItem: View {
                 Button(action: { feuilleModificationItemPresentée.toggle() }) {
 //                  Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
                     VStack {
-                        Image(systemName: "quare.and.pencil")
+                        Image(systemName: "square.and.pencil")
                         Text("Modifier").font(.caption)
+                        }
+                  }.buttonStyle(.borderedProminent)
+                
+                Button(role: .destructive, action: {  }) {
+                    VStack {
+                        Image(systemName: "trash")
+                        Text("Supprimer").font(.caption)
                         }
                   }.buttonStyle(.borderedProminent)
 

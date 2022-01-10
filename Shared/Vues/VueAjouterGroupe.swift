@@ -11,6 +11,8 @@ import SwiftUI
 struct VueAjouterGroupe: View {
   @State var nom = ""
   @State var collaboratif = false
+  @FocusState private var focusSurLeChampNom: Bool //= false
+
 
   let achevé: (String, Bool) -> Void
     
@@ -21,6 +23,11 @@ struct VueAjouterGroupe: View {
             TextField("BOF",
                       text: $nom,
                       prompt: Text("Saisissez le nom du groupe") )
+                .focused($focusSurLeChampNom)
+                .textFieldStyle(.roundedBorder)
+                .border(focusSurLeChampNom ?  Color.accentColor : .secondary , width: 2)
+                .onChange(of: nom, perform: {newValue in })
+
             
             Toggle("Collaboratif", isOn: $collaboratif)
                 .toggleStyle(.switch)

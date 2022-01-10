@@ -27,6 +27,8 @@ struct ListeGroupe: View {
   @State private var recherche = ""
   @State var groupesFiltrés = [Groupe]()
   @State static var rafraichir    = false
+  @State private var groupesEnCourDeSuppression: IndexSet? //SetIndex<Item>?
+
 
 
     private let formatHorodatage: DateFormatter = {
@@ -56,7 +58,7 @@ struct ListeGroupe: View {
               }.badge( Text("\(groupe.valeur)").foregroundColor(.purple)    )
             }
         }
-        .onDelete(perform: supprimerGroupes)
+        .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
        
 
       }
@@ -98,13 +100,42 @@ struct ListeGroupe: View {
           .onChange(of: recherche) {valeurCherchée in
               groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool }
             }
+      
+          .alert(item: $groupesEnCourDeSuppression) { jeuIndices in
+              assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+      //        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
+              
+              let nom = (jeuIndices.map {groupes[$0].nom}.first ?? "")!
+
+              var description:String=""
+              
+              //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
+              jeuIndices.forEach {
+                  let groupe = groupes[$0]
+                  description = groupe.description
+                  }
+
+              return Alert(
+                  title: Text("Suppression du groupe ") + Text("'\(nom)'").foregroundColor(.accentColor),
+                  message: Text(description),
+                  primaryButton: .default(
+                                  Text("NON, je dois réfléchir un peu."),
+                                  action: abandoner
+                              ),
+                  secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
+                      supprimerVraimentGroupes(positions: jeuIndices)
+                  })
+                  )
+
+          }
+
   }
 
         
         
         
-        
-    private func ajouterIndividuel() {
+    // Pas Glop
+    private func ajouterIndividuel_() {
         let maintenant = Date()
         withAnimation {
             Groupe.creer(contexte:viewContext,
@@ -118,12 +149,35 @@ struct ListeGroupe: View {
         let maintenant = Date()
         withAnimation {
             Groupe.creer(contexte:viewContext,
-                         titre:"Collab-" + formatHorodatage.string(from: maintenant),
+//                         titre:"Collab-" + formatHorodatage.string(from: maintenant),
+                         titre:"" + formatHorodatage.string(from: maintenant),
+
                          collaboratif:true)
             }
         }
     
     
+    
+    private func proposerSuppressionGroupes(positions: IndexSet) {
+        print("🔘 Proposition de suppression de :", positions.map { groupes[$0].nom ?? ""} )
+        groupesEnCourDeSuppression = positions
+        }
+    
+
+    private func supprimerVraimentGroupes(positions: IndexSet) {
+        print("🔘 Suppression réeel de :", positions.map { groupes[$0].nom ?? ""} )
+        positions.forEach {
+            print("\t🔘 Suppression de :", groupes[$0].nom ?? "" )
+//TODO: -    items[$0].removeFromGroupes(items[$0].groupes ?? []) -
+            persistance.sauverContexte()
+            }
+                    
+        withAnimation {
+            persistance.supprimerObjets(positions.map { groupes[$0] })
+            }
+        }
+    
+    private func abandoner() {}
     
   /// Supprimer les groupes passés en parametre,
   /// et enlever les references à ces groupes presentes dans lleurs .items

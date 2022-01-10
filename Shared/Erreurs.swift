@@ -12,12 +12,17 @@ import Foundation
         case caractereInvalide
         case trucQuiVaPas(num : Int)
         case erreurInterne
+        case itemSansPrincipal
+        case groupeSansPrincipal
         
         var errorDescription: String? {
             switch self {
-                case .caractereInvalide:          return NSLocalizedString("C'est quoi ce caractere ?", comment: "")
+                case .caractereInvalide:          return NSLocalizedString("C'est quoi ce caractere ?"            , comment: "")
                 case .erreurInterne:              return NSLocalizedString("Erreur interne, reinstallez l'appli !", comment: "")
-                case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ...", comment: "")
+                case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ..."    , comment: "")
+                case .itemSansPrincipal:          return NSLocalizedString(" Item sans Groupe referent (Principal", comment: "Pourquoi pas")
+                case .groupeSansPrincipal:        return NSLocalizedString(" Groupe sans Item Principal"          , comment: "C'est grave")
+
             }
         }
         }
