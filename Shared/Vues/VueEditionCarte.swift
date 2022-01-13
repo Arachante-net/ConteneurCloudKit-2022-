@@ -27,20 +27,44 @@ import CoreData
 ///
 struct VueEditionCarte: View {
     
-    @ObservedObject var item: Item
+//    @ObservedObject var item: Item
+    
+    @StateObject private var Ξ : ViewModel //    viewModel = ViewModel()
 
-    @Binding  var sectionGéographique : MKCoordinateRegion
-    @Binding  var lesLieux : [Lieu]
-    @Binding  var lieuEnCoursEdition : Lieu?
+//    @Binding  var sectionGéographique : MKCoordinateRegion
+//    @Binding  var lesLieux : [Lieu]
+//    @Binding  var lieuEnCoursEdition : Lieu?
+    
+//    var sectionGéographique : MKCoordinateRegion
+//    var lesLieux : [Lieu]
+//    var lieuEnCoursEdition : Lieu?
 
+    init(_ unItem: Item,
+         sectionGéographique : MKCoordinateRegion,
+         lesLieux : [Lieu],
+         lieuEnCoursEdition : Lieu?
+        ) {
+        _Ξ = StateObject(wrappedValue: ViewModel(
+            unItem,
+            sectionGéographique: sectionGéographique,
+            lesLieux: lesLieux, // la position
+            lieuEnCoursEdition: lieuEnCoursEdition
+            ))
+//        self.sectionGéographique = sectionGéographique
+//        self.lesLieux = lesLieux
+//        self.lieuEnCoursEdition = lieuEnCoursEdition
+        
+        }
+    
+    
     var body: some View {
 //            NavigationView {
-        Text("= \(lesLieux.last?.latitude ?? 0) - \(lesLieux.last?.longitude ?? 0)       \(sectionGéographique.center.latitude) - \(sectionGéographique.center.longitude)").font(.caption)
+        Text("= \(Ξ.lesLieux.last?.latitude ?? 0) - \(Ξ.lesLieux.last?.longitude ?? 0)       \(Ξ.sectionGéographique.center.latitude) - \(Ξ.sectionGéographique.center.longitude)").font(.caption)
             ZStack {
-                let _ = print("🚩🚩 édition carte avec", lesLieux.count, "marqueurs")
-                let _ = print("🚩🚩 dernier", lesLieux.last ?? "/")
+                let _ = print("🚩🚩 édition carte avec", Ξ.lesLieux.count, "marqueurs")
+                let _ = print("🚩🚩 dernier", Ξ.lesLieux.last ?? "/")
 
-                Map(coordinateRegion: $sectionGéographique, annotationItems: $lesLieux) { location in
+                Map(coordinateRegion: $Ξ.sectionGéographique, annotationItems: $Ξ.lesLieux) { location in
                     
                     MapAnnotation(coordinate: location.wrappedValue.coordonnées) {
                         
@@ -56,7 +80,7 @@ struct VueEditionCarte: View {
 
                         }
                         .onTapGesture {
-                            lieuEnCoursEdition = location.wrappedValue   //////////
+                            Ξ.lieuEnCoursEdition = location.wrappedValue   //////////
                         }
                     }
 
@@ -77,13 +101,13 @@ struct VueEditionCarte: View {
                                 id: UUID(),
                                 libellé: "Nouveau Lieu",
                                 description: "Ceci est un lieu qu'il est bien",
-                                latitude:  sectionGéographique.center.latitude,
-                                longitude: sectionGéographique.center.longitude)
+                                latitude:  Ξ.sectionGéographique.center.latitude,
+                                longitude: Ξ.sectionGéographique.center.longitude)
                             
-                            lesLieux.append(nouveauLieu)
+                            Ξ.lesLieux.append(nouveauLieu)
                             
-                            item.longitude = nouveauLieu.longitude
-                            item.latitude  = nouveauLieu.latitude
+                            Ξ.item.longitude = nouveauLieu.longitude
+                            Ξ.item.latitude  = nouveauLieu.latitude
 //
 
                         } label: {
@@ -108,11 +132,11 @@ struct VueEditionCarte: View {
         //
         // isPresented : valeur booléenne qui détermine s'il faut présenter la feuille
         // fournie par le contenu de la fermeture (closure)
-            .sheet(item: $lieuEnCoursEdition) { place in
+            .sheet(item: $Ξ.lieuEnCoursEdition) { place in
                 VueEditionLieu(place) { unLieu in
 //                    print("🚩 édition de ", unLieu.libellé,  unLieu.description)
-                    if let index = lesLieux.firstIndex(of: place) {
-                        lesLieux[index] = unLieu
+                    if let index = Ξ.lesLieux.firstIndex(of: place) {
+                        Ξ.lesLieux[index] = unLieu
 //                        print("🚩 modif de ", index, lesLieux[index].libellé,  lesLieux[index].latitude, lesLieux[index].longitude )
                         }
                     }

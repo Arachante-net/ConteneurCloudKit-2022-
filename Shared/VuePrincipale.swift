@@ -25,11 +25,13 @@ struct VuePrincipale: View {
     
   @Environment(\.managedObjectContext) private var viewContext
 
-  @State private var groupeItemChoisi: Groupe? //= 0 //= groupe //[0]
+  //@State private var groupeItemChoisi: Groupe? //= 0 //= groupe //[0]
     
   let uid = UserDefaults.standard.string(forKey: "UID")
     
-  @State var appError: ErrorType? = nil
+//  @State var appError: ErrorType? = nil
+
+  @StateObject private var viewModel = ViewModel()
 
     
   var body: some View {
@@ -49,8 +51,9 @@ struct VuePrincipale: View {
 //            .badge("G")
 
         
-              ListeItem(appError: $appError).tabItem {
-//              ListeItem().tabItem {
+//              ListeItem(appError: $viewModel.appError).tabItem {
+//              ListeItem(viewModel: viewModel.wrappedValue).tabItem {
+              ListeItem(appError: $viewModel.appError).tabItem {
                 VStack {
                     Image(systemName: "sun.max.fill")
                     Text("Items")
@@ -70,7 +73,7 @@ struct VuePrincipale: View {
           } // tab view
       }
 //      .environmentObject(appError ?? <#default value#>)
-      .alert(item: $appError) {appError in
+      .alert(item: $viewModel.appError) {appError in
           Alert(title: Text("!!!!!"),
                 message: Text(appError.error.localizedDescription)//,
   //              dismissButton: <#T##Alert.Button?#>

@@ -69,7 +69,7 @@ struct Reglages: View {
                 Divider()
 //                Spacer()
                 
-                Text("\(orphelins.count) Orphelins").bold()
+                Text("\(orphelins.count) Orphelins (qui ne participent à aucun groupe)").bold()
                 List {
                     ForEach(orphelins) {orphelin in
                         Text("° \(orphelin.titre ?? ".") ")
@@ -81,7 +81,7 @@ struct Reglages: View {
                       }
                     }
                 
-                Text("\(isolés.count) isolés").bold()
+                Text("\(isolés.count) isolés (non assicié à un évenement prinipal)").bold()
                 List {
                     ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
                     }

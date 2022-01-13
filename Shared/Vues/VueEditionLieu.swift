@@ -16,8 +16,10 @@ import SwiftUI
 struct VueEditionLieu: View {
     var lieu: Lieu
 
-    @State private var nom: String
-    @State private var description: String
+//    @State private var nom: String
+//    @State private var description: String
+    
+    @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
     // pour récuperer des infos en retour de Vue
     var informationARetourner: (Lieu) -> Void
@@ -28,9 +30,10 @@ struct VueEditionLieu: View {
     init(_ lieuAEditer: Lieu, onSave: @escaping (Lieu) -> Void) {
         self.lieu = lieuAEditer
         self.informationARetourner = onSave
+        _Ξ = StateObject(wrappedValue: ViewModel(lieuAEditer))
 
-        _nom         = State(initialValue: lieuAEditer.libellé)
-        _description = State(initialValue: lieuAEditer.description)
+//        _nom         = State(initialValue: lieuAEditer.libellé)
+//        _description = State(initialValue: lieuAEditer.description)
         }
     
     // Rejet de la présentation actuelle
@@ -41,19 +44,18 @@ struct VueEditionLieu: View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Nom du lieu", text: $nom)
-                    TextField("Déscription", text: $description)
+                    TextField("Nom du lieu", text: $Ξ.nom)
+                    TextField("Déscription", text: $Ξ.description)
                 }
             }
             .navigationTitle("Details du lieu")
             .toolbar {
                 Button("Sauver") {
-                    var leuEdité = lieu
-                        leuEdité.id = UUID()
-                        leuEdité.libellé = nom
-                        leuEdité.description = description
-                    print("🚩🚩🚩 Nom du lieu", leuEdité.libellé, leuEdité.description)
-                    informationARetourner(leuEdité)
+                    var lieuEdité = lieu
+                        lieuEdité.id = UUID()
+                        lieuEdité.libellé = Ξ.nom
+                        lieuEdité.description = Ξ.description
+                    informationARetourner(lieuEdité)
                     cloreLaVueActuelle()
                 }
             }

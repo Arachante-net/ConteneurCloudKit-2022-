@@ -12,6 +12,7 @@ import SwiftUI
 struct EtiquetteCoordonnees: View {
   static let symbole = UnitAngle.degrees.symbol
 
+  let prefix : String
   let latitude: Double
   let longitude: Double
   let font: Font
@@ -29,7 +30,7 @@ struct EtiquetteCoordonnees: View {
   var body: some View {
       
       HStack {
-          Text("Coordonnées : ")
+          Text("Coordonnées \(prefix) : ")
               .foregroundColor(.secondary)
           Text(chaineLatitude).padding(.horizontal)
           Text(" , ")

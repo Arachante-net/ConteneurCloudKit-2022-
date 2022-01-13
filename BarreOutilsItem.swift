@@ -8,30 +8,67 @@
 
 import SwiftUI
 
+//
+//var favoritesButton: some View {
+//    Button(action: toggleFavorites) {
+//        if showingFavorites {
+//            Text("Show all locations")
+//        } else {
+//            Text("Show only favorites")
+//        }
+//    }
+//}
 // pas (encore ?) utilisée
-struct BarreOutilsItem: View {
-    var body: some View {
-        Text("")
-            Button(action: { print("")}) {
-                VStack {
-                    Image(systemName: "tray.and.arrow.down.fill")
-                    Text("Rallier").font(.caption)
+
+var barreOutilsItem: some View {
+//    @Binding var feuilleModificationItemPresentée:Bool //= false
+    return HStack {
+        Text("MD")
+//            Button(action: { print("")}) {
+//                VStack {
+//                    Image(systemName: "tray.and.arrow.down.fill")
+//                    Text("Rallier").font(.caption)
+//                    }
+//                }
+//
+//
+//            Spacer()
+//
+//            Button(action: {
+//              print("")
+//                }
+//                ) { Text("Sauver") }
+//                .buttonStyle(.borderedProminent)
+//        }
+    
+    
+                    Spacer()
+    
+                    Button(action: {
+//                        feuilleModificationItemPresentée.toggle()
+                        
+                    }) {
+    //                  Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
+                        VStack {
+                            Image(systemName: "square.and.pencil")
+                            Text("Modifier").font(.caption)
+                            }
+                      }.buttonStyle(.borderedProminent)
+    
+                    Button(role: .destructive, action: {  }) {
+                        VStack {
+                            Image(systemName: "trash")
+                            Text("Supprimer").font(.caption)
+                            }
+                      }.buttonStyle(.borderedProminent)
+    
+                    Spacer()
+    
                     }
-                }
 
-
-            Spacer()
-
-            Button(action: {
-              print("")
-                }
-                ) { Text("Sauver") }
-                .buttonStyle(.borderedProminent)
+    
+    
     }
-}
 
-struct BarreOutilsItem_Previews: PreviewProvider {
-    static var previews: some View {
-        BarreOutilsItem()
-    }
-}
+
+

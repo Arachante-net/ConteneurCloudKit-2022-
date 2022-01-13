@@ -44,9 +44,12 @@ struct ListeItem: View {
 
   @Environment(\.managedObjectContext) private var viewContext
     
-  @State private var alerteAffichée = false
-  @State private var itemEnCours: Item?
-  @State private var itemsEnCourDeSuppression: IndexSet? //SetIndex<Item>?
+//  @Binding var viewModel:VuePrincipale.ViewModel // = VuePrincipale.ViewModel()
+  @StateObject private var Ξ = ViewModel() //    viewModel = ViewModel()
+//  @State private var alerteAffichée = false
+//  @State private var itemEnCours: Item?
+//  @State private var itemsEnCourDeSuppression: IndexSet? //SetIndex<Item>?
+   
   @Binding var appError: ErrorType? // = nil
 
 
@@ -54,12 +57,13 @@ struct ListeItem: View {
     NavigationView {
         
         List {
-        ForEach(items) { item in // , id: \.timestamp
-            let _ = print("👁 ", item.titre ?? "-")
-            NavigationLink(destination: VueDetailItem(item: item, itemsSupprimables: $itemsEnCourDeSuppression )) {
-                Text("")
-                + Text(item.titre ?? "-")
-                }
+        ForEach(items) { item in
+            NavigationLink( destination: VueDetailItem (
+                item//,
+//                itemsSupprimables: $Ξ.itemsEnCourDeSuppression
+                ))
+            { Text(item.leTitre) }
+            
             .badge(Int(item.valeur))
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
@@ -68,24 +72,25 @@ struct ListeItem: View {
       .navigationBarTitle(Text("Items"))
       .navigationBarItems(
         leading:
-            HStack {
-                Spacer()
-                Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.circle.fill"   )
-                    .hoverEffect()
-                    .scaleEffect(1.5)
-//                    .symbolRenderingMode(.hierarchical)
-                    .symbolRenderingMode(.multicolor)
-                    .saturation(1)
-
-                }
-                Spacer()
-                Spacer()
-                Button(role: .destructive, action: ajouterItem)
-                    { Label("Ajouter un Item", systemImage: "plus")}
-                    .foregroundColor(.red).opacity(0.5)
-//              Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
-                Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}.opacity(0.7)
-                },
+            barreMenuNavigation,
+//            HStack {
+//                Spacer()
+//                Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.circle.fill"   )
+//                    .hoverEffect()
+//                    .scaleEffect(1.5)
+////                    .symbolRenderingMode(.hierarchical)
+//                    .symbolRenderingMode(.multicolor)
+//                    .saturation(1)
+//
+//                }
+//                Spacer()
+//                Spacer()
+//                Button(role: .destructive, action: ajouterItem)
+//                    { Label("Ajouter un Item", systemImage: "plus")}
+//                    .foregroundColor(.red).opacity(0.5)
+////              Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
+//                Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}.opacity(0.7)
+//                },
         trailing: Button(action: { let _ = Item.extractionItems }) { Image(systemName: "arrow.2.circlepath")}.opacity(0.7)
        )
         
@@ -93,32 +98,32 @@ struct ListeItem: View {
         
     }
       
-    .alert(item: $itemsEnCourDeSuppression) { jeuIndices in
-        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
-//        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
-        
-        let titre = (jeuIndices.map {items[$0].titre}.first ?? "")!
-
-        var description:String=""
-        
-        //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
-        jeuIndices.forEach {
-            let item = items[$0]
-            description = item.description
-            }
-
-        return Alert(
-            title: Text("Suppression de l'item ") + Text("'\(titre)'").foregroundColor(.accentColor),
-            message: Text(description),
-            primaryButton: .default(
-                            Text("NON, je dois réfléchir un peu."),
-                            action: abandoner
-                        ),
-            secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
-                supprimerVraimentItems(positions: jeuIndices)
-            })
-            ) 
-
+    .alert(item: $Ξ.itemsEnCourDeSuppression) { indicesDesItemsASupprimer in
+        alerteSuppression(jeuIndices: indicesDesItemsASupprimer)
+//        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+////        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
+//
+//        let titre = (jeuIndices.map {items[$0].titre}.first ?? "")!
+//
+//        var description:String=""
+//
+//        //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
+//        jeuIndices.forEach {
+//            let item = items[$0]
+//            description = item.description
+//            }
+//
+//        return Alert(
+//            title: Text("Suppression de l'item ") + Text("'\(titre)'").foregroundColor(.accentColor),
+//            message: Text(description),
+//            primaryButton: .default(
+//                            Text("NON, je dois réfléchir un peu."),
+//                            action: abandoner
+//                        ),
+//            secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
+//                supprimerVraimentItems(positions: jeuIndices)
+//            })
+//            )
     }
 
 //    .alert(isPresented: $alerteAffichée) {
@@ -161,15 +166,75 @@ struct ListeItem: View {
       
       
   }
+    
+    
+    
+    var barreMenuNavigation: some View {
+        HStack {
+            Spacer()
+            Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.circle.fill"   )
+                .hoverEffect()
+                .scaleEffect(1.5)
+//                    .symbolRenderingMode(.hierarchical)
+                .symbolRenderingMode(.multicolor)
+                .saturation(1)
 
+            }
+            Spacer()
+            Spacer()
+            Button(role: .destructive, action: ajouterItem)
+                { Label("Ajouter un Item", systemImage: "plus")}
+                .foregroundColor(.red).opacity(0.5)
+//              Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
+            Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}.opacity(0.7)
+            }
+        }
+
+    
+    /// Fournit une Alerte qui affiche une brève desciption de l''Item à supprimer
+    /// et demande la confirmation de sa suppression
+    /// - Parameter jeuIndices: le(s) rang(s) des éléments a supprimer, dans le FetchedResults du .onDelete utilisé
+    /// - Returns: une Alerte
+    func alerteSuppression(jeuIndices:IndexSet) ->  Alert {
+        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+        
+        let titre = (jeuIndices.map {items[$0].titre}.first ?? "")!
+
+        var description:String=""
+        
+        //TODO: Si certitude d'avoir un jeu de taille 1, pas vraiment la peine de parcourir le jeu
+        jeuIndices.forEach {
+            let item = items[$0]
+            description = item.description
+            }
+
+        return Alert(
+            title: Text("Suppression de l'item ") + Text("'\(titre)'").foregroundColor(.accentColor),
+            message: Text(description),
+            primaryButton: .default(
+                            Text("NON, je dois réfléchir un peu."),
+                            action: abandoner
+                        ),
+            secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
+                supprimerVraimentItems(positions: jeuIndices)
+            })
+            )
+    }
+    
+    
+
+    
+    
+    
+    
     private func abandoner() {}
-    private func accepter(positions: IndexSet) {}
+//    private func accepter(positions: IndexSet) {}
 
   
     private func ajouterItem() {
         withAnimation {
           Item.creer(contexte:viewContext)
-            }
+          }
         }
     
     private func ajouterGroupeItem() {
@@ -179,16 +244,16 @@ struct ListeItem: View {
         }
 
     
-    private func RallierGroupe() {
-        withAnimation {
-//            Groupe.rallier(<#T##self: Groupe##Groupe#>)(contexte:viewContext)
-            }
-        }
+//    private func RallierGroupe() {
+//        withAnimation {
+////            Groupe.rallier(<#T##self: Groupe##Groupe#>)(contexte:viewContext)
+//            }
+//        }
 
     
     private func proposerSuppressionItems(positions: IndexSet) {
         print("🔘 Proposition de suppression de :", positions.map { items[$0].titre ?? ""} )
-        itemsEnCourDeSuppression = positions
+        Ξ.itemsEnCourDeSuppression = positions
         }
     
 
@@ -207,27 +272,27 @@ struct ListeItem: View {
         }
 
     // Pas utilisé
-    private func supprimerItems_(positions: IndexSet) {
-    //TODO: on pourrait utiliser  item.prepareForDeletion()
-        print("🔘 Suppression de :", positions.map { items[$0].titre ?? ""} )
-        alerteAffichée = true
-        positions.forEach {
-            let item = items[$0]
-            print("\t🔘 Suppression de :", item.titre ?? "" )
-            itemEnCours = item
-            alerteAffichée = true
-            print("🔘", $0 + 1, "° item du menu :", item.titre ?? ", valeur :", item.valeur , " , membre de" , item.groupes?.count ?? 0, "groupes")
-            print("🔘\t:" , item.groupes?.map { ($0 as! Groupe).nom ?? ""} ?? "" )
-
-            item.removeFromGroupes(item.groupes ?? [])
-//            item.delete()
-            persistance.sauverContexte()
-            }
-                    
-        withAnimation {
-            persistance.supprimerObjets(positions.map { items[$0] })
-            }
-        }
+//    private func supprimerItems_(positions: IndexSet) {
+//    //TODO: on pourrait utiliser  item.prepareForDeletion()
+//        print("🔘 Suppression de :", positions.map { items[$0].titre ?? ""} )
+//        viewModel.alerteAffichée = true
+//        positions.forEach {
+//            let item = items[$0]
+//            print("\t🔘 Suppression de :", item.titre ?? "" )
+//            viewModel.itemEnCours = item
+//            viewModel.alerteAffichée = true
+//            print("🔘", $0 + 1, "° item du menu :", item.titre ?? ", valeur :", item.valeur , " , membre de" , item.groupes?.count ?? 0, "groupes")
+//            print("🔘\t:" , item.groupes?.map { ($0 as! Groupe).nom ?? ""} ?? "" )
+//
+//            item.removeFromGroupes(item.groupes ?? [])
+////            item.delete()
+//            persistance.sauverContexte()
+//            }
+//
+//        withAnimation {
+//            persistance.supprimerObjets(positions.map { items[$0] })
+//            }
+//        }
 
     
     

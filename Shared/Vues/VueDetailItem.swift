@@ -16,73 +16,43 @@ struct VueDetailItem: View {
     @Environment(\.presentationMode)     var modePresentation
 
     @EnvironmentObject private var persistance: ControleurPersistance
-    @ObservedObject var item: Item
     
-    @State var itemMémoire = Item.Memoire(titre: "", valeur: 0,  longitude:0, latitude:0)
-    @Binding var itemsSupprimables: IndexSet? //SetIndex<Item>?
+//    @StateObject private var Ξ = ViewModel()
+    @StateObject private var Ξ:ViewModel // = ViewModel(item)
 
+    //:FIXME: Item incorporable au ViewModel ??
+//    @ObservedObject var item: Item
     
 
     //  @State ??? non car Property wrapper ne peut être appliqué a une propriété calculée
     var régionCarte: MKCoordinateRegion {
-      //
-      print("🟦 Région carto", item.latitude, item.longitude )
-      let coordonnées = CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)
-      // Dimension de la section à afficher en °
-      let section = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-      return MKCoordinateRegion(center: coordonnées, span: section)
+      MKCoordinateRegion(
+        center: CLLocationCoordinate2D(
+            latitude:  Ξ.item.latitude ,
+            longitude: Ξ.item.longitude),
+        span: MKCoordinateSpan(
+            latitudeDelta:  0.5,
+            longitudeDelta: 0.5)
+        )
       }
     
-//    @State var régionCarte_ = MKCoordinateRegion(
-//        center:  CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude),
-//        span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-//        )
-    
-    
-//    var régionCarto: MKCoordinateRegion {
-//      //
-//      print("🟦 map Région", item.latitude, item.longitude )
-//      let coordonnées = CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)
-//      // Dimension de la section à afficher en °
-//        let section = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-//      return MKCoordinateRegion(center: coordonnées, span: section)
-//      }
-
-    
-    
-    
-    @State private var selectedPlace: Lieu?
-
-//    @FocusState var isInputActive: Bool
 
     let formatDate: DateFormatter = {
-       let formateur = DateFormatter()
-          formateur.dateStyle = .long
-          formateur.locale    = Locale(identifier: "fr_FR") //FR-fr")
-
-      return formateur
+        let formateur = DateFormatter()
+            formateur.dateStyle = .long
+            formateur.locale    = Locale(identifier: "fr_FR") //FR-fr")
+     return formateur
     }()
-
-    
-//    var régionCarto: MKCoordinateRegion {
-//      //
-//      print("🟦 map Région", item.latitude, item.longitude )
-//      let coordonnées = CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)
-//      // Dimension de la section à afficher en °
-//        let section = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-//      return MKCoordinateRegion(center: coordonnées, span: section)
-//    }
-    
     
     
     
     
     
     var annotationCartographique: AnnotationGeographique {
-      return AnnotationGeographique(
+      AnnotationGeographique(
         libellé: "ici",
-        coordonnées: régionCarte.center, ////////////////
-        couleur: UIColor(item.coloris)
+        coordonnées: régionCarte.center,
+        couleur: UIColor(Ξ.item.coloris)
       )
     }
     
@@ -96,133 +66,30 @@ struct VueDetailItem: View {
       )
     }
     
-    
-    
-    
     var lieux = [Lieu]()
 
-    @State var feuilleAffectationGroupesPresentée = false
-    @State var feuilleModificationItemPresentée = false
-
-
+    init(_ unItem: Item) { _Ξ = StateObject(wrappedValue: ViewModel(unItem)) }
+    
     var body: some View {
-        let _ = assert(item.principal != nil, "❌ Item isolé")
-        VStack(alignment: .leading , spacing: 2) {
-            VStack(alignment: .leading , spacing: 2) { // (alignment: .leading , spacing: 2)
-
-//                Text("Identifiant :").foregroundColor(.secondary)
-//                + Text(" \(item.id?.uuidString ?? "❌")")
-                Etiquette("Identifiant", valeur: item.id?.uuidString ?? "❌")
-                Text("Crée le ").foregroundColor(.secondary)
-                + Text(" \( formatDate.string(from: item.horodatage )) ")
-                + Text(" à")
-                    .foregroundColor(.secondary)
-                + Text(" \(item.horodatage, style: .time)")
-                + Text(", par ")
-                    .foregroundColor(.secondary)
-                + Text(" \(item.createur ?? "inconnu")")
-                + Text(".")
-                    .foregroundColor(.secondary)
-
-                HStack {
-                    Text ("En mode :")
-                        .foregroundColor(.secondary)
-                    + Text(" \(item.mode.rawValue).  ")
-                    Text("Couleur : ")
-                        .foregroundColor(.secondary)
-                    Circle()
-                        .fill(item.coloris)
-                        .clipShape(Circle())
-                        .overlay( Circle()
-                            .strokeBorder(.primary, lineWidth: 0.5)
-                            )
-                        .frame(width: 20, height: 20)
-                    }
-                Text("Valeur :").foregroundColor(.secondary)
-                + Text("\(item.valeur)")
-               // + Text( item.valeur == valeurLocale ? "🆗" : "〰️")
-
-
-                }
-                .padding(.horizontal)
-            
-            VStack(alignment: .leading , spacing: 2) {
-                Etiquette("Principal", valeur: item.principal?.nom ?? "❌")
-
-                Text("Membre de")
-                    .foregroundColor(.secondary)
-                + Text(" \(item.lesGroupes.count) ")
-                + Text(" groupes")
-                    .foregroundColor(.secondary)
-                
-                    ForEach(Array(item.lesGroupes)) { groupe in Text("° \(groupe.nom ?? "..") ").padding(.horizontal) }
-                
-                }
-                .padding(.horizontal)
-            
-//            let _ = print ("🚩 comp",
-//                        annotationCartographique.coordonnées.longitude,
-//                        annotationCartographique.coordonnées.latitude,
-//
-//                       lieuCartographique.longitude,
-//                       lieuCartographique.latitude
-//                    )
-            Spacer()
-            let régionCarte_ = MKCoordinateRegion(
-                center:  CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
-                )
-            
-            VueCarte(
-                laRegion: régionCarte_,     //////////////:régionCarte, ///////////:
-                annotations: [lieuCartographique]
-                )
-
-             
-        }
-        .isHidden(item.isDeleted || item.isFault ? true : false)
-        .opacity(item.valide ? 1.0 : 0.1)
+        let _ = assert(Ξ.item.principal != nil, "❌ Item isolé")
+        description
+            .isHidden( (Ξ.item.isDeleted || Ξ.item.isFault) ? true : false  )
+            .opacity(Ξ.item.valide ? 1.0 : 0.1)
         
-        .sheet(isPresented: $feuilleModificationItemPresentée) {
+            .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
             
-            VueModifItem(item) { valeur in
+                VueModifItem( Ξ.item ) { valeur in
 //                print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION ITEM")
-                feuilleModificationItemPresentée = false
+                Ξ.feuilleModificationItemPresentée = false
                 }
-                .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+////////////////////:                .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
-        
-        
-        
         
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                
-                Spacer()
-
-                Button(action: { feuilleModificationItemPresentée.toggle() }) {
-//                  Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
-                    VStack {
-                        Image(systemName: "square.and.pencil")
-                        Text("Modifier").font(.caption)
-                        }
-                  }.buttonStyle(.borderedProminent)
-                
-                Button(role: .destructive, action: {  }) {
-                    VStack {
-                        Image(systemName: "trash")
-                        Text("Supprimer").font(.caption)
-                        }
-                  }.buttonStyle(.borderedProminent)
-
-                Spacer()
-
-                }
+            ToolbarItemGroup(placement: .navigationBarTrailing)
+            { barreMenu }
             }
 
-        
-        
-        
         
         
         .onAppear(perform: {
@@ -244,12 +111,125 @@ struct VueDetailItem: View {
             })
         
     }
+    
+    
+    
+    
+    
+    
+    //MARK: - Sous Vues -
+    
+    var description: some View {
+        VStack(alignment: .leading , spacing: 2) {
+            VStack(alignment: .leading , spacing: 2) { // (alignment: .leading , spacing: 2)
+
+                Text("Identifiant :").foregroundColor(.secondary)
+                + Text(" \(Ξ.item.id?.uuidString ?? "❌")")
+                Etiquette("Identifiant", valeur: Ξ.item.id?.uuidString ?? "❌")
+                Text("Crée le ").foregroundColor(.secondary)
+                + Text(" \( formatDate.string(from: Ξ.item.horodatage )) ")
+                + Text(" à")
+                    .foregroundColor(.secondary)
+                + Text(" \(Ξ.item.horodatage, style: .time)")
+                + Text(", par ")
+                    .foregroundColor(.secondary)
+                + Text(" \(Ξ.item.createur ?? "inconnu")")
+                + Text(".")
+                    .foregroundColor(.secondary)
+
+                HStack {
+                    Text ("En mode :")
+                        .foregroundColor(.secondary)
+                    + Text(" \(Ξ.item.mode.rawValue).  ")
+                    Text("Couleur : ")
+                        .foregroundColor(.secondary)
+                    Circle()
+                        .fill(Ξ.item.coloris)
+                        .clipShape(Circle())
+                        .overlay( Circle()
+                            .strokeBorder(.primary, lineWidth: 0.5)
+                            )
+                        .frame(width: 20, height: 20)
+                    }
+
+                Text("Valeur :").foregroundColor(.secondary)
+                + Text("\(Ξ.item.valeur)")
+//                + Text( item.valeur == valeurLocale ? "🆗" : "〰️")
 
 
+                }
+                .padding(.horizontal)
+            
+            VStack(alignment: .leading , spacing: 2) {
+                Etiquette("Principal", valeur: Ξ.item.principal?.nom ?? "❌")
 
+                Text("Membre de")
+                    .foregroundColor(.secondary)
+                + Text(" \(Ξ.item.lesGroupes.count ) ")
+                + Text(" groupes")
+                    .foregroundColor(.secondary)
+                
+                ForEach( Array(Ξ.item.lesGroupes) )
+                    { groupe in Text("° \(groupe.nom ?? "..") ").padding(.horizontal) }
+                
+                }
+                .padding(.horizontal)
+            
+
+            Spacer()
+
+            
+            VueCarte(
+                laRegion: MKCoordinateRegion(
+                    center:  CLLocationCoordinate2D(
+                        latitude:  Ξ.latitude ,  /////// $
+                        longitude: Ξ.longitude ),
+                    span: MKCoordinateSpan(
+                        latitudeDelta: 0.5,
+                        longitudeDelta: 0.5)
+                    ),
+                annotations: [lieuCartographique]
+                )
+            
+            VueCarte(
+                laRegion: régionCarte ,
+                annotations: [lieuCartographique]
+                )
+
+             
+        }
+        }
+
+    
+    var barreMenu: some View {
+        HStack {
+            Spacer()
+
+            Button(action: { Ξ.feuilleModificationItemPresentée.toggle() }) {
+                VStack {
+                    Image(systemName: "square.and.pencil")
+                    Text("Modifier").font(.caption)
+                    }
+              }.buttonStyle(.borderedProminent)
+
+            Button(role: .destructive, action: {  }) {
+                VStack {
+                    Image(systemName: "trash")
+                    Text("Supprimer").font(.caption)
+                    }
+              }.buttonStyle(.borderedProminent)
+
+            Spacer()
+            }
+        }
+
+    
+    
+    //MARK: - quelques fonctions -
+    
     private func rallierGroupes(_ groupes: Set<Groupe>) {
         withAnimation {
-            item.rallier(contexte:contexte, communauté: groupes )
+            Ξ.item.rallier(contexte:contexte, communauté: groupes )
             }
         persistance.sauverContexte("Groupe")
         }

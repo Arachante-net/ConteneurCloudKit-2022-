@@ -176,7 +176,7 @@ extension Groupe {
     
     
     var leNom:String {
-        get {nom ?? "..."}
+        get {nom ?? "␀"}
         set {nom = newValue}
         }
     

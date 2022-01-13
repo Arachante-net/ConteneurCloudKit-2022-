@@ -31,8 +31,8 @@ struct VueCarte: View {
 //                  "\t",
 //                  laRegion.span.latitudeDelta, laRegion.span.longitudeDelta, "...")
       
-      EtiquetteCoordonnees(latitude: laRegion.center.latitude, longitude: laRegion.center.longitude, font: .body)
-      EtiquetteCoordonnees(latitude: annotations.first?.latitude ?? 0, longitude: annotations.first?.longitude ?? 0, font: .body)
+      EtiquetteCoordonnees(prefix: "C ", latitude: laRegion.center.latitude, longitude: laRegion.center.longitude, font: .body)
+      EtiquetteCoordonnees(prefix: "P ", latitude: annotations.first?.latitude ?? 0, longitude: annotations.first?.longitude ?? 0, font: .body)
       ZStack {
           //=================================
           Map(coordinateRegion: $laRegion, annotationItems: annotations) { annotation in

@@ -216,7 +216,7 @@ extension Item {
         }
     
     var leTitre:String {
-        get {titre ?? "..."}
+        get {titre ?? "␀"}
         set {titre = newValue}
         }
     
@@ -295,7 +295,7 @@ extension Item {
             let coul = NSColor(self.coloris)
         #endif
             return AnnotationGeographique( // id = UUID(),
-                libellé:  self.titre ?? "...",
+                libellé:  self.titre ?? "␀",
                 coordonnées : self.coordonnées, //: CLLocationCoordinate2D
                 couleur : coul
                )
@@ -312,8 +312,8 @@ extension Item {
         #endif
             return Lieu(
                 id: UUID(),
-                libellé: self.titre ?? "...",
-                description: "...",
+                libellé: self.titre ?? "␀",
+                description: "␀",
                 latitude: self.latitude,
                 longitude: self.longitude
 //                coordonnées : self.coordonnées //: CLLocationCoordinate2D
@@ -324,7 +324,7 @@ extension Item {
     
     override public func prepareForDeletion() {
 //        super.prepareForDeletion()
-        print("🔘 Suppresion imminente de l'item ", titre ?? "...",
+        print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
               "délégué du groupe", principal?.nom,
               "membre de", groupes?.count, "autres groupes")
         }
