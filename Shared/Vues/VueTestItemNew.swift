@@ -11,7 +11,7 @@ import MapKit
 
 
 
-struct VueTestItem: View {
+struct VueTestItemNew: View {
     @Environment(\.managedObjectContext) var contexte
     @Environment(\.presentationMode)     var modePresentation
 
@@ -21,7 +21,7 @@ struct VueTestItem: View {
 //    @StateObject private var Ξ : ViewModel //(Item.bidon())
     
     @State var item : Item
-    @State var région : MKCoordinateRegion
+//    @State var région : MKCoordinateRegion
     
 
     
@@ -53,7 +53,7 @@ struct VueTestItem: View {
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
                 
-                    VueModifItemTest( item: item, région: $région ) { valeur in
+                    VueModifItemTestNew( item: item) { valeur in
     //                print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION ITEM")
                     Ξ.feuilleModificationItemPresentée = false
                     }
@@ -138,10 +138,8 @@ struct VueTestItem: View {
             Spacer()
 
 //            let _ = print("🌐 Appel de VueCarte avec longitudes :", Ξ.item.longitude, lieuDeEvenement.longitude )
-            VueCarteTest(
-                item : $item ,
-                laRegion: $région
-            )
+            VueCarteTestNew(
+                item : $item )
 
             }
         }

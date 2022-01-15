@@ -63,9 +63,9 @@ struct ListeItem: View {
         
         List {
         ForEach(items) { item in
-            NavigationLink( destination: VueDetailItem (
-                item//,
-//                itemsSupprimables: $Ξ.itemsEnCourDeSuppression
+            NavigationLink( destination: VueTestItem (
+                item: item ,
+                région: item.région
                 ))
             { Text(item.leTitre) }
             
@@ -73,7 +73,7 @@ struct ListeItem: View {
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
             
-            NavigationLink( destination: VueTestItem(item: itemDeTest, région: itemDeTest.région ) ) { Text("TEST") } // VueTestItem (Item.bidon()
+//            NavigationLink( destination: VueTestItem(item: itemDeTest, région: itemDeTest.région ) ) { Text("TEST") } // VueTestItem (Item.bidon()
       }
       .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("SOS") }}
       .navigationBarTitle(Text("Items"))

@@ -30,7 +30,7 @@ struct EtiquetteCoordonnees: View {
   var body: some View {
       
       HStack {
-          Text("Coordonnées \(prefix) : ")
+          Text(" \(prefix) : ") // Coordonnées
               .foregroundColor(.secondary)
           Text(chaineLatitude).padding(.horizontal)
           Text(" , ")

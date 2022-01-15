@@ -329,12 +329,18 @@ extension Item {
         }
     
     var région : MKCoordinateRegion {
-              MKCoordinateRegion(
+        get {
+            MKCoordinateRegion(
                 center: CLLocationCoordinate2D(
                     latitude:  latitude ,
                     longitude: longitude),
                 span : spanDefaut)
-              }
+            }
+        set {
+            latitude = newValue.center.latitude
+            longitude = newValue.center.longitude
+            }
+        }
         
     
     override public func prepareForDeletion() {

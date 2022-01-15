@@ -12,7 +12,7 @@ import MapKit
 
 /// Vue permettant d'éditer les propriétées d'un Item
 ///     VueModifItem(item) { valeur in ... code à éxecuter afin de retourner des infos à la vue appelante }
-struct VueModifItemTest: View {
+struct VueModifItemTestNew: View {
     
 //    @ObservedObject var item: Item
 //FIXME:  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
@@ -22,7 +22,7 @@ struct VueModifItemTest: View {
 //    @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
     @State var item:Item
-    @Binding var région : MKCoordinateRegion
+//    @Binding var région : MKCoordinateRegion
     let achevée: (Bool) -> Void
 
     @State var feuilleAffectationGroupesPresentée:Bool = false
@@ -92,8 +92,8 @@ struct VueModifItemTest: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteTest(item: $item, laRegion: $région)
-//            VueCarteTestNew(item: $item)
+//            VueCarteTest(item: $item, laRegion: $région)
+            VueCarteTestNew(item: $item)
 
             
 //            VueEditionCarte(
@@ -152,8 +152,8 @@ struct VueModifItemTest: View {
                 }
                 
                 Button(action: {
-                    item.longitude = région.center.longitude
-                    item.latitude  = région.center.latitude
+                    item.longitude = item.région.center.longitude
+                    item.latitude  = item.région.center.latitude
 
                    ////////////:
 //                    if !Ξ.locations.isEmpty {

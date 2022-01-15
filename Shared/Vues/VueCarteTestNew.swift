@@ -10,16 +10,16 @@ import SwiftUI
 import MapKit
 
 
-struct IdentifiablePlace: Identifiable {
-    let id: UUID
-    let location: CLLocationCoordinate2D
-    init(id: UUID = UUID(), lat: Double, long: Double) {
-        self.id = id
-        self.location = CLLocationCoordinate2D(
-            latitude: lat,
-            longitude: long)
-    }
-}
+//struct IdentifiablePlace: Identifiable {
+//    let id: UUID
+//    let location: CLLocationCoordinate2D
+//    init(id: UUID = UUID(), lat: Double, long: Double) {
+//        self.id = id
+//        self.location = CLLocationCoordinate2D(
+//            latitude: lat,
+//            longitude: long)
+//    }
+//}
 
 
 
@@ -32,11 +32,11 @@ struct IdentifiablePlace: Identifiable {
 ///annotations_: [lieuCartographique]
 ///)
 ///
-struct VueCarteTest: View {
+struct VueCarteTestNew: View {
     
 
   @Binding var item:Item
-  @Binding var laRegion: MKCoordinateRegion
+//  @Binding var laRegion: MKCoordinateRegion
 
 //  let annotations: [Lieu]
 //  @State var annotations: [Lieu]
@@ -67,8 +67,8 @@ struct VueCarteTest: View {
     
   var body: some View {
       let _ = print("🌐 Appel de VueCarte sur une région centrée en ",
-                  laRegion.center.latitude,
-                  laRegion.center.longitude)
+                    item.région.center.latitude,
+                    item.région.center.longitude)
       
 //      let place = IdentifiablePlace(lat: item.latitude, long: item.longitude)
 //      lazy var place = IdentifiablePlace(lat: item.latitude, long: item.longitude)
@@ -103,13 +103,13 @@ struct VueCarteTest: View {
 //              }
 //          }
           
-      EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRegion.center.latitude,         longitude: laRegion.center.longitude,         font: .caption).padding(.leading)
+      EtiquetteCoordonnees(prefix: "centre carte ", latitude: item.région.center.latitude,         longitude: item.région.center.longitude,         font: .caption).padding(.leading)
       EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
       ZStack {
-          Map( coordinateRegion: $laRegion, annotationItems: [yPlace()])   { place in
+          Map( coordinateRegion: $item.région, annotationItems: [yPlace()])   { place in
               MapPin(
                 coordinate: yPlace().location,
-                tint: laRegion.center == place.location ? Color.red : Color.clear)
+                tint: item.région.center == place.location ? Color.red : Color.clear)
             }
 //          Map( coordinateRegion: $item.région, annotationItems: [yPlace()])   { place in
 //              MapPin(
@@ -119,8 +119,8 @@ struct VueCarteTest: View {
           
           Circle()
               .fill(.red)
-              .opacity(laRegion.center == yPlace().location ? 0.2 : 0.7)
-              .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
+              .opacity(item.région.center == yPlace().location ? 0.2 : 0.7)
+              .frame(width: 30, height: 30).scaleEffect(item.région.center == yPlace().location ? 0.5 : 1)
           }
           .onAppear()    {print("🌐 Affichage carte Item")}
           .onDisappear() {print("🔺 Disparition carte Item")}

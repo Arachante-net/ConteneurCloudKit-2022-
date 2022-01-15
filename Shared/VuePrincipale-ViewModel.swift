@@ -144,3 +144,10 @@ extension VueTestItem {
         @Published var feuilleModificationItemPresentée   = false
         }
 }
+
+extension VueTestItemNew {
+    @MainActor class ViewModel: ObservableObject {
+
+        @Published var feuilleModificationItemPresentée   = false
+        }
+}
