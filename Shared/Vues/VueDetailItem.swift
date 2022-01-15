@@ -48,27 +48,41 @@ struct VueDetailItem: View {
     
     
     
-    var annotationCartographique: AnnotationGeographique {
-      AnnotationGeographique(
-        libellé: "ici",
-        coordonnées: régionCarte.center,
-        couleur: UIColor(Ξ.item.coloris)
-      )
-    }
+//    var annotationCartographique: AnnotationGeographique {
+//      AnnotationGeographique(
+//        libellé: "ici",
+//        coordonnées: régionCarte.center,
+//        couleur: UIColor(Ξ.item.coloris)
+//      )
+//    }
     
-    var lieuCartographique: Lieu {
-      return Lieu(
-        id: UUID(),  // on peut avoir à le modifier
-        libellé: "ICI",
-        description: "...",
-        latitude: régionCarte.center.latitude,
-        longitude: régionCarte.center.longitude
-      )
-    }
+    @State var lieuDeEvenement: Lieu
     
-    var lieux = [Lieu]()
+//    var lieuCartographique: Lieu {
+//      return Lieu(
+//        id: UUID(),  // on peut avoir à le modifier
+//        libellé: "ICI",
+//        description: "...",
+//        latitude: régionCarte.center.latitude,
+//        longitude: régionCarte.center.longitude
+//      )
+//    }
+    
+//    var lieux = [Lieu]()
 
-    init(_ unItem: Item) { _Ξ = StateObject(wrappedValue: ViewModel(unItem)) }
+    init(_ unItem: Item) {
+        _Ξ = StateObject(wrappedValue: ViewModel(unItem))
+        _lieuDeEvenement = State(initialValue: Lieu(
+            id: UUID(),  // on peut avoir à le modifier
+            libellé: "ICI",
+            description: "...",
+            latitude: unItem.latitude,
+            longitude: unItem.longitude
+          ))
+        print ("🌐 Init Vue Detail avec longitudes :", Ξ.item.longitude, lieuDeEvenement.longitude )
+
+        }
+    
     
     var body: some View {
         let _ = assert(Ξ.item.principal != nil, "❌ Item isolé")
@@ -178,22 +192,24 @@ struct VueDetailItem: View {
 
             Spacer()
 
-            
+            let _ = print("🌐 Appel de VueCarte avec longitudes :", Ξ.item.longitude, lieuDeEvenement.longitude )
             VueCarte(
+                item : Ξ.item,
                 laRegion: MKCoordinateRegion(
                     center:  CLLocationCoordinate2D(
-                        latitude:  Ξ.latitude ,  /////// $
-                        longitude: Ξ.longitude ),
+                        latitude:  Ξ.item.latitude, //Ξ.latitude ,  /////// $
+                        longitude: Ξ.item.longitude), //Ξ.longitude ),
                     span: MKCoordinateSpan(
                         latitudeDelta: 0.5,
                         longitudeDelta: 0.5)
                     ),
-                annotations: [lieuCartographique]
+                annotations: [lieuDeEvenement]
                 )
             
             VueCarte(
+                item : Ξ.item,
                 laRegion: régionCarte ,
-                annotations: [lieuCartographique]
+                annotations: [lieuDeEvenement]
                 )
 
              

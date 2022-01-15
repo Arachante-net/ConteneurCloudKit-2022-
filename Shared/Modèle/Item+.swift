@@ -76,10 +76,10 @@ extension Item {
     
     static func bidon() -> Item {
         let nouvelItem = Item()
-            nouvelItem.valide           = false
+            nouvelItem.valide           = true
             nouvelItem.timestamp        = Date(timeIntervalSince1970:0)
             nouvelItem.titre            = "␀"
-            nouvelItem.id               = nil //UUID()
+            nouvelItem.id               = UUID()
             nouvelItem.valeur           = 0
             nouvelItem.latitude         = 0
             nouvelItem.longitude        = 0
@@ -321,6 +321,21 @@ extension Item {
                 )
             }
         }
+    
+    var spanDefaut : MKCoordinateSpan {
+        MKCoordinateSpan(
+            latitudeDelta:  0.5,
+            longitudeDelta: 0.5)
+        }
+    
+    var région : MKCoordinateRegion {
+              MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude:  latitude ,
+                    longitude: longitude),
+                span : spanDefaut)
+              }
+        
     
     override public func prepareForDeletion() {
 //        super.prepareForDeletion()

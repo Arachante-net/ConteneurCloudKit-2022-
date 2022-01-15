@@ -71,6 +71,29 @@ extension VueModifItem {
         }
     }
 
+extension VueModifItemTest {
+    @MainActor class ViewModel: ObservableObject {
+        
+        init (_ unItem: Item) { item = unItem }
+        @Published var item : Item
+        
+        @Published var feuilleAffectationGroupesPresentée = false
+        /// La région géographique entourant l'item en cours d'édition
+        @Published  var régionItem = MKCoordinateRegion (
+            center: CLLocationCoordinate2D (
+                latitude: Lieu.exemple.latitude,
+                longitude: Lieu.exemple.longitude),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.5,
+                longitudeDelta: 0.5)
+            )
+        /// Les lieux éditables (ici on en utilise qu'un seul)
+        @Published  var locations = [Lieu]()
+        /// Le lieu en cours d'édition
+        @Published  var leLieuÉdité: Lieu?
+        }
+    }
+
 extension VueEditionLieu {
     @MainActor class ViewModel: ObservableObject {
         init (_ lieuAEditer: Lieu) {
@@ -106,3 +129,18 @@ extension VueEditionCarte {
 
         }
     }
+
+extension VueTestItem {
+    @MainActor class ViewModel: ObservableObject {
+//        init (_ unItem: Item) {
+//            item = unItem
+//            latitude = unItem.latitude
+//            longitude = unItem.longitude
+//        }
+        
+//        @Published var latitude: Double
+//        @Published var longitude: Double
+//        @Published var item : Item
+        @Published var feuilleModificationItemPresentée   = false
+        }
+}

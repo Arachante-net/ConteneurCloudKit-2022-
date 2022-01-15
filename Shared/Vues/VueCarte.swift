@@ -21,21 +21,35 @@ import MapKit
 ///
 struct VueCarte: View {
     
-  @State var laRegion: MKCoordinateRegion
-  let annotations: [Lieu]
+  @State var item:Item
+  @State var laRegion: MKCoordinateRegion 
+//  let annotations: [Lieu]
+  @State var annotations: [Lieu]
+
 
     
   var body: some View {
-//      let _ = print("🟦 Région",
-//                  laRegion.center.latitude,    laRegion.center.longitude,
-//                  "\t",
-//                  laRegion.span.latitudeDelta, laRegion.span.longitudeDelta, "...")
+      let _ = print("🌐 Appel de VueCarte sur une région centrée en ",
+                  laRegion.center.latitude,
+                  laRegion.center.longitude)
       
-      EtiquetteCoordonnees(prefix: "C ", latitude: laRegion.center.latitude, longitude: laRegion.center.longitude, font: .body)
-      EtiquetteCoordonnees(prefix: "P ", latitude: annotations.first?.latitude ?? 0, longitude: annotations.first?.longitude ?? 0, font: .body)
+      EtiquetteCoordonnees(prefix: "c   ", latitude: laRegion.center.latitude,         longitude: laRegion.center.longitude,         font: .body)
+      EtiquetteCoordonnees(prefix: "a   ", latitude: annotations.first?.latitude ?? 0, longitude: annotations.first?.longitude ?? 0, font: .body)
+      EtiquetteCoordonnees(prefix: "I ! ", latitude: item.latitude,                    longitude: item.longitude,                    font: .title)
       ZStack {
           //=================================
-          Map(coordinateRegion: $laRegion, annotationItems: annotations) { annotation in
+          Map(
+            coordinateRegion: $laRegion,
+//            coordinateRegion: MKCoordinateRegion(
+//                    center: CLLocationCoordinate2D(
+//                        latitude:  item.latitude,
+//                        longitude: item.longitude),
+//                    span: MKCoordinateSpan(
+//                        latitudeDelta: 0.5,
+//                        longitudeDelta: 0.5)
+//                    ),
+            
+            annotationItems: annotations) { annotation in
               MapAnnotation(coordinate: annotation.coordonnées) {
                   RoundedRectangle(cornerRadius: 7.0)
                       .stroke(.red, lineWidth: 4.0)
@@ -43,6 +57,7 @@ struct VueCarte: View {
                       .frame(width: 30, height: 30)
                   }
           }//.edgesIgnoringSafeArea(.all)
+//          .onChange(of: $laRegion) {n in print("🌐")}
           
           Circle()
               .background(Color(.blue))
@@ -52,7 +67,7 @@ struct VueCarte: View {
           
               
         }
-          .onAppear()    {print("🔺 Affichage carte Item")}
+          .onAppear()    {print("🌐 Affichage carte Item")}
           .onDisappear() {print("🔺 Disparition carte Item")}
         }
     }

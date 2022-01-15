@@ -53,7 +53,12 @@ struct ListeItem: View {
   @Binding var appError: ErrorType? // = nil
 
 
+    
   var body: some View {
+      
+      let itemDeTest = items.first!
+//Item.bidon() //items.first!
+
     NavigationView {
         
         List {
@@ -67,6 +72,8 @@ struct ListeItem: View {
             .badge(Int(item.valeur))
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
+            
+            NavigationLink( destination: VueTestItem(item: itemDeTest, région: itemDeTest.région ) ) { Text("TEST") } // VueTestItem (Item.bidon()
       }
       .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("SOS") }}
       .navigationBarTitle(Text("Items"))

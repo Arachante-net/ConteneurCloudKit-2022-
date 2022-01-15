@@ -53,16 +53,16 @@ struct VueEditionCarte: View {
 //        self.sectionGéographique = sectionGéographique
 //        self.lesLieux = lesLieux
 //        self.lieuEnCoursEdition = lieuEnCoursEdition
-        
+        print("Init VueEditionCarte avec longitudes :", Ξ.item.longitude,  Ξ.sectionGéographique.center.longitude  )
         }
     
     
     var body: some View {
 //            NavigationView {
-        Text("= \(Ξ.lesLieux.last?.latitude ?? 0) - \(Ξ.lesLieux.last?.longitude ?? 0)       \(Ξ.sectionGéographique.center.latitude) - \(Ξ.sectionGéographique.center.longitude)").font(.caption)
+        Text("= \(Ξ.lesLieux.last?.latitude ?? 0) - \(Ξ.lesLieux.last?.longitude ?? 0)       Section \(Ξ.sectionGéographique.center.latitude) - \(Ξ.sectionGéographique.center.longitude)").font(.caption)
             ZStack {
-                let _ = print("🚩🚩 édition carte avec", Ξ.lesLieux.count, "marqueurs")
-                let _ = print("🚩🚩 dernier", Ξ.lesLieux.last ?? "/")
+                let _ = print("🌐 édition carte avec", Ξ.lesLieux.count, "marqueurs, sur la région centrée en", Ξ.sectionGéographique.center.latitude , Ξ.sectionGéographique.center.longitude)
+                let _ = print("🌐 dernier", Ξ.lesLieux.last ?? "/")
 
                 Map(coordinateRegion: $Ξ.sectionGéographique, annotationItems: $Ξ.lesLieux) { location in
                     
@@ -96,7 +96,7 @@ struct VueEditionCarte: View {
                     HStack {
                         Spacer()
                         Button {
-                            // positionnement du lieu de l'item
+                            // création d'un Lieu positionné au centre de la région géographique affichée
                             let nouveauLieu = Lieu(
                                 id: UUID(),
                                 libellé: "Nouveau Lieu",
@@ -108,6 +108,8 @@ struct VueEditionCarte: View {
                             
                             Ξ.item.longitude = nouveauLieu.longitude
                             Ξ.item.latitude  = nouveauLieu.latitude
+                            
+                            let _ = print("🌐 Nouveau lieu :", nouveauLieu.longitude, nouveauLieu.latitude)
 //
 
                         } label: {
