@@ -33,45 +33,45 @@ extension ListeItem {
       }
     }
     
-extension VueDetailItem {
-    @MainActor class ViewModel: ObservableObject {
-        init (_ unItem: Item) {
-            item = unItem
-            latitude = unItem.latitude
-            longitude = unItem.longitude
-        }
-        
-        @Published var latitude: Double
-        @Published var longitude: Double
-        @Published var item : Item
-        @Published var feuilleModificationItemPresentée   = false
-        }
-    }
+//extension VueDetailItem-OLD {
+//    @MainActor class ViewModel: ObservableObject {
+//        init (_ unItem: Item) {
+//            item = unItem
+//            latitude = unItem.latitude
+//            longitude = unItem.longitude
+//        }
+//
+//        @Published var latitude: Double
+//        @Published var longitude: Double
+//        @Published var item : Item
+//        @Published var feuilleModificationItemPresentée   = false
+//        }
+//    }
+
+//extension VueModifItemOLD {
+//    @MainActor class ViewModel: ObservableObject {
+//        
+//        init (_ unItem: Item) { item = unItem }
+//        @Published var item : Item
+//        
+//        @Published var feuilleAffectationGroupesPresentée = false
+//        /// La région géographique entourant l'item en cours d'édition
+//        @Published  var régionItem = MKCoordinateRegion (
+//            center: CLLocationCoordinate2D (
+//                latitude: Lieu.exemple.latitude,
+//                longitude: Lieu.exemple.longitude),
+//            span: MKCoordinateSpan(
+//                latitudeDelta: 0.5,
+//                longitudeDelta: 0.5)
+//            )
+//        /// Les lieux éditables (ici on en utilise qu'un seul)
+//        @Published  var locations = [Lieu]()
+//        /// Le lieu en cours d'édition
+//        @Published  var leLieuÉdité: Lieu?
+//        }
+//    }
 
 extension VueModifItem {
-    @MainActor class ViewModel: ObservableObject {
-        
-        init (_ unItem: Item) { item = unItem }
-        @Published var item : Item
-        
-        @Published var feuilleAffectationGroupesPresentée = false
-        /// La région géographique entourant l'item en cours d'édition
-        @Published  var régionItem = MKCoordinateRegion (
-            center: CLLocationCoordinate2D (
-                latitude: Lieu.exemple.latitude,
-                longitude: Lieu.exemple.longitude),
-            span: MKCoordinateSpan(
-                latitudeDelta: 0.5,
-                longitudeDelta: 0.5)
-            )
-        /// Les lieux éditables (ici on en utilise qu'un seul)
-        @Published  var locations = [Lieu]()
-        /// Le lieu en cours d'édition
-        @Published  var leLieuÉdité: Lieu?
-        }
-    }
-
-extension VueModifItemTest {
     @MainActor class ViewModel: ObservableObject {
         
         init (_ unItem: Item) { item = unItem }
@@ -108,29 +108,29 @@ extension VueEditionLieu {
     
     }
 
-extension VueEditionCarte {
-    @MainActor class ViewModel: ObservableObject {
-        init (_ unItem: Item,
-              sectionGéographique : MKCoordinateRegion,
-              lesLieux : [Lieu],
-              lieuEnCoursEdition : Lieu?
-            ) {
-            item = unItem
-            self.sectionGéographique = sectionGéographique
-            self.lesLieux = lesLieux
-            self.lieuEnCoursEdition = lieuEnCoursEdition
-        }
-        
-        @Published var item : Item
-        
-        @Published  var sectionGéographique : MKCoordinateRegion
-        @Published  var lesLieux : [Lieu]
-        @Published  var lieuEnCoursEdition : Lieu?
+//extension VueEditionCarte {
+//    @MainActor class ViewModel: ObservableObject {
+//        init (_ unItem: Item,
+//              sectionGéographique : MKCoordinateRegion,
+//              lesLieux : [Lieu],
+//              lieuEnCoursEdition : Lieu?
+//            ) {
+//            item = unItem
+//            self.sectionGéographique = sectionGéographique
+//            self.lesLieux = lesLieux
+//            self.lieuEnCoursEdition = lieuEnCoursEdition
+//        }
+//        
+//        @Published var item : Item
+//        
+//        @Published  var sectionGéographique : MKCoordinateRegion
+//        @Published  var lesLieux : [Lieu]
+//        @Published  var lieuEnCoursEdition : Lieu?
+//
+//        }
+//    }
 
-        }
-    }
-
-extension VueTestItem {
+extension VueDetailItem {
     @MainActor class ViewModel: ObservableObject {
 //        init (_ unItem: Item) {
 //            item = unItem
@@ -145,9 +145,9 @@ extension VueTestItem {
         }
 }
 
-extension VueTestItemNew {
-    @MainActor class ViewModel: ObservableObject {
-
-        @Published var feuilleModificationItemPresentée   = false
-        }
-}
+//extension VueTestItemNew {
+//    @MainActor class ViewModel: ObservableObject {
+//
+//        @Published var feuilleModificationItemPresentée   = false
+//        }
+//}

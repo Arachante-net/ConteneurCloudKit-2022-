@@ -15,69 +15,53 @@ import CoreData
 struct VueDetailGroupe: View {
     
     @Environment(\.managedObjectContext) var contexte
-    
-//    @ObservedObject var chronomètre = Horloge()
-    
+        
     @EnvironmentObject private var persistance : ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
     
-    // Pas utilisé, cf aussi init() //////////////////////////
-//    @FetchRequest private var items:   FetchedResults<Item>
 
-//    var groupe: Groupe
+//    var groupe: Groupe  OU @State ??
     @ObservedObject var groupe:    Groupe
-    @ObservedObject var item: Item
+//    @ObservedObject var item: Item
 //    @State var principal: Item
 
 
 
     @State var collaboration = false
     @State var nom           = ""
-//    @State var rafraichir    = false
-            
-//    @State var valeurLocale:    Int    = 0
-//
-//    var chaineDécorée:AttributedString {
-//        var nom = AttributedString("Michel")
-//        var boite = AttributeContainer()
-//            boite.foregroundColor = .blue
-//            boite.underlineStyle  = .double
-//            boite.underlineColor  = .red
-//        nom.mergeAttributes(boite)
-//        return "Bonjour " + nom
-//       }
+
    
 
-  var régionGéographique: MKCoordinateRegion {
-    let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
+    var régionGéographique: MKCoordinateRegion {
+        let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
 
-    guard let itemQuelconque = groupe.items?.anyObject() as? Item else {
-        return MKCoordinateRegion(center: CLLocationCoordinate2D(), span: span)
+        guard let itemQuelconque = groupe.items?.anyObject() as? Item else {
+            return MKCoordinateRegion(center: CLLocationCoordinate2D(), span: span)
+            }
+
+        let coordonnées = CLLocationCoordinate2D(latitude: itemQuelconque.latitude, longitude: itemQuelconque.longitude)
+        return MKCoordinateRegion(center: coordonnées, span: span)
         }
 
-    let coordonnées = CLLocationCoordinate2D(latitude: itemQuelconque.latitude, longitude: itemQuelconque.longitude)
-    return MKCoordinateRegion(center: coordonnées, span: span)
-  }
+    var annotationsCartographiques: [AnnotationGeographique] {
+        guard let items = groupe.items else {
+          return []
+          }
 
-  var annotationsCartographiques: [AnnotationGeographique] {
-    guard let items = groupe.items else {
-      return []
-      }
+        return items.compactMap {
+          guard let item = $0 as? Item else {
+            return nil
+            }
 
-    return items.compactMap {
-      guard let item = $0 as? Item else {
-        return nil
+          return AnnotationGeographique(
+            libellé: item.titre ?? "",
+            coordonnées: CLLocationCoordinate2D(
+                latitude: item.latitude,
+                longitude: item.longitude),
+            couleur: UIColor(item.coloris)
+            )
+          }
         }
-
-      return AnnotationGeographique(
-        libellé: item.titre ?? "",
-        coordonnées: CLLocationCoordinate2D(
-            latitude: item.latitude,
-            longitude: item.longitude),
-        couleur: UIColor(item.coloris)
-      )
-    }
-  }
     
 
 
@@ -104,9 +88,7 @@ struct VueDetailGroupe: View {
     var body: some View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
     VStack(alignment: .leading, spacing: 2) {
-//        Text("\(rafraichir.description)").font(.system(size: 1)).hidden()
         VStack(alignment: .leading, spacing: 2)  {
-//            Etiquette( "Item principal", valeur: groupe.principal?.titre).padding(.leading)
             Etiquette( "Item principal", valeur : (groupe.principal != nil) ? groupe.principal!.titre ?? "..." : "❌").padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
             Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
@@ -130,50 +112,43 @@ struct VueDetailGroupe: View {
 ////                onDecrement: { decrementer(min: 0) }
 //                .padding(.leading)
         
-        
-        
         VueCartographique(
             région: groupe.régionEnglobante,
             annotations: groupe.lesAnnotations_)
-        }
-    .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
-    .opacity(groupe.valide ? 1 : 0.1)
-    .disabled(groupe.valide ? false : true)
         
-    .onAppear() {
-//        valeurLocale    = Int(groupe.principal?.valeur ?? 0)
         }
+        .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
+        .opacity(groupe.valide ? 1 : 0.1)
+        .disabled(groupe.valide ? false : true)
+        
+        .onAppear() {}
 
-    .sheet(isPresented: $feuilleModificationPresentée) {
-        Text("Edition")
+        .sheet(isPresented: $feuilleModificationPresentée) {
+            Text("Edition")
+    //        let t = self.principal
+    //        VueModifGroupe(groupe: groupe, principal: groupe.lePrincipal) { valeur in
+            VueModifGroupe(groupe) { valeur in
+    //        VueModifGroupe(groupe: groupe, principal: groupe.principal) { valeur in
+                            feuilleModificationPresentée = false
+                            }
+                .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+            
+    //        VueModifGroupe(groupe) { valeur in
+    ////            print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION GROUPE")
+    //            feuilleModificationPresentée = false
+    //            }
+    //            .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+        }
+        .transition(.move(edge: .top))
         
-        
-//        let t = self.principal
-        VueModifGroupe(groupe: groupe, principal: groupe.lePrincipal) { valeur in
-//        VueModifGroupe(groupe: groupe, principal: groupe.principal) { valeur in
-                        feuilleModificationPresentée = false
-//                        rafraichir.toggle()
-//                        ListeGroupe.rafraichir.toggle()
-                        }
-            .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-        
-//        VueModifGroupe(groupe) { valeur in
-////            print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION GROUPE")
-//            feuilleModificationPresentée = false
-//            }
-//            .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-    }
-    .transition(.move(edge: .top))
-        
-    .toolbar {
-        ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: { feuilleModificationPresentée.toggle() }) {
-                Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: { feuilleModificationPresentée.toggle() }) {
+                    Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
+                    }
                 }
-
             }
-        }
-      .navigationBarTitle(Text(groupe.nom ?? ""))
+          .navigationBarTitle(Text(groupe.nom ?? ""))
     }
         
     

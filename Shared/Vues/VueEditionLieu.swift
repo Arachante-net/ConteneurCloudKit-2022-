@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-/// Editer (modifier) les informations décrivant un lieu géographique (mais pas ses coordonnées)
+/// Editer (modifier) les informations d'une annotation décrivant un lieu géographique (mais pas ses coordonnées)
 /// - Parameters:
 ///   - lieu: le Lieu à éditer
 ///   - informationARetourner: Une Closure fournissant les informations retournée par la Vue

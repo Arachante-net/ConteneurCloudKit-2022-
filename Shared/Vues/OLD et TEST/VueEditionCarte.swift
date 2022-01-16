@@ -53,7 +53,7 @@ struct VueEditionCarte: View {
 //        self.sectionGéographique = sectionGéographique
 //        self.lesLieux = lesLieux
 //        self.lieuEnCoursEdition = lieuEnCoursEdition
-        print("Init VueEditionCarte avec longitudes :", Ξ.item.longitude,  Ξ.sectionGéographique.center.longitude  )
+        print("🌐 Init VueEditionCarte avec longitudes :", Ξ.item.longitude,  Ξ.sectionGéographique.center.longitude  )
         }
     
     
@@ -91,6 +91,27 @@ struct VueEditionCarte: View {
                     .fill(.blue)
                     .opacity(0.3)
                     .frame(width: 32, height: 32)
+                
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button {
+                            // Survoler la position de l'utilisateur
+//
+
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                        }
+                        .buttonStyle(.borderless)
+                        .padding()
+                        .background(.black.opacity(0.75))
+                        .foregroundColor(.white)
+                        .font(.title)
+                        .clipShape(Circle())
+                        .padding(.trailing)
+                    }
+                }
                 VStack {
                     Spacer()
                     HStack {
@@ -98,9 +119,9 @@ struct VueEditionCarte: View {
                         Button {
                             // création d'un Lieu positionné au centre de la région géographique affichée
                             let nouveauLieu = Lieu(
-                                id: UUID(),
-                                libellé: "Nouveau Lieu",
-                                description: "Ceci est un lieu qu'il est bien",
+//                                id: UUID(),
+//                                libellé: "Nouveau Lieu",
+//                                description: "Ceci est un lieu qu'il est bien",
                                 latitude:  Ξ.sectionGéographique.center.latitude,
                                 longitude: Ξ.sectionGéographique.center.longitude)
                             

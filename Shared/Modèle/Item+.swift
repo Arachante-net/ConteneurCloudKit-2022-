@@ -311,9 +311,9 @@ extension Item {
             let coul = NSColor(self.coloris)
         #endif
             return Lieu(
-                id: UUID(),
-                libellé: self.titre ?? "␀",
-                description: "␀",
+//                id: UUID(),
+//                libellé: self.titre ?? "␀",
+//                description: "␀",
                 latitude: self.latitude,
                 longitude: self.longitude
 //                coordonnées : self.coordonnées //: CLLocationCoordinate2D

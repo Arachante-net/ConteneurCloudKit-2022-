@@ -12,21 +12,15 @@ import MapKit
 
 /// Vue permettant d'éditer les propriétées d'un Item
 ///     VueModifItem(item) { valeur in ... code à éxecuter afin de retourner des infos à la vue appelante }
-struct VueModifItemTest: View {
+struct VueModifItemOLD: View {
     
 //    @ObservedObject var item: Item
 //FIXME:  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
 //FIXME: c'est quoi un  @StateObject  ?
     
-     
-//    @StateObject private var Ξ:ViewModel // = ViewModel(item)
-    
-    @State var item:Item
-    @Binding var région : MKCoordinateRegion
     let achevée: (Bool) -> Void
-
-    @State var feuilleAffectationGroupesPresentée:Bool = false
-
+     
+    @StateObject private var Ξ:ViewModel // = ViewModel(item)
 
     @Environment(\.managedObjectContext) var contexte
     @Environment(\.presentationMode)     var modePresentation
@@ -40,15 +34,14 @@ struct VueModifItemTest: View {
     
 
     
-//    init(_ unItem: Item, région:MKCoordinateRegion, onSave: @escaping (Bool) -> Void ) {
-////        _item = State(initialValue: unItem) /////:
-////        item = unItem /////////:
-////        Ξ.item =  unItem
-//        _Ξ = StateObject(wrappedValue: ViewModel(unItem))
-//        self.achevée = onSave
-//        _région = Binding(projectedValue: unItem.région) //région
-////        print("🌐 Init de VueModifItem avec longitudes", Ξ.item.longitude,unItem.longitude )
-//        }
+    init(_ unItem: Item, onSave: @escaping (Bool) -> Void ) {
+//        _item = State(initialValue: unItem) /////:
+//        item = unItem /////////:
+//        Ξ.item =  unItem
+        _Ξ = StateObject(wrappedValue: ViewModel(unItem))
+        self.achevée = onSave
+        print("🌐 Init de VueModifItem avec longitudes", Ξ.item.longitude,unItem.longitude )
+        }
 
 
     var body: some View {
@@ -58,7 +51,7 @@ struct VueModifItemTest: View {
                 VStack { // (alignment: .leading , spacing: 2)
                     
                     TextField("Titre carte :",
-                              text: $item.leTitre  //,
+                              text: $Ξ.item.leTitre  //,
 //                              format: .name(style: .medium)
                               )
                         .textFieldStyle(.roundedBorder)
@@ -73,17 +66,17 @@ struct VueModifItemTest: View {
                                 }
                             }
 
-                    Stepper("\(item.valeur) points", value: $item.valeur, in: 0...10, step: 1)
+                    Stepper("\(Ξ.item.valeur) points", value: $Ξ.item.valeur, in: 0...10, step: 1)
                         .padding(.horizontal)
                     
-                    Text("item.valeur : \(item.valeur) ") //  valeurLocale : \(valeurLocale)")
+                    Text("item.valeur : \(Ξ.item.valeur) ") //  valeurLocale : \(valeurLocale)")
 
-                    Toggle("Valide", isOn: $item.valide)
+                    Toggle("Valide", isOn: $Ξ.item.valide)
                     HStack {
-                        ColorPicker("Couleur", selection: $item.coloris, supportsOpacity: false)
+                        ColorPicker("Couleur", selection: $Ξ.item.coloris, supportsOpacity: false)
                         }
                         .frame(maxWidth: .infinity , maxHeight: 30)
-                        .background(item.coloris)
+                        .background(Ξ.item.coloris)
 
                     }
                     .border(.secondary)
@@ -92,39 +85,35 @@ struct VueModifItemTest: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteTest(item: $item, laRegion: $région)
-//            VueCarteTestNew(item: $item)
-
-            
-//            VueEditionCarte(
-//                Ξ.item,
-//                sectionGéographique: Ξ.régionItem,
-//                lesLieux:            Ξ.locations, // la position
-//                lieuEnCoursEdition:  Ξ.leLieuÉdité
-//            )
-//                .onChange(of: Ξ.locations) {newValue in
-//                    let _ = print("🌐 le tableau des locations évolue")
-//                    Ξ.régionItem.center.longitude = newValue.last?.longitude ?? 0
-//                    Ξ.régionItem.center.latitude  = newValue.last?.latitude  ?? 0
-//                    }
-//                .onChange(of: Ξ.leLieuÉdité) {newValue in
-//                    let _ = print("🌐 le lieu édité évolue")
-//                    }
+            VueEditionCarte(
+                Ξ.item,
+                sectionGéographique: Ξ.régionItem,
+                lesLieux:            Ξ.locations, // la position
+                lieuEnCoursEdition:  Ξ.leLieuÉdité
+            )
+                .onChange(of: Ξ.locations) {newValue in
+                    let _ = print("🌐 le tableau des locations évolue")
+                    Ξ.régionItem.center.longitude = newValue.last?.longitude ?? 0
+                    Ξ.régionItem.center.latitude  = newValue.last?.latitude  ?? 0
+                    }
+                .onChange(of: Ξ.leLieuÉdité) {newValue in
+                    let _ = print("🌐 le lieu édité évolue")
+                    }
             
             
         }
-        .isHidden(item.isDeleted || item.isFault ? true : false)
-        .opacity(item.valide ? 1.0 : 0.1)
+        .isHidden(Ξ.item.isDeleted || Ξ.item.isFault ? true : false)
+        .opacity(Ξ.item.valide ? 1.0 : 0.1)
         
         
         
         
-        .sheet(isPresented: $feuilleAffectationGroupesPresentée) {
+        .sheet(isPresented: $Ξ.feuilleAffectationGroupesPresentée) {
             Text("Rallier les groupes")
             
-            VueAffectationItemGroupe(lesGroupesChoisis: item.lesGroupes ) {
+            VueAffectationItemGroupe(lesGroupesChoisis: Ξ.item.lesGroupes ) {
                 rallierGroupes($0)
-                feuilleAffectationGroupesPresentée = false
+                Ξ.feuilleAffectationGroupesPresentée = false
                 }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
@@ -133,7 +122,7 @@ struct VueModifItemTest: View {
         
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: { feuilleAffectationGroupesPresentée.toggle() }) {
+                Button(action: { Ξ.feuilleAffectationGroupesPresentée.toggle() }) {
                     VStack {
                         Image(systemName: "tray.and.arrow.down.fill")
                         Text("Rallier").font(.caption)
@@ -152,16 +141,13 @@ struct VueModifItemTest: View {
                 }
                 
                 Button(action: {
-                    item.longitude = région.center.longitude
-                    item.latitude  = région.center.latitude
-
-                   ////////////:
-//                    if !Ξ.locations.isEmpty {
-//                        Ξ.item.longitude = (Ξ.locations.last?.coordonnées.longitude)! //?? 0
-//                        Ξ.item.latitude  = (Ξ.locations.last?.coordonnées.latitude)! // ?? 0
-//                        Ξ.régionItem.center.latitude = Ξ.locations.last?.coordonnées.latitude ?? 0
-//                        Ξ.régionItem.center.longitude = Ξ.locations.last?.coordonnées.longitude ?? 0
-//                        }
+                    
+                    if !Ξ.locations.isEmpty {
+                        Ξ.item.longitude = (Ξ.locations.last?.coordonnées.longitude)! //?? 0
+                        Ξ.item.latitude  = (Ξ.locations.last?.coordonnées.latitude)! // ?? 0
+                        Ξ.régionItem.center.latitude = Ξ.locations.last?.coordonnées.latitude ?? 0
+                        Ξ.régionItem.center.longitude = Ξ.locations.last?.coordonnées.longitude ?? 0
+                        }
                      
                         persistance.sauverContexte("Item")
                     
@@ -198,7 +184,7 @@ struct VueModifItemTest: View {
 
     private func rallierGroupes(_ groupes: Set<Groupe>) {
         withAnimation {
-            item.rallier(contexte:contexte, communauté: groupes )
+            Ξ.item.rallier(contexte:contexte, communauté: groupes )
             }
         persistance.sauverContexte("Groupe")
         }

@@ -56,14 +56,14 @@ struct ListeItem: View {
     
   var body: some View {
       
-      let itemDeTest = items.first!
+//      let itemDeTest = items.first!
 //Item.bidon() //items.first!
 
     NavigationView {
         
         List {
         ForEach(items) { item in
-            NavigationLink( destination: VueTestItem (
+            NavigationLink( destination: VueDetailItem (
                 item: item ,
                 région: item.région
                 ))

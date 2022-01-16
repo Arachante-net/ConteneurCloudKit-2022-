@@ -22,20 +22,40 @@ struct Lieu: Identifiable, Codable, Equatable {
 //    let couleur: UIColor sinon il manque Codable
 
 
-    static let BuckinghamPalace = Lieu(id: UUID(), libellé: "Buckingham Palace", description: "Where Queen Elizabeth lives with her dorgis.",                                               latitude:  51.501   , longitude:   -0.141    )
-    static let MontSaintMichel  = Lieu(id: UUID(), libellé: "Mont Saint-Michel", description: "Îlot rocheux consacré à saint Michel où s’élève aujourd’hui l’abbaye du Mont-Saint-Michel.", latitude:  48.636021, longitude:   -1.511496 )
-    static let Paris            = Lieu(id: UUID(), libellé: "Paris",             description: "La capitale des Français",                                                                   latitude:  48.856614, longitude:    2.3522219)
-    static let Londres          = Lieu(id: UUID(), libellé: "Londres",           description: "La capitale des Anglais",                                                                    latitude:  51.507222, longitude:   -0.1275   )
-    static let Tonga            = Lieu(id: UUID(), libellé: "Tonga",             description: "Une île trés à l'Ouest presque 20° sous l'équateur",                                         latitude: -19.916086, longitude: -175.202622 )
-    static let Fidji            = Lieu(id: UUID(), libellé: "Fidji",             description: "Une île trés à l'Est presque 20° sous l'équateur",                                           latitude: -18.123973, longitude:  179.01226  )
+    static let BuckinghamPalace = Lieu(latitude:  51.501   , longitude:   -0.141    ,libellé: "Buckingham Palace", description: "Where Queen Elizabeth lives with her dorgis."                                              )
+    static let MontSaintMichel  = Lieu(latitude:  48.636021, longitude:   -1.511496 ,libellé: "Mont Saint-Michel", description: "Îlot rocheux consacré à saint Michel où s’élève aujourd’hui l’abbaye du Mont-Saint-Michel.")
+    static let Paris            = Lieu(latitude:  48.856614, longitude:    2.3522219,libellé: "Paris",             description: "La capitale des Français"                                                                  )
+    static let Londres          = Lieu(latitude:  51.507222, longitude:   -0.1275   ,libellé: "Londres",           description: "La capitale des Anglais"                                                                   )
+    static let Tonga            = Lieu(latitude: -19.916086, longitude: -175.202622 ,libellé: "Tonga",             description: "Une île trés à l'Ouest presque 20° sous l'équateur"                                        )
+    static let Fidji            = Lieu(latitude: -18.123973, longitude:  179.01226  ,libellé: "Fidji",             description: "Une île trés à l'Est presque 20° sous l'équateur"                                          )
 
     static let exemple = MontSaintMichel
     
     static func ==(lhs: Lieu, rhs: Lieu) -> Bool { lhs.id == rhs.id }
+    
+    init(id: UUID = UUID(), latitude: Double, longitude: Double, libellé:String="", description:String="") {
+        self.id = id
+//        self.coordonnées = CLLocationCoordinate2D(
+//            latitude: lat,
+//            longitude: long)
+        self.latitude    = latitude
+        self.longitude   = longitude
+        self.libellé     = libellé
+        self.description = description
+    }
 }
 
 
-
+struct IdentifiablePlace: Identifiable {
+    let id: UUID
+    let location: CLLocationCoordinate2D
+    init(id: UUID = UUID(), lat: Double, long: Double) {
+        self.id = id
+        self.location = CLLocationCoordinate2D(
+            latitude: lat,
+            longitude: long)
+    }
+}
 
 
 

@@ -11,53 +11,35 @@ import MapKit
 import CoreData
 
   
-
+/// Edition et modification des caracteristique du groupe passé en parametre
 struct VueModifGroupe: View {
     
     // parametre d'appel de la Vue
-//    @State var groupe:     Groupe
     @ObservedObject var groupe: Groupe
-    @ObservedObject var principal: Item
-
+    // closure en parametre, a executer lorsque l'utilisateur quitte cette vue
     var achevée: (Bool) -> Void
-//    @State var laValeur:Int = 0
-//    @State var rafraichir : Int = 0
+
     @Environment(\.managedObjectContext) var contexte
     @EnvironmentObject private var persistance : ControleurPersistance
     
-//    @State var collaboration = false
-//    @State var valide = false
-//    @State var nom           = ""
-//    init(_ unGroupe: Groupe) {
-//        self.groupe = unGroupe
+    init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
+        self.groupe = unGroupe
 //        self.principalItem = unGroupe.principal!
-//        self.achevée = { (false) in }
+        self.achevée = achevée
 ////        if groupe.principal != nil {
 ////            self.principalItem = groupe.principal!
 ////            }
 ////        else {self.principalItem = nil}
-//        }
+        }
 
     var body: some View {
     VStack {
-//        Text("\(rafraichir)")
         TextField("Nouveau nom du groupe", text: $groupe.leNom)
             .submitLabel(.done)
             .textFieldStyle(.roundedBorder)
 //            .clearButtonMode = .whileEditing
             .padding()
             .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
-//      Text("nb items : \(items.count) | \(chronomètre.temps) - ")
-//        Text("\(principal.valeur) \(groupe.valeurPrincipale)  \(laValeur)")
-        
-//        Stepper("Valeur locale : \(laValeur)", value: $laValeur)
-//            .padding(.leading)
-//        
-//        Stepper("Valeur locale : \(principal.valeur)", value: $principal.valeur)
-//            .padding(.leading)
-//        
-//        Stepper("Valeur locale : \(groupe.valeurPrincipale)", value: $groupe.valeurPrincipale)
-//            .padding(.leading)
         
         VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
         
@@ -84,6 +66,12 @@ struct VueModifGroupe: View {
         
     }
         
+    
+    
+    
+    
+//MARK: --
+    
     private func validerFormulaire() {
         
 //        if !nom.isEmpty {groupe.nom  = nom}

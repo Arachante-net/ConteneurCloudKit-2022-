@@ -8,17 +8,8 @@
 
 import SwiftUI
 
-//
-//var favoritesButton: some View {
-//    Button(action: toggleFavorites) {
-//        if showingFavorites {
-//            Text("Show all locations")
-//        } else {
-//            Text("Show only favorites")
-//        }
-//    }
-//}
-// pas (encore ?) utilisée
+
+// pas (encore ?) utilisée en tant que fichier séparé
 
 var barreOutilsItem: some View {
 //    @Binding var feuilleModificationItemPresentée:Bool //= false
