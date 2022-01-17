@@ -16,18 +16,19 @@ struct ListeGroupe: View {
   @Environment(\.managedObjectContext) private var viewContext
     
   @FetchRequest(
-    fetchRequest: Groupe.extractionGroupes, //ListeGroupe.fetchRequest,
+    fetchRequest: Groupe.extractionGroupes,
     animation: .default)
   private var groupes: FetchedResults<Groupe>
 
-    
-  @State var presenterCréationGroupe = false
-  @State private var nouveauNom = ""
-  @State var courant:String? = nil
-  @State private var recherche = ""
-  @State var groupesFiltrés = [Groupe]()
-  @State static var rafraichir    = false
   @State private var groupesEnCourDeSuppression: IndexSet? //SetIndex<Item>?
+
+  @State private var presenterCréationGroupe = false
+  @State private var nouveauNom              = ""
+  @State private var courant:String?         = nil
+  @State private var recherche               = ""
+  @State private var groupesFiltrés          = [Groupe]()
+    
+//  @State  static var rafraichir              = false
 
 
 
@@ -46,8 +47,6 @@ struct ListeGroupe: View {
 
     NavigationView {
       List() {
-//          Text("\(ListeGroupe.rafraichir.description)") // .font(.system(size: 1)).hidden()
-
           ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
               NavigationLink(destination: VueDetailGroupe(groupe: groupe  ),

@@ -286,6 +286,7 @@ extension Item {
             }
         }
     
+    // Un lieu (Lat, Long) et quelques infos descriptions complementaires
     var annotationGeographiques:AnnotationGeographique {
         get {
             
@@ -302,7 +303,9 @@ extension Item {
             }
         }
     
-    var annotationGeographiques_:Lieu {
+    
+    // Pas utilisé
+    var lieu_:Lieu {
         get {
             
         #if os(iOS)

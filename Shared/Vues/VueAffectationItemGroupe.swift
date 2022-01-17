@@ -30,7 +30,7 @@ struct VueAffectationItemGroupe: View {
             List(groupesCollaboratifs, id: \.id, selection: $lesGroupesChoisis) { groupe in
                 VueCelluleItemGroupe(groupe: groupe, selection: $lesGroupesChoisis)
                 }
-              .navigationTitle(Text("Choisir Groupes à rallier"))
+              .navigationTitle(Text("Choisir les groupes à rallier"))
               .navigationBarItems(  trailing: Button("OK") { action_OK() }  )
             }
         }

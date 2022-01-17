@@ -20,17 +20,15 @@ struct VueDetailGroupe: View {
     @Environment(\.managedObjectContext) private var viewContext
     
 
-//    var groupe: Groupe  OU @State ??
-    @ObservedObject var groupe:    Groupe
-//    @ObservedObject var item: Item
-//    @State var principal: Item
-
-
-
+//    ou @State ? ou @ObservedObject ??
+//    @State l'etat n'est pas MàJ immediatement
+    @StateObject var groupe: Groupe // idem qu'ObservedObject mais ici c'est cette Vue qui est proprietaire
+// Etats 'locaux'
     @State var collaboration = false
     @State var nom           = ""
 
-   
+    @State var feuilleModificationPresentée = false
+
 
     var régionGéographique: MKCoordinateRegion {
         let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
@@ -43,15 +41,13 @@ struct VueDetailGroupe: View {
         return MKCoordinateRegion(center: coordonnées, span: span)
         }
 
+    
+    
     var annotationsCartographiques: [AnnotationGeographique] {
-        guard let items = groupe.items else {
-          return []
-          }
+        guard let items = groupe.items else { return [] }
 
         return items.compactMap {
-          guard let item = $0 as? Item else {
-            return nil
-            }
+          guard let item = $0 as? Item else { return nil }
 
           return AnnotationGeographique(
             libellé: item.titre ?? "",
@@ -64,8 +60,9 @@ struct VueDetailGroupe: View {
         }
     
 
+    
+    
 
-    @State var feuilleModificationPresentée = false
     
 ////////////////////////////////////////////////////:
 //    init(_ unGroupe: Groupe, principal:Item) {
@@ -90,6 +87,7 @@ struct VueDetailGroupe: View {
     VStack(alignment: .leading, spacing: 2) {
         VStack(alignment: .leading, spacing: 2)  {
             Etiquette( "Item principal", valeur : (groupe.principal != nil) ? groupe.principal!.titre ?? "..." : "❌").padding(.leading)
+            Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
             Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
             ForEach(Array(groupe.lesItems)) { item in
@@ -112,9 +110,11 @@ struct VueDetailGroupe: View {
 ////                onDecrement: { decrementer(min: 0) }
 //                .padding(.leading)
         
-        VueCartographique(
-            région: groupe.régionEnglobante,
-            annotations: groupe.lesAnnotations_)
+            VueCartographiqueGroupe(
+                région:      groupe.régionEnglobante,
+                annotations: groupe.lesAnnotations
+                )
+        
         
         }
         .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
@@ -124,23 +124,14 @@ struct VueDetailGroupe: View {
         .onAppear() {}
 
         .sheet(isPresented: $feuilleModificationPresentée) {
-            Text("Edition")
-    //        let t = self.principal
-    //        VueModifGroupe(groupe: groupe, principal: groupe.lePrincipal) { valeur in
-            VueModifGroupe(groupe) { valeur in
-    //        VueModifGroupe(groupe: groupe, principal: groupe.principal) { valeur in
+            VueModifGroupe(groupe) { quiterLaVue in
+                            print("Retour de VueModifGroupe avec", quiterLaVue )
                             feuilleModificationPresentée = false
                             }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+            }
+            .transition(.opacity) //.move(edge: .top))
             
-    //        VueModifGroupe(groupe) { valeur in
-    ////            print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION GROUPE")
-    //            feuilleModificationPresentée = false
-    //            }
-    //            .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-        }
-        .transition(.move(edge: .top))
-        
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action: { feuilleModificationPresentée.toggle() }) {

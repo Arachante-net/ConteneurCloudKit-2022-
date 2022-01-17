@@ -12,9 +12,10 @@ import MapKit
 
 
 
-//MARK: Requetes
+//MARK: - Requetes -
 extension Groupe {
-    /// Criteres d'extraction depuis le stockage permanent
+    
+    //MARK: Criteres d'extraction depuis le stockage permanent -
 
     static var extractionGroupes: NSFetchRequest<Groupe> {
       let request: NSFetchRequest<Groupe> = Groupe.fetchRequest()
@@ -31,7 +32,7 @@ extension Groupe {
 }
 
 
-//MARK: Manipulation
+//MARK: - Manipulation -
 extension Groupe {
 
     
@@ -141,7 +142,10 @@ extension Groupe {
         }
    }
 
-//MARK: Proprietés
+
+
+//MARK: - Proprietés -
+
 extension Groupe {
     
     var vide:Groupe {
@@ -238,7 +242,7 @@ extension Groupe {
         print("🏁 Min Min", P1.longitude, P1.latitude)
         print("🏁 Max Max", P2.longitude, P2.latitude)
 
-        let π = Double.pi
+        let   π = Double.pi
         let _2π = 2 * π
         let _3π = 3 * π
 
@@ -332,19 +336,23 @@ extension Groupe {
             return région
         }
     
-    var lesAnnotations:[AnnotationGeographique] {
+    // regroupe les descriptions des lieux des membres du groupe (sans celle du principal)
+    var lesAnnotations_:[AnnotationGeographique] {
         lesItems.map {$0.annotationGeographiques}
         }
     
-    var lesAnnotations_:[AnnotationGeographique] {
+    // Regroupe les descriptions des lieux des membres du groupe
+    // ET celle de l'item principal du groupe
+    var lesAnnotations:[AnnotationGeographique] {
         var toutesLesAnnotations:[AnnotationGeographique]
         
         if let lePrincipal:AnnotationGeographique = principal?.annotationGeographiques {
             toutesLesAnnotations = [lePrincipal]
-            toutesLesAnnotations.append(contentsOf: lesAnnotations)
+            toutesLesAnnotations.append(contentsOf: lesAnnotations_)
             }
         else {
-            toutesLesAnnotations = lesAnnotations
+            
+            toutesLesAnnotations = lesAnnotations_
             }
         print ("Nous avons", toutesLesAnnotations.count, "annotations")
         return toutesLesAnnotations

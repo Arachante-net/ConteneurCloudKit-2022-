@@ -14,7 +14,7 @@ import CoreData
 /// Edition et modification des caracteristique du groupe passé en parametre
 struct VueModifGroupe: View {
     
-    // parametre d'appel de la Vue
+    // parametres d'appel de la Vue
     @ObservedObject var groupe: Groupe
     // closure en parametre, a executer lorsque l'utilisateur quitte cette vue
     var achevée: (Bool) -> Void
@@ -33,27 +33,62 @@ struct VueModifGroupe: View {
         }
 
     var body: some View {
-    VStack {
-        TextField("Nouveau nom du groupe", text: $groupe.leNom)
-            .submitLabel(.done)
-            .textFieldStyle(.roundedBorder)
-//            .clearButtonMode = .whileEditing
+    VStack(alignment: .leading, spacing: 2){
+        VStack(alignment: .leading, spacing: 1) {
+            Text(" Nom du groupe :")
+            TextField("",                      text: .constant("Papyrus avec nous !"))
+                .foregroundColor(Color.secondary).font(Font.custom("Papyrus", size: 16))
+            TextField("Nouveau nom du groupe", text: $groupe.leNom)
+                .foregroundColor(Color.accentColor)
+//                .font(Font.custom("Papyrus", size: 16))
+                .submitLabel(.done)
+                .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+    //            .clearButtonMode = .whileEditing // seulement pour les UITextField
+                .padding()
+                .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
+        }
+        .padding()
+        .overlay( RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.secondary, lineWidth: 0.5)
+            )
+        .padding()
+        
+        VStack {
+            VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
+            }
             .padding()
-            .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
+            .overlay( RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.secondary, lineWidth: 0.5)
+                )
+            .padding()
         
-        VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
-        
-        Toggle("Collaboratif", isOn: $groupe.collaboratif)///   collaboration)
-        Toggle("Valide",       isOn: $groupe.valide)
+        VStack {
+            Toggle("Collaboratif", isOn: $groupe.collaboratif)
+                .toggleStyle(.switch)  //.toggleStyle(.button)
+            
+            Toggle("Valide",       isOn: $groupe.valide)
+                .toggleStyle(.switch) //.checkbox)
 
+
+            }
+            .padding()
+            .overlay( RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.secondary, lineWidth: 0.5)
+                )
+            .padding()
+        
         if groupe.collaboratif {
             Button(action: enrôlerUnNouvelItem)    { Label("Enrôler",      systemImage: "plus.square.on.square")}
             }
           else { Text("Individuel") }
-          
+        
+        (Text("Editer le principal : ")
+        + Text("\(groupe.lePrincipal.leTitre)")) .padding()
+        
+        Spacer()
         Button(" VALIDER ") { validerFormulaire() }
             .buttonStyle(.borderedProminent)
-        
+        Spacer()
         }.onAppear(perform: {
             // recuperer les champs modifiables Groupe CoreData
 //            collaboration = groupe.collaboratif

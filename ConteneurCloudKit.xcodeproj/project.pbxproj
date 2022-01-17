@@ -13,8 +13,8 @@
 		D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe.swift */; };
 		D01830712743BEEC000889E2 /* VueDetailGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe.swift */; };
 		D01830722743BEEC000889E2 /* VueDetailGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe.swift */; };
-		D01830742743C068000889E2 /* VueCartographique.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCartographique.swift */; };
-		D01830752743C068000889E2 /* VueCartographique.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCartographique.swift */; };
+		D01830742743C068000889E2 /* VueCartographiqueGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCartographiqueGroupe.swift */; };
+		D01830752743C068000889E2 /* VueCartographiqueGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCartographiqueGroupe.swift */; };
 		D01830772743DDE4000889E2 /* VuePrincipale.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830762743DDE4000889E2 /* VuePrincipale.swift */; };
 		D01830782743DDE4000889E2 /* VuePrincipale.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830762743DDE4000889E2 /* VuePrincipale.swift */; };
 		D018307A2743F98D000889E2 /* VueAjouterGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830792743F98D000889E2 /* VueAjouterGroupe.swift */; };
@@ -98,7 +98,7 @@
 		D018306A2742E567000889E2 /* ListeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeItem.swift; sourceTree = "<group>"; };
 		D018306D2743BB1C000889E2 /* ListeGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeGroupe.swift; sourceTree = "<group>"; };
 		D01830702743BEEC000889E2 /* VueDetailGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueDetailGroupe.swift; sourceTree = "<group>"; };
-		D01830732743C068000889E2 /* VueCartographique.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueCartographique.swift; sourceTree = "<group>"; };
+		D01830732743C068000889E2 /* VueCartographiqueGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueCartographiqueGroupe.swift; sourceTree = "<group>"; };
 		D01830762743DDE4000889E2 /* VuePrincipale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VuePrincipale.swift; sourceTree = "<group>"; };
 		D01830792743F98D000889E2 /* VueAjouterGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueAjouterGroupe.swift; sourceTree = "<group>"; };
 		D018307C274556DE000889E2 /* VueCarte-OLD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VueCarte-OLD.swift"; sourceTree = "<group>"; };
@@ -268,7 +268,7 @@
 				D0B84E412764A885000E6849 /* VueModifGroupe.swift */,
 				D0203D0D2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift */,
 				D018307F27464271000889E2 /* VueAffectationItemGroupe.swift */,
-				D01830732743C068000889E2 /* VueCartographique.swift */,
+				D01830732743C068000889E2 /* VueCartographiqueGroupe.swift */,
 				D0627E94275A412B00F51592 /* ListeCollaboratif.swift */,
 				D01830822746446E000889E2 /* VueCelluleItemGroupe.swift */,
 				D0385A2C277211010063E926 /* Reglages.swift */,
@@ -426,7 +426,7 @@
 				D0E893C727561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAB27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
 				D0DFCA6A27943F4800914ECF /* VueCarteEdition.swift in Sources */,
-				D01830742743C068000889E2 /* VueCartographique.swift in Sources */,
+				D01830742743C068000889E2 /* VueCartographiqueGroupe.swift in Sources */,
 				D0DFCA572791CC6600914ECF /* VueCarte.swift in Sources */,
 				D0DFCA51278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */,
 				D0DFCA5A2792ECC500914ECF /* VueModifItem.swift in Sources */,
@@ -474,7 +474,7 @@
 				D0E893C827561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAC27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
 				D0DFCA6B27943F4800914ECF /* VueCarteEdition.swift in Sources */,
-				D01830752743C068000889E2 /* VueCartographique.swift in Sources */,
+				D01830752743C068000889E2 /* VueCartographiqueGroupe.swift in Sources */,
 				D0DFCA582791CC6600914ECF /* VueCarte.swift in Sources */,
 				D0DFCA52278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */,
 				D0DFCA5B2792ECC500914ECF /* VueModifItem.swift in Sources */,

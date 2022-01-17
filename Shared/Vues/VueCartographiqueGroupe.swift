@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 
 /// Afficher un groupe d'item representés par des annotations
-struct VueCartographique: View {
+struct VueCartographiqueGroupe: View {
   @State var région: MKCoordinateRegion
   let annotations: [AnnotationGeographique]
 

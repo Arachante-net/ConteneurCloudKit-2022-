@@ -29,12 +29,18 @@ struct VueValeurItemPrincipal: View {
      }
     
     var body: some View {
-        Stepper { Text("Valeur : \(item.valeur) ") }
+        Stepper { Text("Valeur principale : ")
+            + Text(" \(item.valeur)")
+                .bold()
+                .font(.title)
+                .foregroundColor(Color.accentColor)
+            }
             onIncrement: { incrementer() }
             onDecrement: { decrementer() }
             .padding(.leading)
             .onChange(of: item.valeur) { val in
                 print("☑️ ----\(val)----")
+                //FIXME: Y-a vraiment besoin de ça ??
                 groupe.integration.toggle() //+= 1 // pour se rafraichir
                 persistance.sauverContexte("Item")
 //                ListeGroupe.rafraichir.toggle()
