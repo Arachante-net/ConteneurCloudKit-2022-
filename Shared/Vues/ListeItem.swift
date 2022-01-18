@@ -73,104 +73,23 @@ struct ListeItem: View {
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
             
-//            NavigationLink( destination: VueTestItem(item: itemDeTest, région: itemDeTest.région ) ) { Text("TEST") } // VueTestItem (Item.bidon()
       }
       .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("SOS") }}
       .navigationBarTitle(Text("Items"))
       .navigationBarItems(
         leading:
             barreMenuNavigation,
-//            HStack {
-//                Spacer()
-//                Button(action: ajouterGroupeItem){ Label("Ajouter un Groupe/Item", systemImage: "plus.circle.fill"   )
-//                    .hoverEffect()
-//                    .scaleEffect(1.5)
-////                    .symbolRenderingMode(.hierarchical)
-//                    .symbolRenderingMode(.multicolor)
-//                    .saturation(1)
-//
-//                }
-//                Spacer()
-//                Spacer()
-//                Button(role: .destructive, action: ajouterItem)
-//                    { Label("Ajouter un Item", systemImage: "plus")}
-//                    .foregroundColor(.red).opacity(0.5)
-////              Button(action: RallierGroupe)    { Label("Rallier un groupe",      systemImage: "plus.square.on.square")}
-//                Button(action: GenererErreur)    { Label("générer une erreur",     systemImage: "ladybug.fill")}.opacity(0.7)
-//                },
-        trailing: Button(action: { let _ = Item.extractionItems }) { Image(systemName: "arrow.2.circlepath")}.opacity(0.7)
-       )
-        
-        
+        trailing:
+            Button(action: { let _ = Item.extractionItems })
+                { Image(systemName: "arrow.2.circlepath")}
+                .opacity(0.7)
+        )
         
     }
       
     .alert(item: $Ξ.itemsEnCourDeSuppression) { indicesDesItemsASupprimer in
         alerteSuppression(jeuIndices: indicesDesItemsASupprimer)
-//        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
-////        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
-//
-//        let titre = (jeuIndices.map {items[$0].titre}.first ?? "")!
-//
-//        var description:String=""
-//
-//        //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
-//        jeuIndices.forEach {
-//            let item = items[$0]
-//            description = item.description
-//            }
-//
-//        return Alert(
-//            title: Text("Suppression de l'item ") + Text("'\(titre)'").foregroundColor(.accentColor),
-//            message: Text(description),
-//            primaryButton: .default(
-//                            Text("NON, je dois réfléchir un peu."),
-//                            action: abandoner
-//                        ),
-//            secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
-//                supprimerVraimentItems(positions: jeuIndices)
-//            })
-//            )
-    }
-
-//    .alert(isPresented: $alerteAffichée) {
-//        let i:IndexSet = []
-//        Alert(
-//            title: Text("\(itemEnCours?.titre ?? "") ATTENTION !").foregroundColor(.red),
-//            message: Text("Supprimer les contibutions de cet item ")
-//            + Text("délégué principal de l'évenement '\(itemEnCours?.principal?.leNom ?? ""),' \n")
-//            + Text("et membre de \(itemEnCours?.groupes?.count ?? 0) autres groupes ?")
-//            + Text("\(itemEnCours?.groupes?.map {($0 as! Groupe).nom}.debugDescription ?? "") "),
-//            primaryButton: .default(
-//                            Text("NON, je dois réfléchir un peu."),
-//                            action: abandoner
-//                        ),
-//            secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {print("")}) //accepter(positions: i) )
-//            // ou dismissButton
-//        )
-//    }
-      
-      
-//    .alert(item: $appError) {appError in
-//        Alert(title: Text("!!!!!"),
-//              message: Text(appError.error.localizedDescription),//,
-//              dismissButton: .default(Text("Got it!"))
-//        )
-//
-//    }
-    
-    
-//    .alert("Suppresion", isPresented: $alerteAffichée) {
-//        Alert(title: Text("Attention"),
-//              message: Text("Supprimer les contibutions de \(itemEnCours?.titre ?? "") ?"),
-//              dismissButton: .default(Text("Got it!"))
-//            )
-//        Text("Supprimer les contibutions de \(itemEnCours?.titre ?? "") ?")
-//        Button("Oui", role: .destructive) { }
-//        Button("Non", role: .cancel) { }
-//    }
-      
-      
+        }
       
   }
     

@@ -12,11 +12,37 @@ import UIKit
 
 class Utilisateur : ObservableObject {
     
+    
+    
     init() {
 //        let TT = UIDevice.current.identifierForVendor?.uuidString
-    UserDefaults.standard.set(UIDevice.current.identifierForVendor?.uuidString, forKey: "UID")
+    let configuration = UserDefaults.standard
+    configuration.set(UIDevice.current.identifierForVendor?.uuidString, forKey: "UID")
+    configuration.set(1960,                                             forKey: "Age")
+    configuration.set(true,                                             forKey: "EstInteligent")
+    configuration.set(CGFloat.pi,                                       forKey: "Pi")
+    configuration.set(Date(),                                           forKey: "DerniereUtilisation")
+        
+    let favoris = ["Alpha", "Beta"]
+    configuration.set(favoris,                                          forKey: "Favoris")
+    let Identification = ["Prenom": "Michel", "Nom": "DENOUAL", "Pays": "FR"]
+    configuration.set(Identification,                                   forKey: "Identification")
+        
+    // Exemple d'utilisation :
+    // Si "Favoris" existe et est un tableau de chaînes,
+    // il est placé dans "tab".
+    // S'il n'existe pas (ou si il existe mais n'est pas un tableau de chaînes),
+    // alors "tab" devient un nouveau tableau de chaînes vide.
+    let tab  = configuration.object(forKey:"Favoris")         as? [String]         ?? [String]()
+    let dico = configuration.object(forKey: "Identification") as? [String: String] ?? [String: String]()
+
+        
+        
     statuer()
+
     }
+    
+
     
     
     

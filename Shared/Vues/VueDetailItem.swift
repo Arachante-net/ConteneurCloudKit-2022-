@@ -85,6 +85,11 @@ struct VueDetailItem: View {
             VStack(alignment: .leading , spacing: 2) { // (alignment: .leading , spacing: 2)
 
                 Etiquette("Identifiant", valeur: item.id?.uuidString ?? "❌")
+                    .onHover { over in
+                        print("〽️")
+//                        .overlay(Text("〽️"))
+                    }
+                
                 Text("Crée le ").foregroundColor(.secondary)
                 + Text(" \( formatDate.string(from: item.horodatage )) ")
                 + Text(" à")

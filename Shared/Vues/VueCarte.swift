@@ -117,7 +117,8 @@ struct VueCarte: View {
     //                tint: item.région.center == place.location ? Color.red : Color.clear)
     //            }
               
-              Croix().stroke().foregroundColor(.pink).opacity(0.2)
+              Croix().stroke(lineWidth:0.5).foregroundColor(.pink).opacity(0.2)
+              Viseur().stroke(lineWidth:5).foregroundColor(.yellow).opacity(0.8)
 
               Circle()
                   .fill(.red)
@@ -162,6 +163,30 @@ struct Croix: Shape {
         path.move(   to: CGPoint(x: rect.minX, y: rect.midY))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
 
+        return path
+    }
+}
+
+struct Viseur: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        path.move(   to: CGPoint(x: rect.midX - 5, y: rect.maxY    ))
+        path.addLine(to: CGPoint(x: rect.midX    , y: rect.maxY - 5))
+        path.addLine(to: CGPoint(x: rect.midX + 5, y: rect.maxY    ))
+
+        path.move(   to: CGPoint(x: rect.midX - 5, y: rect.minY    ))
+        path.addLine(to: CGPoint(x: rect.midX    , y: rect.minY + 5))
+        path.addLine(to: CGPoint(x: rect.midX + 5, y: rect.minY    ))
+
+        path.move(   to: CGPoint(x: rect.minX    , y: rect.midY - 5 ))
+        path.addLine(to: CGPoint(x: rect.minX + 5, y: rect.midY     ))
+        path.addLine(to: CGPoint(x: rect.minX    , y: rect.midY + 5 ))
+        
+        path.move(   to: CGPoint(x: rect.maxX    , y: rect.midY - 5 ))
+        path.addLine(to: CGPoint(x: rect.maxX - 5, y: rect.midY     ))
+        path.addLine(to: CGPoint(x: rect.maxX    , y: rect.midY + 5 ))
+        
         return path
     }
 }

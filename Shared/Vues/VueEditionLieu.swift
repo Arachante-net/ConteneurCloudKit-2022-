@@ -15,10 +15,8 @@ import SwiftUI
 /// - VueEditionLieu( place ) { newLocation in ...  }
 struct VueEditionLieu: View {
     var lieu: Lieu
-
-//    @State private var nom: String
-//    @State private var description: String
-    
+    //TODO: Faire un @Binding de lieu
+        
     @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
     // pour récuperer des infos en retour de Vue
@@ -31,9 +29,6 @@ struct VueEditionLieu: View {
         self.lieu = lieuAEditer
         self.informationARetourner = onSave
         _Ξ = StateObject(wrappedValue: ViewModel(lieuAEditer))
-
-//        _nom         = State(initialValue: lieuAEditer.libellé)
-//        _description = State(initialValue: lieuAEditer.description)
         }
     
     // Rejet de la présentation actuelle

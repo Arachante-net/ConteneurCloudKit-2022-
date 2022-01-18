@@ -92,6 +92,8 @@
 		D0E897282789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
 		D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
+		D0F187A32796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */; };
+		D0F187A42796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +152,8 @@
 		D0E8972327877D7000A82214 /* Erreurs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erreurs.swift; sourceTree = "<group>"; };
 		D0E897262789957B00A82214 /* Etat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Etat.swift; path = Shared/Etat.swift; sourceTree = SOURCE_ROOT; };
 		D0E8974D278ACD0600A82214 /* Binding+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Binding+.swift"; path = "Shared/Binding+.swift"; sourceTree = SOURCE_ROOT; };
+		D0F1879F27969C3C00FF9EAB /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarreOutilsIGroupe.swift; sourceTree = SOURCE_ROOT; };
 		D0FF9C2B277A4C0D00902CF2 /* VueModifItemOLD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifItemOLD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,10 +262,12 @@
 				D0DFCA562791CC6600914ECF /* VueCarte.swift */,
 				D0DFCA6927943F4800914ECF /* VueCarteEdition.swift */,
 				D04B25D22779C4BC00AD171D /* VueEditionLieu.swift */,
+				D0F1879F27969C3C00FF9EAB /* EditView.swift */,
 				D0385A2F27724D010063E926 /* Voyant.swift */,
 				D0A232AE27746649006A3320 /* Etiquette.swift */,
 				D05AFAA327510C83001CCA52 /* EtiquetteCoordonnees.swift */,
 				D085AA2F276DF88100535552 /* BarreOutilsItem.swift */,
+				D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */,
 				D018306D2743BB1C000889E2 /* ListeGroupe.swift */,
 				D01830702743BEEC000889E2 /* VueDetailGroupe.swift */,
 				D01830792743F98D000889E2 /* VueAjouterGroupe.swift */,
@@ -437,6 +443,7 @@
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
 				D0DFCA542791BDF200914ECF /* VueDetailItem.swift in Sources */,
 				D018307A2743F98D000889E2 /* VueAjouterGroupe.swift in Sources */,
+				D0F187A32796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */,
 				D01830772743DDE4000889E2 /* VuePrincipale.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,6 +492,7 @@
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,
 				D0DFCA552791BDF200914ECF /* VueDetailItem.swift in Sources */,
 				D018307B2743F98D000889E2 /* VueAjouterGroupe.swift in Sources */,
+				D0F187A42796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */,
 				D01830782743DDE4000889E2 /* VuePrincipale.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

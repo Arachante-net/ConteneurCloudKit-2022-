@@ -16,8 +16,8 @@ struct VueCartographiqueGroupe: View {
 
 
   var body: some View {
-    //======================
-    Map(coordinateRegion: $région, annotationItems: annotations) { annotation in
+ 
+      Map(coordinateRegion: $région, annotationItems: annotations) { annotation in
         MapAnnotation(coordinate: annotation.coordonnées) {
             Text(annotation.libellé)
                 .foregroundColor(.black)

@@ -134,14 +134,71 @@ struct VueDetailGroupe: View {
             
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: { feuilleModificationPresentée.toggle() }) {
-                    Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
-                    }
+//                Button(action: { feuilleModificationPresentée.toggle() }) {
+//                    Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
+//                    }
+                barreMenu
                 }
             }
           .navigationBarTitle(Text(groupe.nom ?? ""))
     }
         
+    
+    
+    var barreMenu: some View {
+        HStack {
+            Spacer()
+
+            Button(action: {
+                let ceGroupe = groupe.id?.uuidString ?? ""
+                var tabFavoris = UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]()
+                var setFavoris = Set(tabFavoris)
+
+//                var _ = setFavoris.contains(ceGroupe)
+//                print ("❤️ contient Alpha"  , setFavoris.contains("Alpha")   )
+//                print ("❤️ contient Beta"   , setFavoris.contains("Beta")    )
+//                print ("❤️ contient Epsilon", setFavoris.contains("Epsilon") )
+//                print ("❤️ contient ce groupe", setFavoris.contains(ceGroupe)  )
+
+                if setFavoris.contains(ceGroupe) {
+                    print("❤️ déja favoris", ceGroupe, setFavoris.count)
+                    setFavoris.remove(ceGroupe)
+                  }
+                else {
+                    setFavoris.insert(ceGroupe)
+                    tabFavoris = Array(setFavoris)
+                    print("❤️ ajout", tabFavoris, tabFavoris.count)
+                  }
+                UserDefaults.standard.set(tabFavoris,forKey: "Favoris")
+
+                
+            }) {
+                VStack {
+                    Image(systemName: "heart.fill").foregroundColor(.red)
+                    Text("Favoris").font(.caption)
+                    }
+              } .buttonStyle(.borderedProminent)
+            
+            
+            
+            Button(action: { feuilleModificationPresentée.toggle()  }) {
+                VStack {
+                    Image(systemName: "square.and.pencil")
+                    Text("Modifier").font(.caption)
+                    }
+              }.buttonStyle(.borderedProminent)
+
+            Button(role: .destructive, action: {  }) {
+                VStack {
+                    Image(systemName: "trash")
+                    Text("Supprimer").font(.caption)
+                    }
+              }.buttonStyle(.borderedProminent)
+
+            Spacer()
+            }
+        }
+
     
     private func enrôlerUnNouvelItem() {
         withAnimation {
