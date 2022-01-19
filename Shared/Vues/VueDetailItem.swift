@@ -52,7 +52,6 @@ struct VueDetailItem: View {
                 .opacity(item.valide ? 1.0 : 0.1)
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
-                
                     VueModifItem( item: item, région: $région ) { valeur in
     //                print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION ITEM")
                     Ξ.feuilleModificationItemPresentée = false

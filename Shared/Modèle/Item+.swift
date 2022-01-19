@@ -325,11 +325,11 @@ extension Item {
             }
         }
     
-    var spanDefaut : MKCoordinateSpan {
-        MKCoordinateSpan(
-            latitudeDelta:  0.5,
-            longitudeDelta: 0.5)
-        }
+//    var spanDefaut : MKCoordinateSpan {
+//        MKCoordinateSpan(
+//            latitudeDelta:  0.5,
+//            longitudeDelta: 0.5)
+//        }
     
     var région : MKCoordinateRegion {
         get {
@@ -337,7 +337,7 @@ extension Item {
                 center: CLLocationCoordinate2D(
                     latitude:  latitude ,
                     longitude: longitude),
-                span : spanDefaut)
+                span : Lieu.régionParDéfaut)
             }
         set {
             latitude = newValue.center.latitude

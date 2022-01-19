@@ -10,6 +10,7 @@
 import CloudKit
 import UIKit
 
+/// Configuration de l'application pour l'utilisateur courant
 class Utilisateur : ObservableObject {
     
     
@@ -22,12 +23,12 @@ class Utilisateur : ObservableObject {
     configuration.set(true,                                             forKey: "EstInteligent")
     configuration.set(CGFloat.pi,                                       forKey: "Pi")
     configuration.set(Date(),                                           forKey: "DerniereUtilisation")
-        
-    let favoris = ["Alpha", "Beta"]
-    configuration.set(favoris,                                          forKey: "Favoris")
+ // Les favoris ne sont placés que par l'utilisateur (pas par l'init de l'appli)
+//    let favoris = ["Alpha", "Beta"]
+//    configuration.set(favoris,                                          forKey: "Favoris")
     let Identification = ["Prenom": "Michel", "Nom": "DENOUAL", "Pays": "FR"]
     configuration.set(Identification,                                   forKey: "Identification")
-        
+    configuration.set("Fantomas",                                       forKey: "Alias")
     // Exemple d'utilisation :
     // Si "Favoris" existe et est un tableau de chaînes,
     // il est placé dans "tab".
@@ -42,9 +43,45 @@ class Utilisateur : ObservableObject {
 
     }
     
+    /// Represente la liste des Groupes favoris désignés par l'utilisateur
+    var listeFavoris:Set<String> {
+        get { Set(  UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]()  ) }
+        set { UserDefaults.standard.set(Array(newValue),forKey: "Favoris") }
+        }
+    
+    /// Indique si le groupe fait parti de l'ensemble des favoris désignés par l'utilisateur
+    func estFavoris(_ groupe:Groupe) -> Bool {
+        listeFavoris.contains( groupe.id?.uuidString ?? "" )
+        }
+    
+    func ajouterAuxFavoris(_ groupe:Groupe) {
+        var setFavoris = Set( UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]() )
+        
+        setFavoris.insert(groupe.id?.uuidString ?? "")
+        listeFavoris = setFavoris
+        }
+    
+    func enleverDesFavoris(_ groupe:Groupe) {
+        var setFavoris = Set( UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]() )
 
-    
-    
+        setFavoris.remove(groupe.id?.uuidString ?? "")
+        listeFavoris = ( setFavoris ) //setFavoris
+
+        }
+
+    /// Enlever le groupe de la liste des favoris s'il en fait partie,  sinon l'ajouter,  et alterner l'état du booléen 'jeSuisFavoris'
+    func inverserFavoris (_ groupe:Groupe , jeSuisFavoris: inout Bool) {
+        
+        if estFavoris(groupe) {
+            enleverDesFavoris(groupe)
+            }
+        else          {
+            ajouterAuxFavoris(groupe)
+            }
+        
+        return  jeSuisFavoris.toggle()
+
+        }
     
     
     func obtenirID() -> String  {

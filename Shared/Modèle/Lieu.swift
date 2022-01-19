@@ -33,6 +33,20 @@ struct Lieu: Identifiable, Codable, Equatable {
     
     static func ==(lhs: Lieu, rhs: Lieu) -> Bool { lhs.id == rhs.id }
     
+    static let coordonnéesParDéfaut = CLLocationCoordinate2D(
+        latitude: 0,
+        longitude: 0)
+    
+    static let régionParDéfaut = MKCoordinateSpan(
+        latitudeDelta:  0.5,
+        longitudeDelta: 0.5
+        )
+    
+    static let régionMax = MKCoordinateSpan(
+        latitudeDelta:  180,
+        longitudeDelta: 360
+        )
+    
     init(id: UUID = UUID(), latitude: Double, longitude: Double, libellé:String="", description:String="") {
         self.id = id
 //        self.coordonnées = CLLocationCoordinate2D(

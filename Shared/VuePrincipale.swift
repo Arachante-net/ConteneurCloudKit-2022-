@@ -43,32 +43,42 @@ struct VuePrincipale: View {
           TabView {
             ListeGroupe().tabItem {
                 VStack {
-                    Image(systemName: "tray.full.fill")
+                    Image(systemName: "sparkles")
+                        .symbolRenderingMode(.hierarchical)
+
                     Text("Événements")
                     }
                 }
             .tag(1)
-//            .badge("G")
+//            .badge(0)
 
         
-//              ListeItem(appError: $viewModel.appError).tabItem {
-//              ListeItem(viewModel: viewModel.wrappedValue).tabItem {
-              ListeItem(appError: $viewModel.appError).tabItem {
-                VStack {
-                    Image(systemName: "sun.max.fill")
-                    Text("Items")
+              ListeItem(appError: $viewModel.appError)
+                  .tabItem {
+                    VStack {
+                        Image(systemName: "sparkle")
+                            .symbolRenderingMode(.multicolor)
+
+                        Text("Items")
+                        }
                     }
-                }
-            .tag(2)
-            .badge("I")
+                  .tag(2)
       
             Reglages().tabItem {
                 VStack {
-                    Image(systemName: "tray.and.arrow.down.fill")
+                    Image(systemName: "sparkles.square.filled.on.square")
+                        .symbolRenderingMode(.palette)
+                         .foregroundStyle(
+                             .linearGradient(colors: [.red, .black], startPoint: .top, endPoint: .bottomTrailing),
+                             .linearGradient(colors: [.green, .black], startPoint: .top, endPoint: .bottomTrailing),
+                             .linearGradient(colors: [.blue, .black], startPoint: .top, endPoint: .bottomTrailing)
+                         )
                     Text("Réglages")
                     }
                 }
             .tag(3)
+            .badge("!")
+
   
           } // tab view
       }

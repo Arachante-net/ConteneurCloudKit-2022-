@@ -14,20 +14,24 @@ import CoreData
 
 struct VueDetailGroupe: View {
     
-    @Environment(\.managedObjectContext) var contexte
-        
+    @Environment(\.managedObjectContext) private var contexte
+
     @EnvironmentObject private var persistance : ControleurPersistance
-    @Environment(\.managedObjectContext) private var viewContext
-    
+    @EnvironmentObject private var configUtilisateur : Utilisateur
 
 //    ou @State ? ou @ObservedObject ??
 //    @State l'etat n'est pas MàJ immediatement
     @StateObject var groupe: Groupe // idem qu'ObservedObject mais ici c'est cette Vue qui est proprietaire
+    
 // Etats 'locaux'
     @State var collaboration = false
     @State var nom           = ""
 
     @State var feuilleModificationPresentée = false
+    
+    /// Le groupe édité fait partie des favoris de l'utilisateur
+    @State private var estFavoris = false
+
 
 
     var régionGéographique: MKCoordinateRegion {
@@ -50,7 +54,7 @@ struct VueDetailGroupe: View {
           guard let item = $0 as? Item else { return nil }
 
           return AnnotationGeographique(
-            libellé: item.titre ?? "",
+            libellé: item.titre ?? "␀",
             coordonnées: CLLocationCoordinate2D(
                 latitude: item.latitude,
                 longitude: item.longitude),
@@ -61,7 +65,12 @@ struct VueDetailGroupe: View {
     
 
     
-    
+//    init(_ unGroupe: Groupe) {
+//        let ceGroupe = groupe.id?.uuidString ?? ""
+//        let tabFavoris = UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]()
+//
+//        _estFavoris = State(initialValue: Set(tabFavoris).contains(ceGroupe))
+//    }
 
     
 ////////////////////////////////////////////////////:
@@ -86,12 +95,12 @@ struct VueDetailGroupe: View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
     VStack(alignment: .leading, spacing: 2) {
         VStack(alignment: .leading, spacing: 2)  {
-            Etiquette( "Item principal", valeur : (groupe.principal != nil) ? groupe.principal!.titre ?? "..." : "❌").padding(.leading)
+            Etiquette( "Item principal", valeur: (groupe.principal != nil) ? groupe.principal!.titre ?? "␀" : "❌").padding(.leading)
             Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
             Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
             Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
             ForEach(Array(groupe.lesItems)) { item in
-                Etiquette("⚬ \(item.titre ?? "..")" , valeur : Int(item.valeur)).padding(.leading)
+                Etiquette("⚬ \(item.titre ?? "␀")" , valeur : Int(item.valeur)).padding(.leading)
                 }
             Etiquette( "Valeur globale", valeur: groupe.valeur).padding(.leading)
             Etiquette( "Créateur"      , valeur: groupe.createur).padding(.leading)
@@ -121,7 +130,10 @@ struct VueDetailGroupe: View {
         .opacity(groupe.valide ? 1 : 0.1)
         .disabled(groupe.valide ? false : true)
         
-        .onAppear() {}
+        .onAppear() {
+            estFavoris = configUtilisateur.estFavoris(groupe)
+            print("❤️ onAppear" , "@state :" , estFavoris , configUtilisateur.estFavoris(groupe))
+            }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
             VueModifGroupe(groupe) { quiterLaVue in
@@ -133,12 +145,7 @@ struct VueDetailGroupe: View {
             .transition(.opacity) //.move(edge: .top))
             
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-//                Button(action: { feuilleModificationPresentée.toggle() }) {
-//                    Label("Modifier", systemImage: "square.and.pencil").labelStyle(.titleAndIcon)
-//                    }
-                barreMenu
-                }
+            ToolbarItemGroup(placement: .navigationBarTrailing) { barreMenu }
             }
           .navigationBarTitle(Text(groupe.nom ?? ""))
     }
@@ -150,31 +157,12 @@ struct VueDetailGroupe: View {
             Spacer()
 
             Button(action: {
-                let ceGroupe = groupe.id?.uuidString ?? ""
-                var tabFavoris = UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]()
-                var setFavoris = Set(tabFavoris)
-
-//                var _ = setFavoris.contains(ceGroupe)
-//                print ("❤️ contient Alpha"  , setFavoris.contains("Alpha")   )
-//                print ("❤️ contient Beta"   , setFavoris.contains("Beta")    )
-//                print ("❤️ contient Epsilon", setFavoris.contains("Epsilon") )
-//                print ("❤️ contient ce groupe", setFavoris.contains(ceGroupe)  )
-
-                if setFavoris.contains(ceGroupe) {
-                    print("❤️ déja favoris", ceGroupe, setFavoris.count)
-                    setFavoris.remove(ceGroupe)
-                  }
-                else {
-                    setFavoris.insert(ceGroupe)
-                    tabFavoris = Array(setFavoris)
-                    print("❤️ ajout", tabFavoris, tabFavoris.count)
-                  }
-                UserDefaults.standard.set(tabFavoris,forKey: "Favoris")
-
+                configUtilisateur.inverserFavoris(groupe, jeSuisFavoris: &estFavoris)                
+                print("❤️ MàJ liste des favoris :", configUtilisateur.listeFavoris, "devient", estFavoris)
                 
             }) {
                 VStack {
-                    Image(systemName: "heart.fill").foregroundColor(.red)
+                    Image(systemName: "heart.fill").foregroundColor(estFavoris ? .red : .secondary)
                     Text("Favoris").font(.caption)
                     }
               } .buttonStyle(.borderedProminent)
@@ -202,8 +190,8 @@ struct VueDetailGroupe: View {
     
     private func enrôlerUnNouvelItem() {
         withAnimation {
-            let nouvelItem = Item.fournirNouveau(contexte : viewContext , titre : "Nouvelle recrue de test")
-            groupe.enrôler(contexte:viewContext, recrues: [nouvelItem])
+            let nouvelItem = Item.fournirNouveau(contexte : contexte , titre : "Nouvelle recrue de test")
+            groupe.enrôler(contexte:contexte, recrues: [nouvelItem])
             }
         }
     

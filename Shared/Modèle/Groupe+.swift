@@ -220,17 +220,33 @@ extension Groupe {
         toutesLesCoordonnées.forEach() {coord in print("🏁 º", coord.longitude, coord.latitude)}
         print("🏁")
         
+        // Aucun point : on affiche le monde
         if toutesLesCoordonnées.isEmpty {
             return  MKCoordinateRegion(
                     center: CLLocationCoordinate2D(
                         latitude:  0,
                         longitude: 0),
-                    span: MKCoordinateSpan(
-                        latitudeDelta:  180,
-                        longitudeDelta: 360
-                        )
+                    span: Lieu.régionMax
+//                        MKCoordinateSpan(
+//                        latitudeDelta:  180,
+//                        longitudeDelta: 360
+//                        )
                     )
             }
+        
+        // Un seul point (normalement le Principal)
+        if toutesLesCoordonnées.count == 1 {
+            return  MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
+                longitude: toutesLesCoordonnées.first?.longitude ?? 0),
+            span: Lieu.régionParDéfaut
+//                        MKCoordinateSpan(
+//                        latitudeDelta:  180,
+//                        longitudeDelta: 360
+//                        )
+            )
+    }
         
         let lesLongitudes = toutesLesCoordonnées.map {$0.longitude}
         let lesLatitudes  = toutesLesCoordonnées.map {$0.latitude}
@@ -322,10 +338,12 @@ extension Groupe {
             // Detecter et prévenir que l'on depasse le facteur de zoom MapKit.  C'est lequel ??
             // max latitudeDelta : 180
             // cf regionThatFits
-            let envergureMondiale = MKCoordinateSpan(
-                latitudeDelta:  180,
-                longitudeDelta: 360
-                )
+           _ = Lieu.régionMax
+        
+//        MKCoordinateSpan(
+//                latitudeDelta:  180,
+//                longitudeDelta: 360
+//                )
 
             print ("🏁 Carte Milieu", P_milieu.longitude, P_milieu.latitude )
             print ("🏁 Carte Envergure long", envergure.longitudeDelta , "lat", envergure.latitudeDelta)
