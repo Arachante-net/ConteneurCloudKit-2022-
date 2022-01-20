@@ -12,17 +12,34 @@ import Foundation
         case caractereInvalide
         case trucQuiVaPas(num : Int)
         case erreurInterne
+        
         case itemSansPrincipal
+        case itemSansTitre
+        case itemSansID
+        
         case groupeSansPrincipal
+        case groupeSansNom
+        case groupeSansID
+        case groupeInvalide
+        
+        case erreurAPreciser
         
         var errorDescription: String? {
             switch self {
                 case .caractereInvalide:          return NSLocalizedString("C'est quoi ce caractere ?"            , comment: "")
                 case .erreurInterne:              return NSLocalizedString("Erreur interne, reinstallez l'appli !", comment: "")
                 case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ..."    , comment: "")
-                case .itemSansPrincipal:          return NSLocalizedString(" Item sans Groupe referent (Principal", comment: "Pourquoi pas")
-                case .groupeSansPrincipal:        return NSLocalizedString(" Groupe sans Item Principal"          , comment: "C'est grave")
+                
+                case .itemSansPrincipal:          return NSLocalizedString("Item sans Groupe referent (Principal)", comment: "Pourquoi pas")
+                case .itemSansTitre:              return NSLocalizedString("Item sans Titre"                      , comment: "")
+                case .itemSansID:                 return NSLocalizedString("Item sans Identifiant"                         , comment: "")
 
+                case .groupeSansPrincipal:        return NSLocalizedString("Groupe sans Item délégué (Principal)"          , comment: "C'est grave")
+                case .groupeSansNom:              return NSLocalizedString("Groupe sans Nom"                      , comment: "")
+                case .groupeSansID:               return NSLocalizedString("Groupe sans ID"                       , comment: "")
+                case .groupeInvalide:             return NSLocalizedString("Groupe Invalide"                      , comment: "")
+                
+                case .erreurAPreciser:            return NSLocalizedString("", comment:"")
             }
         }
         }
@@ -30,6 +47,9 @@ import Foundation
 struct ErrorType: Identifiable {
     let id = UUID()
     let error : Nimbus
+    
+    init(_ erreur: Nimbus) { error = erreur }
+    
     }
 
     enum Stratus: Error {

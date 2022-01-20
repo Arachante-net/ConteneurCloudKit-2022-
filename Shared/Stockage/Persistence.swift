@@ -70,7 +70,7 @@ class ControleurPersistance : ObservableObject {
         // (permet à un NSPersistentCloudKitContainer d'etre chargé en tant que NSPersistentContainer)
         // (donc inutile si on utilise uniquement un NSPersistentCloudKitContainer ??)
         guard let description = conteneur.persistentStoreDescriptions.first else {
-            appError = ErrorType(error: .erreurInterne)
+            appError = ErrorType( .erreurInterne)
             fatalError("PAS TROUVÉ DE DESCRIPTION")
             }
         
@@ -78,7 +78,7 @@ class ControleurPersistance : ObservableObject {
         description.setOption(true as NSObject, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
         
         // 🔴 Demander les notifications de modifications distantes (en double avec au-dessus)
-        let remoteChangeKey = "NSPersistentStoreRemoteChangeNotificationOptionKey"
+//        let remoteChangeKey = "NSPersistentStoreRemoteChangeNotificationOptionKey"
 //      description.setOption(true as NSNumber, forKey: "NSPersistentStoreRemoteChangeNotificationOptionKey")
         
         // Activer le suivi de l'historique persistant.
@@ -112,13 +112,14 @@ class ControleurPersistance : ObservableObject {
                  
                  Vérifier le message d'erreur pour déterminer quel était le problème réel.
                 */
-                self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
+                self.appError = ErrorType( .trucQuiVaPas(num: 666))
                 fatalError("ERREUR AU CHARGEMENT DU MAGASIN \(error), \(error.userInfo)")
             }
             
             let identifiantConteneur = storeDescription.cloudKitContainerOptions!.containerIdentifier
             print("Identifiant du conteneur", identifiantConteneur)
             let lesOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: identifiantConteneur)
+            print (lesOptions)
 //            storeDescription.cloudKitContainerOptions?.databaseScope = .public
 
 //            let scope:CKDatabase.Scope = .shared
@@ -375,7 +376,7 @@ class ControleurPersistance : ObservableObject {
           // You should not use this function in a shipping application, although it may be useful during development.
        
         let nsError = error as NSError
-        appError = ErrorType(error: .trucQuiVaPas(num: 666))
+        appError = ErrorType(.trucQuiVaPas(num: 666))
         os_log(.error, log: .default, "Erreur lors de l'enregistrement de %@", nsError)
         }
       }

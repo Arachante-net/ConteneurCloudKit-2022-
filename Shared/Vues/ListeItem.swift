@@ -23,7 +23,7 @@ struct ListeItem: View {
 //        requete.sortDescriptors = [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)]
 //        return requete
 //        }
-
+//TODO: TEST
     
     @FetchRequest(sortDescriptors: []) var reqêteMinimalePédagogique: FetchedResults<Item>
 
@@ -223,7 +223,7 @@ struct ListeItem: View {
     
     
     private func GenererErreur() {
-        appError = ErrorType(error: .trucQuiVaPas(num: 666))
+        appError = ErrorType( .trucQuiVaPas(num: 666))
         }
 
 }

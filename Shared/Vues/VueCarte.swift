@@ -125,29 +125,10 @@ struct VueCarte: View {
                   .opacity(laRegion.center == yPlace().location ? 0.2 : 0.7)
                   .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
              
-//              Group {
-//                  Triangle()
-//                      .fill(.red)
-//                      .frame(width: 15, height: 15)
-//                      .position(x: geometrie.size.width / 2, y: 0 )
-//
-//                      .rotationEffect(Angle(degrees: 180))
-//                  Triangle()
-//                      .fill(.green)
-//                      .frame(width: 15, height: 15)
-//                      .position(x: 0, y: geometrie.size.height / 2 )
-//
-//                      .rotationEffect(Angle(degrees: 90))
-//                  Triangle()
-//                      .fill(.yellow)
-//                      .frame(width: 15, height: 15)
-//                      .position(x: geometrie.size.width / 2, y: 0 )
-//
-//                  }
-//          }
+
           .onAppear()    {print("🌐 Affichage carte Item")}
           .onDisappear() {print("🔺 Disparition carte Item")}
-      }}//.background(Color(.clear))
+      }}
       }
     }
    
@@ -163,7 +144,8 @@ struct Croix: Shape {
         path.move(   to: CGPoint(x: rect.minX, y: rect.midY))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
 
-        return path
+        return path  //  .stroke(Color.black, lineWidth: 2) as! Path
+
     }
 }
 

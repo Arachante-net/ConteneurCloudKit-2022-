@@ -90,6 +90,7 @@ struct VueModifGroupe: View {
             .buttonStyle(.borderedProminent)
         Spacer()
         }.onAppear(perform: {
+            let _ = groupe.verifierCohérence(depuis: #function)
             // recuperer les champs modifiables Groupe CoreData
 //            collaboration = groupe.collaboratif
 //            valide        = groupe.valide
@@ -117,6 +118,7 @@ struct VueModifGroupe: View {
         persistance.sauverContexte("Groupe Item")
 //        rafraichir += 1
         print(" ☑️VALEUR A SAUVER", groupe.valeurPrincipale, groupe.principal?.valeur ?? 0)
+        let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
         achevée(true)
         }
     

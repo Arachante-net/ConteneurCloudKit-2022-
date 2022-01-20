@@ -9,42 +9,43 @@
 import SwiftUI
 
 struct EditView: View {
-    @Environment(\.dismiss) var dismiss
-    
-    var location: Location
-    var onSave: (Location) -> Void
-    
-    @State private var name:String
-    @State private var description:String
-    
-    
-    init (location: Location), onSave: @escaping (Location) -> Void {
-        self.location = location
-        self.onSave   = onSave
-        
-        _name        = State(initialValue: location.name)
-        _description = State(initialValue: location.description)
-        }
-    
+//    @Environment(\.dismiss) var dismiss
+//
+//    var location: Location
+//    var onSave: (Location) -> Void
+//
+//    @State private var name:String
+//    @State private var description:String
+//
+//
+//    init (location: Location), onSave: @escaping (Location) -> Void {
+//        self.location = location
+//        self.onSave   = onSave
+//
+//        _name        = State(initialValue: location.name)
+//        _description = State(initialValue: location.description)
+//        }
+//
     var body: some View {
-        NavigationView {
-            Form {
-                Section {
-                    TextField("Lieu",        text: $name)
-                    TextField("Description", text: $description)
-                    }
-                }
-            .navigationTitle("Détails du lieu")
-            .toolbar {
-                Button("OK") {
-                    var newLocation = location
-                    newLocation.name = name
-                    newLocation.description = description
-                    onSave(newLocation)
-                    dismiss()
-                    }
-                }
-            }
+        Text("BIDON")
+//        NavigationView {
+//            Form {
+//                Section {
+//                    TextField("Lieu",        text: $name)
+//                    TextField("Description", text: $description)
+//                    }
+//                }
+//            .navigationTitle("Détails du lieu")
+//            .toolbar {
+//                Button("OK") {
+//                    var newLocation = location
+//                    newLocation.name = name
+//                    newLocation.description = description
+//                    onSave(newLocation)
+//                    dismiss()
+//                    }
+//                }
+//            }
         }
     }
 

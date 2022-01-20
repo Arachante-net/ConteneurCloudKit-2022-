@@ -93,7 +93,7 @@ public class Historien {
                             }
                         catch {
                             let nserror = error as NSError
-                            self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
+                            self.appError = ErrorType( .trucQuiVaPas(num: 666))
                             fatalError("🔹 ERREUR DE RÉCUPERATION SUITE À NOTIFICATION \(nserror), \(nserror.userInfo)")
                             }
         
@@ -114,7 +114,7 @@ public class Historien {
 //                                try self.persistance.sauverContexte() ///////// DANGER
                             } catch {
                                 let nserror = error as NSError
-                                self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
+                                self.appError = ErrorType(.trucQuiVaPas(num: 666))
                                 fatalError("🔹 ERREUR DE MÀJ SUITE À NOTIFICATION \(nserror), \(nserror.userInfo)")
                             }
                         } // contexte
@@ -155,12 +155,12 @@ public class Historien {
               print("🟣 Filtrer la requête sur", ControleurPersistance.auteurTransactions ?? "", "et", ControleurPersistance.nomContexte)
               //FIXME: A ECRIRE COMPLETEMENT
               
-              let predicatTout             = NSPredicate(value:true)
+//            let predicatTout             = NSPredicate(value:true)
               
-              let predicatUnAutreAuteur_  = NSPredicate(format: "%K != %@", "author", ControleurPersistance.auteurTransactions!)
+//            let predicatUnAutreAuteur_  = NSPredicate(format: "%K != %@", "author", ControleurPersistance.auteurTransactions!)
               let predicatUnAutreAuteur   = NSPredicate(format: "%K != %@", #keyPath(NSPersistentHistoryTransaction.author     ), ControleurPersistance.auteurTransactions ?? "") //as! CVarArg )
 
-              let predicatUnAutreContexte_ = NSPredicate(format: "%K != %@", "author", ControleurPersistance.nomContexte)
+//            let predicatUnAutreContexte_ = NSPredicate(format: "%K != %@", "author", ControleurPersistance.nomContexte)
               let predicatUnAutreContexte  = NSPredicate(format: "%K != %@", #keyPath(NSPersistentHistoryTransaction.contextName), ControleurPersistance.nomContexte        )
             
               // Regarder uniquement les transactions créées par d'autres
@@ -210,7 +210,7 @@ public class Historien {
             }
           } catch {
             let nsError = error as NSError
-              self.appError = ErrorType(error: .trucQuiVaPas(num: 666))
+              self.appError = ErrorType( .trucQuiVaPas(num: 666))
             os_log(
               .error,
               log: .default,
@@ -395,11 +395,11 @@ public class Historien {
     } // integrerLesEvolutions
 
     private func faireLeMenage() {
-        let maintenant = Date() //
-        let deuxSemainesAuparavant = Calendar.current.date(byAdding: .day, value: -14, to: maintenant)!
+//      let maintenant = Date() //
+//      let deuxSemainesAuparavant = Calendar.current.date(byAdding: .day, value: -14, to: maintenant)!
         let laSemaineDerniere      = Date(timeIntervalSinceNow: TimeInterval(exactly: -604_800)!)
 
-        let netoyerHistorique_2 = NSPersistentHistoryChangeRequest.deleteHistory(before: deuxSemainesAuparavant)
+//      let netoyerHistorique_2 = NSPersistentHistoryChangeRequest.deleteHistory(before: deuxSemainesAuparavant)
         let netoyerHistorique   = NSPersistentHistoryChangeRequest.deleteHistory(before: laSemaineDerniere)
 
         

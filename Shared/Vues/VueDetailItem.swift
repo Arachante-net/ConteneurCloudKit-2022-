@@ -66,7 +66,7 @@ struct VueDetailItem: View {
 
         
         
-        .onAppear(perform: {})
+        .onAppear(perform: { let _ = item.verifierCohérence(depuis: #file) })
         
         }
         }

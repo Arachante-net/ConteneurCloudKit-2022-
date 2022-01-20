@@ -22,7 +22,6 @@ struct VueDetailGroupe: View {
 //    ou @State ? ou @ObservedObject ??
 //    @State l'etat n'est pas MàJ immediatement
     @StateObject var groupe: Groupe // idem qu'ObservedObject mais ici c'est cette Vue qui est proprietaire
-    
 // Etats 'locaux'
     @State var collaboration = false
     @State var nom           = ""
@@ -131,6 +130,7 @@ struct VueDetailGroupe: View {
         .disabled(groupe.valide ? false : true)
         
         .onAppear() {
+            let _ = groupe.verifierCohérence(depuis: #function)
             estFavoris = configUtilisateur.estFavoris(groupe)
             print("❤️ onAppear" , "@state :" , estFavoris , configUtilisateur.estFavoris(groupe))
             }
@@ -145,7 +145,10 @@ struct VueDetailGroupe: View {
             .transition(.opacity) //.move(edge: .top))
             
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) { barreMenu }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+//                BarreOutilsGroupe(feuilleModificationPresentée: $feuilleModificationPresentée, estFavoris: $estFavoris, groupe: Binding(projectedValue: _groupe ) )
+                barreMenu
+            }
             }
           .navigationBarTitle(Text(groupe.nom ?? ""))
     }

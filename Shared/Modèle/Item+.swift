@@ -72,7 +72,7 @@ extension Item {
 extension Item {
     
     
-    static func vide() { Item() }
+//    static func vide() { Item() }
     
     static func bidon() -> Item {
         let nouvelItem = Item()
@@ -349,11 +349,40 @@ extension Item {
     override public func prepareForDeletion() {
 //        super.prepareForDeletion()
         print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
-              "délégué du groupe", principal?.nom,
-              "membre de", groupes?.count, "autres groupes")
+              "délégué du groupe", principal?.nom ?? "␀",
+              "membre de", groupes?.count ?? 0, "autres groupes")
         }
 
 }
+
+
+//MARK: - Pour Tests -
+extension Item {
+    
+    func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
+        var lesErreurs = [ErrorType]()
+        print("☑️ Cohérence de l'item", titre ?? "␀" , ", depuis :" , depuis)
+
+//        if (titre == nil || ((titre?.isEmpty) != nil) || titre == "")
+        if (titre == nil || titre!.isEmpty || titre == "")
+            {lesErreurs.append(ErrorType(.itemSansTitre ))}
+        
+        if (id == nil )
+            { lesErreurs.append(ErrorType(.itemSansID )) }
+        if principal == nil
+            { lesErreurs.append(ErrorType(.itemSansPrincipal ))}
+        
+        if lesErreurs.isEmpty {print("☑️✅")}
+        else { lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
+        
+        return lesErreurs
+        }
+    }
+
+
+
+
+
 
 
 

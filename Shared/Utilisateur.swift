@@ -23,7 +23,7 @@ class Utilisateur : ObservableObject {
     configuration.set(true,                                             forKey: "EstInteligent")
     configuration.set(CGFloat.pi,                                       forKey: "Pi")
     configuration.set(Date(),                                           forKey: "DerniereUtilisation")
- // Les favoris ne sont placés que par l'utilisateur (pas par l'init de l'appli)
+// Les favoris ne sont placés que par l'utilisateur (pas par l'init de l'appli)
 //    let favoris = ["Alpha", "Beta"]
 //    configuration.set(favoris,                                          forKey: "Favoris")
     let Identification = ["Prenom": "Michel", "Nom": "DENOUAL", "Pays": "FR"]
@@ -34,8 +34,8 @@ class Utilisateur : ObservableObject {
     // il est placé dans "tab".
     // S'il n'existe pas (ou si il existe mais n'est pas un tableau de chaînes),
     // alors "tab" devient un nouveau tableau de chaînes vide.
-    let tab  = configuration.object(forKey:"Favoris")         as? [String]         ?? [String]()
-    let dico = configuration.object(forKey: "Identification") as? [String: String] ?? [String: String]()
+//    let tab  = configuration.object(forKey:"Favoris")         as? [String]         ?? [String]()
+//    let dico = configuration.object(forKey: "Identification") as? [String: String] ?? [String: String]()
 
         
         
@@ -93,6 +93,7 @@ class Utilisateur : ObservableObject {
         let _           = UIDevice.current.systemName
         let nomAppareil = UIDevice.current.name
         let idAppareil  = UIDevice.current.identifierForVendor
+        print(nom, nomComplet, nomAppareil)
         return idAppareil?.uuidString ?? ""
         }
 

@@ -68,8 +68,6 @@
 		D0BD19C327317A6500E01EF5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BD19C227317A6500E01EF5 /* CloudKit.framework */; };
 		D0C9D9B7274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
 		D0C9D9B8274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
-		D0DFCA4B278D879400914ECF /* BarreOutilsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085AA2F276DF88100535552 /* BarreOutilsItem.swift */; };
-		D0DFCA4C278D879600914ECF /* BarreOutilsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085AA2F276DF88100535552 /* BarreOutilsItem.swift */; };
 		D0DFCA51278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */; };
 		D0DFCA52278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */; };
 		D0DFCA542791BDF200914ECF /* VueDetailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DFCA532791BDF200914ECF /* VueDetailItem.swift */; };
@@ -92,8 +90,6 @@
 		D0E897282789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
 		D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
-		D0F187A32796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */; };
-		D0F187A42796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,7 +127,7 @@
 		D0627E94275A412B00F51592 /* ListeCollaboratif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListeCollaboratif.swift; sourceTree = "<group>"; };
 		D06D875827567DDA0038C955 /* Utilisateur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilisateur.swift; sourceTree = "<group>"; };
 		D085AA2E276DC6A500535552 /* NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = NOTES.md; sourceTree = "<group>"; };
-		D085AA2F276DF88100535552 /* BarreOutilsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarreOutilsItem.swift; sourceTree = SOURCE_ROOT; };
+		D085AA2F276DF88100535552 /* BarreOutilsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarreOutilsItem.swift; path = "Shared/Vues/OLD et TEST/BarreOutilsItem.swift"; sourceTree = SOURCE_ROOT; };
 		D0A232AE27746649006A3320 /* Etiquette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Etiquette.swift; sourceTree = "<group>"; };
 		D0B84E412764A885000E6849 /* VueModifGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifGroupe.swift; sourceTree = "<group>"; };
 		D0BD19C027317A6000E01EF5 /* ConteneurCloudKit (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ConteneurCloudKit (iOS).entitlements"; sourceTree = "<group>"; };
@@ -153,7 +149,8 @@
 		D0E897262789957B00A82214 /* Etat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Etat.swift; path = Shared/Etat.swift; sourceTree = SOURCE_ROOT; };
 		D0E8974D278ACD0600A82214 /* Binding+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Binding+.swift"; path = "Shared/Binding+.swift"; sourceTree = SOURCE_ROOT; };
 		D0F1879F27969C3C00FF9EAB /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
-		D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarreOutilsIGroupe.swift; sourceTree = SOURCE_ROOT; };
+		D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarreOutilsIGroupe.swift; path = "Shared/Vues/OLD et TEST/BarreOutilsIGroupe.swift"; sourceTree = SOURCE_ROOT; };
+		D0F187A527995FD500FF9EAB /* ScriptMarques.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ScriptMarques.sh; sourceTree = "<group>"; };
 		D0FF9C2B277A4C0D00902CF2 /* VueModifItemOLD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifItemOLD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,6 +176,7 @@
 		D04EDA7A273137F5009BB455 = {
 			isa = PBXGroup;
 			children = (
+				D0F187A62799601C00FF9EAB /* Utilitaires */,
 				D0BD19C427317A7500E01EF5 /* ConteneurCloudKit--iOS--Info.plist */,
 				D0BD19C027317A6000E01EF5 /* ConteneurCloudKit (iOS).entitlements */,
 				D04EDA7F273137F5009BB455 /* Shared */,
@@ -266,8 +264,6 @@
 				D0385A2F27724D010063E926 /* Voyant.swift */,
 				D0A232AE27746649006A3320 /* Etiquette.swift */,
 				D05AFAA327510C83001CCA52 /* EtiquetteCoordonnees.swift */,
-				D085AA2F276DF88100535552 /* BarreOutilsItem.swift */,
-				D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */,
 				D018306D2743BB1C000889E2 /* ListeGroupe.swift */,
 				D01830702743BEEC000889E2 /* VueDetailGroupe.swift */,
 				D01830792743F98D000889E2 /* VueAjouterGroupe.swift */,
@@ -294,6 +290,8 @@
 		D0DFCA65279402C300914ECF /* OLD et TEST */ = {
 			isa = PBXGroup;
 			children = (
+				D085AA2F276DF88100535552 /* BarreOutilsItem.swift */,
+				D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */,
 				D04B25CF2779C48F00AD171D /* VueEditionCarte.swift */,
 				D04A0D5E2735563000EFDCAC /* VueDetailItem-OLD.swift */,
 				D0DFCA622793547D00914ECF /* VueTestItemNew.swift */,
@@ -303,6 +301,14 @@
 				D0DFCA5C279351F000914ECF /* VueCarteTestNew.swift */,
 			);
 			path = "OLD et TEST";
+			sourceTree = "<group>";
+		};
+		D0F187A62799601C00FF9EAB /* Utilitaires */ = {
+			isa = PBXGroup;
+			children = (
+				D0F187A527995FD500FF9EAB /* ScriptMarques.sh */,
+			);
+			path = Utilitaires;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,6 +321,7 @@
 				D04EDA86273137F6009BB455 /* Sources */,
 				D04EDA87273137F6009BB455 /* Frameworks */,
 				D04EDA88273137F6009BB455 /* Resources */,
+				D0F187A72799636100FF9EAB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -398,6 +405,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D0F187A72799636100FF9EAB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/marqueursOutputFile",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\n#SRCROOT=\".\"\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" -type f \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D04EDA86273137F6009BB455 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -419,7 +447,6 @@
 				D04B2596277869BD00AD171D /* Coordonnees+.swift in Sources */,
 				D018306B2742E567000889E2 /* ListeItem.swift in Sources */,
 				D0385A242771BEF10063E926 /* Vues+.swift in Sources */,
-				D0DFCA4B278D879400914ECF /* BarreOutilsItem.swift in Sources */,
 				D04A0D562732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0385A2D277211010063E926 /* Reglages.swift in Sources */,
@@ -443,7 +470,6 @@
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
 				D0DFCA542791BDF200914ECF /* VueDetailItem.swift in Sources */,
 				D018307A2743F98D000889E2 /* VueAjouterGroupe.swift in Sources */,
-				D0F187A32796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */,
 				D01830772743DDE4000889E2 /* VuePrincipale.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,7 +494,6 @@
 				D04B2597277869BD00AD171D /* Coordonnees+.swift in Sources */,
 				D018306C2742E567000889E2 /* ListeItem.swift in Sources */,
 				D0385A252771BEF10063E926 /* Vues+.swift in Sources */,
-				D0DFCA4C278D879600914ECF /* BarreOutilsItem.swift in Sources */,
 				D04A0D572732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0385A2E277211010063E926 /* Reglages.swift in Sources */,
@@ -492,7 +517,6 @@
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,
 				D0DFCA552791BDF200914ECF /* VueDetailItem.swift in Sources */,
 				D018307B2743F98D000889E2 /* VueAjouterGroupe.swift in Sources */,
-				D0F187A42796EA8600FF9EAB /* BarreOutilsIGroupe.swift in Sources */,
 				D01830782743DDE4000889E2 /* VuePrincipale.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

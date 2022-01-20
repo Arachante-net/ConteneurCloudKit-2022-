@@ -71,9 +71,15 @@ struct ListeGroupe: View {
               courant = nom
               }
           }
-      .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("Editer") }}
+      .toolbar { ToolbarItem(placement: .navigationBarTrailing)
+          {EditButton().help("Editer") }
+          ToolbarItem(placement: .principal) {
+                                  Image(systemName: "ellipsis.circle")
+                              }
+      }
        
-      .navigationBarTitle(Text("Événements"))
+    .navigationBarTitle(Text("Événements") + Text(Image(systemName: "sparkles")) + Text("."))
+        
       //FIXME: remplacer par toolbar(content:) avec placement navigationBarLeading ou navigationBarTrailing .
       .navigationBarItems(
         leading:
@@ -98,7 +104,7 @@ struct ListeGroupe: View {
       )
     }.searchable(text: $recherche)
           .onChange(of: recherche) {valeurCherchée in
-              groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool }
+              groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool } // Forced cast of 'Bool' to same type has no effect, N'EST PAS UNE ERREUR
             }
       
           .alert(item: $groupesEnCourDeSuppression) { jeuIndices in

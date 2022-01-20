@@ -163,11 +163,11 @@ extension Groupe {
 //                throw Nimbus.groupeSansPrincipal
                 // donc la suite n'est pas executée
                 fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!")
-                print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
-                return Item.bidon() }
+//                print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
+//                return Item.bidon() }
         }
         }
-    
+    }
     /// Convertir .items:NSSet? en .lesItems:Set<Item>
     var lesItems:Set<Item> { return items as? Set<Item> ?? [] }
     
@@ -191,14 +191,8 @@ extension Groupe {
     
     var valeurPrincipale: Int {
         get { Int(principal?.valeur ?? 0) }
-        set {
-            print("☑️AVANT", principal?.valeur)
-            print("☑️NOUVELLE", newValue)
-            principal?.valeur = Int64(newValue)
-//            integration = Int64(newValue)
-            print("☑️APRES", principal?.valeur)
+        set { principal?.valeur = Int64(newValue) }
         }
-    }
     
     
     var lesCoordonnées:[CLLocationCoordinate2D] {
@@ -227,26 +221,18 @@ extension Groupe {
                         latitude:  0,
                         longitude: 0),
                     span: Lieu.régionMax
-//                        MKCoordinateSpan(
-//                        latitudeDelta:  180,
-//                        longitudeDelta: 360
-//                        )
                     )
             }
         
         // Un seul point (normalement le Principal)
         if toutesLesCoordonnées.count == 1 {
             return  MKCoordinateRegion(
-            center: CLLocationCoordinate2D(
-                latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
-                longitude: toutesLesCoordonnées.first?.longitude ?? 0),
-            span: Lieu.régionParDéfaut
-//                        MKCoordinateSpan(
-//                        latitudeDelta:  180,
-//                        longitudeDelta: 360
-//                        )
-            )
-    }
+                center: CLLocationCoordinate2D(
+                    latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
+                    longitude: toutesLesCoordonnées.first?.longitude ?? 0),
+                span: Lieu.régionParDéfaut
+                )
+            }
         
         let lesLongitudes = toutesLesCoordonnées.map {$0.longitude}
         let lesLatitudes  = toutesLesCoordonnées.map {$0.latitude}
@@ -385,6 +371,44 @@ extension Groupe {
 //              "et de", items?.count, "autres items.")
 //        }
 
+    
+}
+    
+    
+
+
+//MARK: - Pour Tests -
+    
+extension Groupe {
+
+    
+    func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
+        var lesErreurs = [ErrorType]()
+        print("☑️ Cohérence du groupe", nom ?? "␀" , ", depuis :" , depuis)
+        
+        if !valide
+            {lesErreurs.append(ErrorType(.groupeInvalide ))}
+        
+        if (nom == nil || nom!.isEmpty || nom == "")
+            {lesErreurs.append(ErrorType(.groupeSansNom ))}
+        
+        if (id == nil )
+            { lesErreurs.append(ErrorType(.groupeSansID )) }
+        
+        if principal == nil
+            { lesErreurs.append(ErrorType(.itemSansPrincipal ))}
+        
+        
+        
+        if lesErreurs.isEmpty {print("☑️✅")}
+        else { lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
+        
+        return lesErreurs
+        }
     }
+
+
+
+
 
 
