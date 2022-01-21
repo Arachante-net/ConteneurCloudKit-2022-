@@ -71,40 +71,34 @@ struct ListeGroupe: View {
               courant = nom
               }
           }
-      .toolbar { ToolbarItem(placement: .navigationBarTrailing)
-          {EditButton().help("Editer") }
-          ToolbarItem(placement: .principal) {
-                                  Image(systemName: "ellipsis.circle")
-                              }
-      }
-       
-    .navigationBarTitle(Text("Événements") + Text(Image(systemName: "sparkles")) + Text("."))
         
-      //FIXME: remplacer par toolbar(content:) avec placement navigationBarLeading ou navigationBarTrailing .
-      .navigationBarItems(
-        leading:
-            HStack {
-//                Spacer()
-//                Button(action: ajouterIndividuel)
-//                { Label("Ajouter un Individuel", systemImage: "plus").help("YES")}
-//                    .help("Créer un suivi individuel")
-//                Button(action: ajouterCollaboratif)
-//                    { Label("Ajouter un Groupe/Item Collaboratif", systemImage: "plus.square.dashed")}
-//                    .help("Créer un suivi collaboratif")
-                Button(action: { presenterCréationGroupe.toggle() }) {
-                  Image(systemName: "plus")
-                  }.help("YES")
-                },
-        trailing:
-            HStack {
-//                Spacer()
+      .toolbar {
+          ToolbarItem(placement: .navigationBarTrailing)
+            {EditButton().help("Editer") }
+          ToolbarItem(placement: .principal)
+            {Image(systemName: "ellipsis.circle")}
+          ToolbarItem(placement: .navigationBarTrailing)
+            { HStack {
+                Button(action: { presenterCréationGroupe.toggle() })
+                    { Image(systemName: "plus") }
+                }
+            }
+          ToolbarItem(placement: .navigationBarLeading)
+            { HStack {
                 Button(action: { let _ = Item.extractionItems })
                     { Image(systemName: "arrow.2.circlepath")}
+                }
             }
-      )
+      }
+
+    .navigationBarTitle(Text("Événements") + Text(Image(systemName: "sparkles")) + Text("."))
+        
+
+        
+        
     }.searchable(text: $recherche)
           .onChange(of: recherche) {valeurCherchée in
-              groupesFiltrés = Array(groupes).filter {$0.nom?.contains(valeurCherchée) as! Bool } // Forced cast of 'Bool' to same type has no effect, N'EST PAS UNE ERREUR
+              groupesFiltrés = Array(groupes).filter {($0.nom?.contains(valeurCherchée))! as Bool } // Forced cast of 'Bool' to same type has no effect, N'EST PAS UNE ERREUR
             }
       
           .alert(item: $groupesEnCourDeSuppression) { jeuIndices in
@@ -119,8 +113,11 @@ struct ListeGroupe: View {
               jeuIndices.forEach {
                   let groupe = groupes[$0]
                   description = groupe.description
+                  //TODO: verifier si collaboration à d'autre groupes et du coup si la suppression est possible
+                  groupe.collaborateurs.forEach
+                    { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
                   }
-
+              
               return Alert(
                   title: Text("Suppression du groupe ") + Text("'\(nom)'").foregroundColor(.accentColor),
                   message: Text(description),

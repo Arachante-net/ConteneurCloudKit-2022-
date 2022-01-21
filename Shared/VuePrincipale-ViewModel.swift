@@ -41,9 +41,6 @@ extension VueModifItem {
                 latitude: Lieu.exemple.latitude,
                 longitude: Lieu.exemple.longitude),
             span: Lieu.régionParDéfaut
-//                MKCoordinateSpan(
-//                latitudeDelta: 0.5,
-//                longitudeDelta: 0.5)
             )
         /// Les lieux éditables (ici on en utilise qu'un seul)
         @Published  var locations = [Lieu]()

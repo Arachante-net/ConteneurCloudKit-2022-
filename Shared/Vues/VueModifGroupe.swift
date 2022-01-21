@@ -89,15 +89,16 @@ struct VueModifGroupe: View {
         Button(" VALIDER ") { validerFormulaire() }
             .buttonStyle(.borderedProminent)
         Spacer()
-        }.onAppear(perform: {
-            let _ = groupe.verifierCohérence(depuis: #function)
+        }
+        .onDisappear() { let _ = groupe.verifierCohérence(depuis: #function) }
+        .onAppear()    { let _ = groupe.verifierCohérence(depuis: #function)
             // recuperer les champs modifiables Groupe CoreData
 //            collaboration = groupe.collaboratif
 //            valide        = groupe.valide
 //            nom           = groupe.nom ?? "anonyme"
             // d'autres champs ?
 //            laValeur = groupe.valeurPrincipale
-            })
+            }
                     
         
     }
@@ -114,10 +115,8 @@ struct VueModifGroupe: View {
 //        groupe.collaboratif = collaboration
 //        groupe.valide = valide
 //        groupe.principal?.valeur = Int64(laValeur)
-        //TODO: Enregistrer les autres changements
+        //TODO : Enregistrer les autres changements
         persistance.sauverContexte("Groupe Item")
-//        rafraichir += 1
-        print(" ☑️VALEUR A SAUVER", groupe.valeurPrincipale, groupe.principal?.valeur ?? 0)
         let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
         achevée(true)
         }

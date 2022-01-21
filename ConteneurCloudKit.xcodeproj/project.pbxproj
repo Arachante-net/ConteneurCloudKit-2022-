@@ -254,9 +254,7 @@
 		D0A7BB7D2749797300E2073D /* Vues */ = {
 			isa = PBXGroup;
 			children = (
-				D018306A2742E567000889E2 /* ListeItem.swift */,
-				D0DFCA532791BDF200914ECF /* VueDetailItem.swift */,
-				D0DFCA592792ECC500914ECF /* VueModifItem.swift */,
+				D0F187A8279AEE6A00FF9EAB /* Item */,
 				D0DFCA562791CC6600914ECF /* VueCarte.swift */,
 				D0DFCA6927943F4800914ECF /* VueCarteEdition.swift */,
 				D04B25D22779C4BC00AD171D /* VueEditionLieu.swift */,
@@ -309,6 +307,16 @@
 				D0F187A527995FD500FF9EAB /* ScriptMarques.sh */,
 			);
 			path = Utilitaires;
+			sourceTree = "<group>";
+		};
+		D0F187A8279AEE6A00FF9EAB /* Item */ = {
+			isa = PBXGroup;
+			children = (
+				D018306A2742E567000889E2 /* ListeItem.swift */,
+				D0DFCA532791BDF200914ECF /* VueDetailItem.swift */,
+				D0DFCA592792ECC500914ECF /* VueModifItem.swift */,
+			);
+			name = Item;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -418,11 +426,10 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/marqueursOutputFile",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\n#SRCROOT=\".\"\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" -type f \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"\n";
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\n\n#echo ${SRCROOT}\n\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" -type f \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -40,7 +40,7 @@ import CoreData
 ////            contexte.transactionAuthor = nil
 //            }
 //        catch {
-//            //TODO: Peut mieux faire
+//            //TODO : Peut mieux faire
 //            let nsError = error as NSError
 //            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
 //            }
@@ -70,7 +70,7 @@ import CoreData
 ////            contexte.transactionAuthor = nil
 //            }
 //        catch {
-//            //TODO: Peut mieux faire
+//            //TODO : Peut mieux faire
 //            let nsError = error as NSError
 //            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
 //            }

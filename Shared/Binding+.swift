@@ -22,6 +22,7 @@ extension Binding {
     
 }
 
+//ERROR: pour le plaisir
 
 // Slider(value: $rating.onChange(sliderChanged))
 // func sliderChanged(_ value: Double) {...}

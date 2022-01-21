@@ -15,8 +15,8 @@ import MapKit
 struct VueModifItemOLD: View {
     
 //    @ObservedObject var item: Item
-//FIXME:  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
-//FIXME: c'est quoi un  @StateObject  ?
+//FIXME :  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
+//FIXME : c'est quoi un  @StateObject  ?
     
     let achevée: (Bool) -> Void
      

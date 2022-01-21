@@ -15,14 +15,15 @@ import MapKit
 struct VueModifItem: View {
     
 //    @ObservedObject var item: Item
-//FIXME:  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
-//FIXME: c'est quoi un  @StateObject  ?
+//FIXME :  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
+//FIXME : c'est quoi un  @StateObject  ?
     
      
 //    @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
-    @State var item:Item
-    @Binding var région : MKCoordinateRegion
+//    @State var item:Item
+    @Binding var item:Item
+//    @Binding var région : MKCoordinateRegion
     let achevée: (Bool) -> Void
 
     @State var feuilleAffectationGroupesPresentée:Bool = false
@@ -92,7 +93,7 @@ struct VueModifItem: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteEdition(item: $item, laRegion: $région)
+            VueCarteEdition(item: $item, laRegion: $item.région)
 //            VueCarteTestNew(item: $item)
 
             
@@ -152,8 +153,9 @@ struct VueModifItem: View {
                 }
                 
                 Button(action: {
-                    item.longitude = région.center.longitude
-                    item.latitude  = région.center.latitude
+                    item.centrerSurLaRégion()
+//                    item.longitude = item.région.center.longitude
+//                    item.latitude  = item.région.center.latitude
 
                    ////////////:
 //                    if !Ξ.locations.isEmpty {
@@ -177,9 +179,10 @@ struct VueModifItem: View {
         
         
         
-        
+        .onDisappear() {let _ = item.verifierCohérence(depuis: #function)}
         
         .onAppear(perform: {
+            let _ = item.verifierCohérence(depuis: #function)
             // charger un Item en mémoire
 //            titre     = item.titre ?? "..."
 //            valeurLocale    = Int(item.valeur)

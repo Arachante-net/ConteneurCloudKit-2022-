@@ -110,7 +110,7 @@ extension Groupe {
         do {
             contexte.name = "Groupe"
             try contexte.save()
-//            contexte.transactionAuthor = nil
+            contexte.name = nil
             }
         catch {
             //TODO: Peut mieux faire
@@ -194,6 +194,16 @@ extension Groupe {
         set { principal?.valeur = Int64(newValue) }
         }
     
+    /// Liste des groupes en adhérence
+    func collaborateurs_() -> Set<Groupe> {
+        guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
+        return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
+        }
+    
+    var collaborateurs : Set<Groupe> {
+        guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
+        return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
+        }
     
     var lesCoordonnées:[CLLocationCoordinate2D] {
         lesItems.map {$0.coordonnées}
@@ -384,7 +394,7 @@ extension Groupe {
     
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
-        print("☑️ Cohérence du groupe", nom ?? "␀" , ", depuis :" , depuis)
+        print("☑️ Cohérence du groupe", nom ?? "␀" , ", depuis" , depuis, terminator: " :")
         
         if !valide
             {lesErreurs.append(ErrorType(.groupeInvalide ))}
@@ -400,8 +410,10 @@ extension Groupe {
         
         
         
-        if lesErreurs.isEmpty {print("☑️✅")}
-        else { lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
+        if lesErreurs.isEmpty {print(" ✅")}
+        else {
+            print("")
+            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
         
         return lesErreurs
         }

@@ -342,9 +342,25 @@ extension Item {
         set {
             latitude = newValue.center.latitude
             longitude = newValue.center.longitude
+            (latitude, longitude) = pointer(newValue.center)
             }
         }
         
+    func centrerSurLaRégion() {
+//      longitude = région.center.longitude
+//      latitude  = région.center.latitude
+        (latitude, longitude) = centrerSur(région)
+      }
+    
+    func centrerSur(_ région: MKCoordinateRegion ) -> (latitude:Double, longitude:Double) {
+       (latitude: région.center.latitude, longitude: région.center.longitude)
+      }
+    
+    /// Fournir  les coordonnées en argument sous forme de tuple
+    func pointer(_ point: CLLocationCoordinate2D ) -> (latitude:Double, longitude:Double) {
+       (latitude: point.latitude, longitude: point.longitude)
+      }
+    
     
     override public func prepareForDeletion() {
 //        super.prepareForDeletion()
@@ -358,10 +374,10 @@ extension Item {
 
 //MARK: - Pour Tests -
 extension Item {
-    
+    //TODO: - NOUVEAU TODO 21 Janvier 2022
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
-        print("☑️ Cohérence de l'item", titre ?? "␀" , ", depuis :" , depuis)
+        print("☑️ Cohérence de l'item", titre ?? "␀" , ", depuis" , depuis, terminator: " :")
 
 //        if (titre == nil || ((titre?.isEmpty) != nil) || titre == "")
         if (titre == nil || titre!.isEmpty || titre == "")
@@ -372,8 +388,10 @@ extension Item {
         if principal == nil
             { lesErreurs.append(ErrorType(.itemSansPrincipal ))}
         
-        if lesErreurs.isEmpty {print("☑️✅")}
-        else { lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
+        if lesErreurs.isEmpty {print(" ✅")}
+        else {
+            print("")
+            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
         
         return lesErreurs
         }

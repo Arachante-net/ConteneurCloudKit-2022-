@@ -23,7 +23,6 @@ struct ListeItem: View {
 //        requete.sortDescriptors = [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)]
 //        return requete
 //        }
-//TODO: TEST
     
     @FetchRequest(sortDescriptors: []) var reqêteMinimalePédagogique: FetchedResults<Item>
 
@@ -64,8 +63,8 @@ struct ListeItem: View {
         List {
         ForEach(items) { item in
             NavigationLink( destination: VueDetailItem (
-                item: item ,
-                région: item.région
+                item: item //,
+//                région: item.région
                 ))
             { Text(item.leTitre) }
             
@@ -128,7 +127,7 @@ struct ListeItem: View {
 
         var description:String=""
         
-        //TODO: Si certitude d'avoir un jeu de taille 1, pas vraiment la peine de parcourir le jeu
+        //???: Si certitude d'avoir un jeu de taille 1, pas vraiment la peine de parcourir le jeu
         jeuIndices.forEach {
             let item = items[$0]
             description = item.description
@@ -197,28 +196,7 @@ struct ListeItem: View {
             }
         }
 
-    // Pas utilisé
-//    private func supprimerItems_(positions: IndexSet) {
-//    //TODO: on pourrait utiliser  item.prepareForDeletion()
-//        print("🔘 Suppression de :", positions.map { items[$0].titre ?? ""} )
-//        viewModel.alerteAffichée = true
-//        positions.forEach {
-//            let item = items[$0]
-//            print("\t🔘 Suppression de :", item.titre ?? "" )
-//            viewModel.itemEnCours = item
-//            viewModel.alerteAffichée = true
-//            print("🔘", $0 + 1, "° item du menu :", item.titre ?? ", valeur :", item.valeur , " , membre de" , item.groupes?.count ?? 0, "groupes")
-//            print("🔘\t:" , item.groupes?.map { ($0 as! Groupe).nom ?? ""} ?? "" )
-//
-//            item.removeFromGroupes(item.groupes ?? [])
-////            item.delete()
-//            persistance.sauverContexte()
-//            }
-//
-//        withAnimation {
-//            persistance.supprimerObjets(positions.map { items[$0] })
-//            }
-//        }
+
 
     
     

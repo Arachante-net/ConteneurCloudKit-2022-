@@ -40,10 +40,10 @@ struct VueValeurItemPrincipal: View {
             .padding(.leading)
             .onChange(of: item.valeur) { val in
                 print("☑️ ----\(val)----")
-                //FIXME: Y-a vraiment besoin de ça ??
+                //FIXME: Y-a vraiment besoin de cette bidouille ??
                 groupe.integration.toggle() //+= 1 // pour se rafraichir
+                
                 persistance.sauverContexte("Item")
-//                ListeGroupe.rafraichir.toggle()
                 }
     }
 }

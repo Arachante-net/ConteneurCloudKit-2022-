@@ -15,7 +15,7 @@ import SwiftUI
 /// - VueEditionLieu( place ) { newLocation in ...  }
 struct VueEditionLieu: View {
     var lieu: Lieu
-    //TODO: Faire un @Binding de lieu
+    //TODO: Faire un @Binding de lieu, sauf que l'instant on utilise pas 
         
     @StateObject private var Ξ:ViewModel // = ViewModel(item)
     

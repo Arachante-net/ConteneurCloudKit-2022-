@@ -45,6 +45,7 @@ public class Historien {
     
     //FIXME: un autre moyen d'obtenir le conteneur ?
     var conteneur : NSPersistentCloudKitContainer
+    
     init(conteneur : NSPersistentCloudKitContainer)
         {self.conteneur = conteneur}
   
@@ -210,7 +211,7 @@ public class Historien {
             }
           } catch {
             let nsError = error as NSError
-              self.appError = ErrorType( .trucQuiVaPas(num: 666))
+              self.appError = ErrorType( .trucQuiVaPas(num: 666) )
             os_log(
               .error,
               log: .default,

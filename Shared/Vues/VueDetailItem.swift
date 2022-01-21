@@ -20,9 +20,12 @@ struct VueDetailItem: View {
     @StateObject private var Ξ = ViewModel()
 //    @StateObject private var Ξ : ViewModel //(Item.bidon())
     
+    // l'appel depuis ListeItem impose que les deux @State item et région  soient privés
+    // 'VueDetailItem' initializer is inaccessible due to 'private' protection level
     @State var item : Item
-    @State var région : MKCoordinateRegion
-    
+//    @State var région : MKCoordinateRegion
+//    var région = item.région // MKCoordinateRegion
+
 
     
 
@@ -52,7 +55,8 @@ struct VueDetailItem: View {
                 .opacity(item.valide ? 1.0 : 0.1)
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
-                    VueModifItem( item: item, région: $région ) { valeur in
+//                  VueModifItem( item: $item, région: $item.région ) { valeur in
+                    VueModifItem( item: $item) { valeur in
     //                print("CLOSURE" , valeur, "... ACTION FORMULAIRE MODIFICATION ITEM")
                     Ξ.feuilleModificationItemPresentée = false
                     }
@@ -144,7 +148,7 @@ struct VueDetailItem: View {
 //            let _ = print("🌐 Appel de VueCarte avec longitudes :", Ξ.item.longitude, lieuDeEvenement.longitude )
             VueCarte(
                 item : $item ,
-                laRegion: $région
+                laRegion: $item.région
             )
 
             }

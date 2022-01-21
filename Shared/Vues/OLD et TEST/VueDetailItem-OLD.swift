@@ -17,10 +17,8 @@ struct VueDetailItemOLD: View {
 
     @EnvironmentObject private var persistance: ControleurPersistance
     
-//    @StateObject private var Ξ = ViewModel()
-    @StateObject private var Ξ:ViewModel // = ViewModel(item)
+    @StateObject private var Ξ:ViewModel 
 
-    //:FIXME: Item incorporable au ViewModel ??
 //    @ObservedObject var item: Item
     
 

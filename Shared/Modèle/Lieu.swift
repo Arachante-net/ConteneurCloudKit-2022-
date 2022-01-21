@@ -74,7 +74,7 @@ struct IdentifiablePlace: Identifiable {
 
 
 
-//FIXME: Une Annotation c'est different d'un Lieu
+//FIXME: Une Annotation c'est different d'un Lieu (A RATIONALISER)
 struct AnnotationGeographique: Identifiable, Hashable {
   let id = UUID()
   let libellé : String
