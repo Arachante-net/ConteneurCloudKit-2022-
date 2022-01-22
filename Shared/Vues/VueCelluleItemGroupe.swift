@@ -17,13 +17,23 @@ struct VueCelluleItemGroupe: View {
     HStack {
       groupe.nom.map(Text.init)
       Spacer()
-      if estSelectioné { Image(systemName: "checkmark") }
+//      if estSelectioné { Image(systemName: "checkmark") }
+      Image(systemName: "checkmark").isHidden(estSelectioné)
       }
-    .onTapGesture {
-      if estSelectioné { selection.remove(groupe) }
-                else   { selection.insert(groupe) }
-     }
+    .onTapGesture { alternerSelection() }
+//      if estSelectioné { selection.remove(groupe) }
+//                else   { selection.insert(groupe) }
+//     }
   }
+    
+    
+    
+//MARK: -
+func alternerSelection() {
+    if estSelectioné { selection.remove(groupe) }
+              else   { selection.insert(groupe) }
+    }
+    
 }
 
 

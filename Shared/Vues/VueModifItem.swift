@@ -21,9 +21,8 @@ struct VueModifItem: View {
      
 //    @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
-//    @State var item:Item
+    /// Item en cours d'édition, propiété de VueDetailItem
     @Binding var item:Item
-//    @Binding var région : MKCoordinateRegion
     let achevée: (Bool) -> Void
 
     @State var feuilleAffectationGroupesPresentée:Bool = false
@@ -55,12 +54,10 @@ struct VueModifItem: View {
     var body: some View {
         NavigationView {
         VStack(alignment: .leading , spacing: 2) {
-            VStack { // (alignment: .leading , spacing: 2)
-                VStack { // (alignment: .leading , spacing: 2)
-                    
+            VStack {
+                VStack {
                     TextField("Titre carte :",
-                              text: $item.leTitre  //,
-//                              format: .name(style: .medium)
+                              text: $item.leTitre
                               )
                         .textFieldStyle(.roundedBorder)
                         .foregroundColor(.secondary)
@@ -69,7 +66,7 @@ struct VueModifItem: View {
                         .submitLabel(.done)
                         .onSubmit {print("Submit")}
                         .toolbar {
-                            ToolbarItemGroup(placement:   .keyboard) {
+                            ToolbarItemGroup(placement: .keyboard) {
                                 Button("Clic") { champTexteActif = false }
                                 }
                             }
@@ -93,25 +90,7 @@ struct VueModifItem: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteEdition(item: $item, laRegion: $item.région)
-//            VueCarteTestNew(item: $item)
-
-            
-//            VueEditionCarte(
-//                Ξ.item,
-//                sectionGéographique: Ξ.régionItem,
-//                lesLieux:            Ξ.locations, // la position
-//                lieuEnCoursEdition:  Ξ.leLieuÉdité
-//            )
-//                .onChange(of: Ξ.locations) {newValue in
-//                    let _ = print("🌐 le tableau des locations évolue")
-//                    Ξ.régionItem.center.longitude = newValue.last?.longitude ?? 0
-//                    Ξ.régionItem.center.latitude  = newValue.last?.latitude  ?? 0
-//                    }
-//                .onChange(of: Ξ.leLieuÉdité) {newValue in
-//                    let _ = print("🌐 le lieu édité évolue")
-//                    }
-            
+            VueCarteEditionItem(item: $item, laRegion: $item.région)
             
         }
         .isHidden(item.isDeleted || item.isFault ? true : false)
@@ -123,7 +102,7 @@ struct VueModifItem: View {
         .sheet(isPresented: $feuilleAffectationGroupesPresentée) {
             Text("Rallier les groupes")
             
-            VueAffectationItemGroupe(lesGroupesChoisis: item.lesGroupes ) {
+            VueAffectationItemGroupe(lesGroupesARetenir: item.lesGroupes ) {
                 rallierGroupes($0)
                 feuilleAffectationGroupesPresentée = false
                 }
@@ -154,9 +133,6 @@ struct VueModifItem: View {
                 
                 Button(action: {
                     item.centrerSurLaRégion()
-//                    item.longitude = item.région.center.longitude
-//                    item.latitude  = item.région.center.latitude
-
                    ////////////:
 //                    if !Ξ.locations.isEmpty {
 //                        Ξ.item.longitude = (Ξ.locations.last?.coordonnées.longitude)! //?? 0
@@ -194,7 +170,9 @@ struct VueModifItem: View {
 //            valide    = item.valide
             })
         
-    }}
+        }
+
+    }
 
 
 

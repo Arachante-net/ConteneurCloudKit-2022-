@@ -178,7 +178,7 @@ class ControleurPersistance : ObservableObject {
         //Entre le cache du coordinateur de magasin persistant
         //   et le magasin externe (fichier, base de données, etc.).
         conteneur.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
-        //TODO: differet de ?
+        //TODO: different de ?
 //        conteneur.viewContext.mergePolicy = NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType
 
 

@@ -11,7 +11,7 @@ import MapKit
 import CoreData
 
   
-
+/// Affiche les propriétés du Groupe passé en argument
 struct VueDetailGroupe: View {
     
     @Environment(\.managedObjectContext) private var contexte
@@ -21,8 +21,10 @@ struct VueDetailGroupe: View {
 
 //    ou @State ? ou @ObservedObject ??
 //    @State l'etat n'est pas MàJ immediatement
+    /// Argument, Le groupe en cours d'édition, propriétée de  la Vue  VuedetailGroupe
     @StateObject var groupe: Groupe // idem qu'ObservedObject mais ici c'est cette Vue qui est proprietaire
-// Etats 'locaux'
+
+    // Etats 'locaux' de la Vue
     @State var collaboration = false
     @State var nom           = ""
 
@@ -30,83 +32,30 @@ struct VueDetailGroupe: View {
     
     /// Le groupe édité fait partie des favoris de l'utilisateur
     @State private var estFavoris = false
-
-
-
-    var régionGéographique: MKCoordinateRegion {
-        let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
-
-        guard let itemQuelconque = groupe.items?.anyObject() as? Item else {
-            return MKCoordinateRegion(center: CLLocationCoordinate2D(), span: span)
-            }
-
-        let coordonnées = CLLocationCoordinate2D(latitude: itemQuelconque.latitude, longitude: itemQuelconque.longitude)
-        return MKCoordinateRegion(center: coordonnées, span: span)
-        }
-
-    
-    
-    var annotationsCartographiques: [AnnotationGeographique] {
-        guard let items = groupe.items else { return [] }
-
-        return items.compactMap {
-          guard let item = $0 as? Item else { return nil }
-
-          return AnnotationGeographique(
-            libellé: item.titre ?? "␀",
-            coordonnées: CLLocationCoordinate2D(
-                latitude: item.latitude,
-                longitude: item.longitude),
-            couleur: UIColor(item.coloris)
-            )
-          }
-        }
-    
-
-    
-//    init(_ unGroupe: Groupe) {
-//        let ceGroupe = groupe.id?.uuidString ?? ""
-//        let tabFavoris = UserDefaults.standard.object(forKey:"Favoris") as? [String] ?? [String]()
-//
-//        _estFavoris = State(initialValue: Set(tabFavoris).contains(ceGroupe))
-//    }
-
-    
-////////////////////////////////////////////////////:
-//    init(_ unGroupe: Groupe, principal:Item) {
-////
-//        groupe = unGroupe
-//        self.principal = groupe.principal!
-////
-////      /// obtenir les items du groupe
-////      // Rq: le souligné au début de _items, indique que nous n'adressons pas les propriétés de la demande de récupération item,
-////      // nous la remplacons par une toute nouvelle demande de récupération.
-////        _items = FetchRequest<Item>(
-////             entity: Item.entity(),
-////             sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
-////             predicate: NSPredicate(format: "ANY groupes.nom = %@", unGroupe.nom!),
-////             animation: .default)
-////        // cf https://www.hackingwithswift.com/books/ios-swiftui/dynamically-filtering-fetchrequest-with-swiftui
-//         }
+    // configUtilisateur.estFavoris(groupe) //TODO: comment faire ça ?
+    //TODO: essayer estFavoris? = nil
 
     @ViewBuilder
     var body: some View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
     VStack(alignment: .leading, spacing: 2) {
         VStack(alignment: .leading, spacing: 2)  {
-            Etiquette( "Item principal", valeur: (groupe.principal != nil) ? groupe.principal!.titre ?? "␀" : "❌").padding(.leading)
-            Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0)).padding(.leading)
-            Etiquette( "Collaboratif"  , valeur: groupe.collaboratif).padding(.leading)
-            Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)).padding(.leading)
-            ForEach(Array(groupe.lesItems)) { item in
-                Etiquette("⚬ \(item.titre ?? "␀")" , valeur : Int(item.valeur)).padding(.leading)
+            Group {
+                Etiquette( "Item principal", valeur: (groupe.principal != nil) ? groupe.principal!.titre ?? "␀" : "❌")
+                Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0))
+                Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
+                Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
+                ForEach(Array(groupe.lesItems)) { item in
+                    Etiquette("⚬ \(item.titre ?? "␀")" , valeur : Int(item.valeur))
+                    }
+                Etiquette( "Valeur globale", valeur: groupe.valeur)
+                Etiquette( "Créateur"      , valeur: groupe.createur)
+                Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
+                Etiquette( "Valide"        , valeur: groupe.valide)
+    //            Etiquette( "Suppression"   , valeur: groupe.isDeleted)
+                Etiquette( "En erreur"     , valeur: groupe.isFault)
                 }
-            Etiquette( "Valeur globale", valeur: groupe.valeur).padding(.leading)
-            Etiquette( "Créateur"      , valeur: groupe.createur).padding(.leading)
-            Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString).padding(.leading)
-            Etiquette( "Valide"        , valeur: groupe.valide).padding(.leading)
-//            Etiquette( "Suppression"   , valeur: groupe.isDeleted).padding(.leading)
-            Etiquette( "En erreur"     , valeur: groupe.isFault).padding(.leading)
+                .padding(.leading)
             }
         
 //        Stepper("Valeur locale : \(groupe.valeurPrincipale)", value: $groupe.valeurPrincipale)
@@ -118,7 +67,7 @@ struct VueDetailGroupe: View {
 ////                onDecrement: { decrementer(min: 0) }
 //                .padding(.leading)
         
-            VueCartographiqueGroupe(
+            VueCarteGroupe(
                 région:      groupe.régionEnglobante,
                 annotations: groupe.lesAnnotations
                 )
@@ -145,10 +94,8 @@ struct VueDetailGroupe: View {
             .transition(.opacity) //.move(edge: .top))
             
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-//                BarreOutilsGroupe(feuilleModificationPresentée: $feuilleModificationPresentée, estFavoris: $estFavoris, groupe: Binding(projectedValue: _groupe ) )
-                barreMenu
-            }
+            ToolbarItemGroup(placement: .navigationBarTrailing)
+                { barreMenu }
             }
           .navigationBarTitle(Text(groupe.nom ?? ""))
     }
@@ -179,12 +126,15 @@ struct VueDetailGroupe: View {
                     }
               }.buttonStyle(.borderedProminent)
 
-            Button(role: .destructive, action: {  }) {
+            Button(role: .destructive, action: { print ("NON IMPLEMENTÉ") }) {
+                //TODO: A implementer (cf. ListeItem)
                 VStack {
                     Image(systemName: "trash")
                     Text("Supprimer").font(.caption)
                     }
-              }.buttonStyle(.borderedProminent)
+            }.buttonStyle(.borderedProminent)
+                .opacity(0.5)
+                .saturation(0.5)
 
             Spacer()
             }

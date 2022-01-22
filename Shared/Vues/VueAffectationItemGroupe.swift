@@ -22,21 +22,22 @@ struct VueAffectationItemGroupe: View {
     @Environment(\.managedObjectContext) private var viewContext
       
 
-    @State var lesGroupesChoisis: Set<Groupe>
-    let cestFini: (Set<Groupe>) -> Void
+    @State var lesGroupesARetenir: Set<Groupe>
+    let traitementTerminéDe: (Set<Groupe>) -> Void
 
     var body: some View {
         NavigationView {
-            List(groupesCollaboratifs, id: \.id, selection: $lesGroupesChoisis) { groupe in
-                VueCelluleItemGroupe(groupe: groupe, selection: $lesGroupesChoisis)
+            List(groupesCollaboratifs, id: \.id, selection: $lesGroupesARetenir) { groupe in
+                VueCelluleItemGroupe(groupe: groupe, selection: $lesGroupesARetenir)
                 }
               .navigationTitle(Text("Choisir les groupes à rallier"))
               .navigationBarItems(  trailing: Button("OK") { action_OK() }  )
             }
         }
 
+//MARK: -
   private func action_OK() {
-    cestFini(lesGroupesChoisis)
+    traitementTerminéDe(lesGroupesARetenir)
     }
     
     

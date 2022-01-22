@@ -126,8 +126,8 @@ extension Item {
             nouvelItem.titre     = titre
             nouvelItem.id        = UUID()
             nouvelItem.valeur    = 0
-            nouvelItem.latitude  = 48.856614 // Paris
-            nouvelItem.longitude =  2.3522219
+            nouvelItem.latitude  = Lieu.coordonnéesParDéfaut.latitude
+            nouvelItem.longitude = Lieu.coordonnéesParDéfaut.longitude 
             nouvelItem.coloris   = .secondary // appel le 'setter' qui convertira Color en données binaires pour être stockées en CoreData
             nouvelItem.createur  = UserDefaults.standard.string(forKey: "UID") ?? "anonyme"
             nouvelItem.valide    = true
@@ -374,7 +374,6 @@ extension Item {
 
 //MARK: - Pour Tests -
 extension Item {
-    //TODO: - NOUVEAU TODO 21 Janvier 2022
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
         print("☑️ Cohérence de l'item", titre ?? "␀" , ", depuis" , depuis, terminator: " :")

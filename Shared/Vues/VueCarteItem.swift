@@ -26,23 +26,27 @@ import MapKit
 
 
 /// Affiche la carte d'une région géographiquerelative et une série de marquages (annotations) associés
+/// Les marqueurs devraient rester fixes
 ///
 ///VueCarte(
 ///laRegion: régionCarto,
 ///annotations_: [lieuCartographique]
 ///)
 ///
-struct VueCarte: View {
+struct VueCarteItem: View {
     
 
-  @Binding var item:Item
-  @Binding var laRegion: MKCoordinateRegion
+//  @Binding var item:Item
+//  @Binding var laRegion: MKCoordinateRegion
+//    
+    @State var item:Item
+    @State var laRegion: MKCoordinateRegion
 
   @State var suivi:MapUserTrackingMode = .follow
   @State var monSuivi:Bool = false
     
     lazy var place:IdentifiablePlace = IdentifiablePlace(lat: item.latitude, long: item.longitude)
-    lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
+//    lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
 
 //    init(_ unItem: Item, région:MKCoordinateRegion ) {
 //       item = unItem
@@ -52,14 +56,14 @@ struct VueCarte: View {
 //            long: item.longitude))
 //        }
     
-    func xPlace() -> IdentifiablePlace {
-        var moiMutable = self
-        return moiMutable.place
-        }
+//    func xPlace() -> IdentifiablePlace {
+//        var moiMutable = self
+//        return moiMutable.place
+//        }
     
-    func yPlace() -> IdentifiablePlace {
-        IdentifiablePlace(lat: item.latitude, long: item.longitude)
-        }
+//    func yPlace() -> IdentifiablePlace {
+//        IdentifiablePlace(lat: item.latitude, long: item.longitude)
+//        }
     
   var body: some View {
       let _ = print("🌐 Appel de VueCarte sur une région centrée en ",
@@ -68,72 +72,63 @@ struct VueCarte: View {
       let _ = print("🌐 suivi : ", suivi)
 
       VStack(alignment: .leading) {
-//      Text("VueCarteTest").font(.largeTitle)
-//          HStack {
-//
-//              Button("Enregistrer Position") {
-//                  print("🌐 Enregistrer", laRegion.center.latitude, laRegion.center.longitude )
-//                  longitudeMem = laRegion.center.longitude
-//                  latitudeMem  = laRegion.center.latitude
-//                  print("🌐 Enregistrement de ", latitudeMem, longitudeMem)
-//
-//              }
-//
-//              Button("Survoler Paris") {
-//                  print("🌐 Paris")
-//                  laRegion.center.latitude  = Lieu.Paris.latitude
-//                  laRegion.center.longitude = Lieu.Paris.longitude
-//              }
-//
-//
-//
-//              Button("Revenir") {
-//                  print("🌐 Revenir à ", latitudeMem,  longitudeMem )
-////                  item.longitude = longitudeMem
-////                  item.latitude  = latitudeMem
-//                  laRegion.center.latitude  = latitudeMem
-//                  laRegion.center.longitude = longitudeMem
-//
-//              }
-//          }
-          
-      EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRegion.center.latitude,         longitude: laRegion.center.longitude,         font: .caption).padding(.leading)
-      EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
-      ZStack {
-//          GeometryReader { geometrie in
-//              let _ = geometrie.size.width
-              Map(
-                coordinateRegion: $laRegion,
-                showsUserLocation:true,
-                userTrackingMode: monSuivi ? .constant(.follow) : .constant(.none) , //$suivi, //.constant(.follow), //$suivi,
-                annotationItems: [yPlace()])   { place in
-                  MapPin(
-                    coordinate: yPlace().location,
-                    tint: laRegion.center == place.location ? Color.red : Color.clear)
-                }
-    //          Map( coordinateRegion: $item.région, annotationItems: [yPlace()])   { place in
-    //              MapPin(
-    //                coordinate: yPlace().location,
-    //                tint: item.région.center == place.location ? Color.red : Color.clear)
-    //            }
+          EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRegion.center.latitude,         longitude: laRegion.center.longitude,         font: .caption).padding(.leading)
+          EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
+          ZStack {
+    //          GeometryReader { geometrie in
+    //              let _ = geometrie.size.width
+                  Map(
+                    coordinateRegion: $laRegion,
+                    showsUserLocation:true,
+                    userTrackingMode: monSuivi ? .constant(.follow) : .constant(.none) , //$suivi, //.constant(.follow), //$suivi,
+                    annotationItems: [IdentifiablePlace(lat: item.latitude, long: item.longitude)])
+//                  annotationItems: [yPlace()])
+                        { place in
+                          MapPin(
+//                          coordinate: yPlace().location,
+                            coordinate: IdentifiablePlace(lat: item.latitude, long: item.longitude).location,
+                            tint: laRegion.center == place.location ? Color.red : Color.clear)
+                          }
+
+                  
+              HStack {
+                  Spacer()
+                  VStack {
+                      Button
+                      // Retourner survoler la positition de l'Item
+                        {  laRegion.centrerSur(item) }
+                        label: { Image(systemName: "arrow.counterclockwise.circle") }
+                          .buttonStyle(.borderless)
+                          .padding()
+                          .background(.black.opacity(0.75))
+                          .foregroundColor(.white)
+                          .font(.title)
+                          .clipShape(Circle())
+                          .padding(.trailing)
+                          .padding(.top)
+                          .isHidden(laRegion.center == item.coordonnées)
+                      Spacer()
+                      }
+                  }
+                  Croix() .stroke(lineWidth:0.5).foregroundColor(.pink  ).opacity(0.2)
+                  Viseur().stroke(lineWidth:5  ).foregroundColor(.yellow).opacity(0.8)
+
+//                  Circle()
+//                      .fill(.red)
+//                     .opacity(laRegion.center == yPlace().location ? 0.2 : 0.7)
+//                   .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
+                 
+
+              .onAppear()    {print("🌐 Affichage carte Item")}
+              .onDisappear() {print("🔺 Disparition carte Item")}
+              }
               
-              Croix().stroke(lineWidth:0.5).foregroundColor(.pink).opacity(0.2)
-              Viseur().stroke(lineWidth:5).foregroundColor(.yellow).opacity(0.8)
-
-              Circle()
-                  .fill(.red)
-                  .opacity(laRegion.center == yPlace().location ? 0.2 : 0.7)
-                  .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
-             
-
-          .onAppear()    {print("🌐 Affichage carte Item")}
-          .onDisappear() {print("🔺 Disparition carte Item")}
-      }}
+      }
       }
     }
    
      
-
+//MARK: -
 struct Croix: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()

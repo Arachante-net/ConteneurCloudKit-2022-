@@ -49,7 +49,7 @@ struct ListeGroupe: View {
       List() {
           ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
-              NavigationLink(destination: VueDetailGroupe(groupe: groupe  ),
+              NavigationLink(destination: VueDetailGroupe(groupe: groupe),
                              tag: groupe.nom ?? "",
                              selection: $courant) {
               HStack {

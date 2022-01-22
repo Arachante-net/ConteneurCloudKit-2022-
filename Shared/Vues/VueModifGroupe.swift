@@ -15,17 +15,20 @@ import CoreData
 struct VueModifGroupe: View {
     
     // parametres d'appel de la Vue
+    /// Le groupe en cour d'édition, il est la propriétée de la Vue VueDetailGroupe
     @ObservedObject var groupe: Groupe
-    // closure en parametre, a executer lorsque l'utilisateur quitte cette vue
-    var achevée: (Bool) -> Void
-
+    /// Closure en parametre, a executer lorsque l'utilisateur quitte cette vue
+    var laModificationDuGroupeEstRéalisée: (Bool) -> Void
+//    @State var groupe_2:Groupe
+    
     @Environment(\.managedObjectContext) var contexte
     @EnvironmentObject private var persistance : ControleurPersistance
     
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
         self.groupe = unGroupe
+//        self.groupe_2 = unGroupe
 //        self.principalItem = unGroupe.principal!
-        self.achevée = achevée
+        self.laModificationDuGroupeEstRéalisée = achevée
 ////        if groupe.principal != nil {
 ////            self.principalItem = groupe.principal!
 ////            }
@@ -34,42 +37,30 @@ struct VueModifGroupe: View {
 
     var body: some View {
     VStack(alignment: .leading, spacing: 2){
-        VStack(alignment: .leading, spacing: 1) {
-            Text(" Nom du groupe :")
-            TextField("",                      text: .constant("Papyrus avec nous !"))
-                .foregroundColor(Color.secondary).font(Font.custom("Papyrus", size: 16))
-            TextField("Nouveau nom du groupe", text: $groupe.leNom)
-                .foregroundColor(Color.accentColor)
-//                .font(Font.custom("Papyrus", size: 16))
-                .submitLabel(.done)
-                .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
-    //            .clearButtonMode = .whileEditing // seulement pour les UITextField
-                .padding()
-                .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
-        }
-        .padding()
-        .overlay( RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.secondary, lineWidth: 0.5)
-            )
-        .padding()
-        
-        VStack {
-            VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
+        Group {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(" Nom du groupe :")
+                TextField("",                      text: .constant("Papyrus avec nous !"))
+                TextField("Nouveau nom du groupe", text: $groupe.leNom)
+                    .foregroundColor(Color.accentColor)
+                    .submitLabel(.done)
+                    .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+                    .padding()
+                    .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
             }
-            .padding()
-            .overlay( RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.secondary, lineWidth: 0.5)
-                )
-            .padding()
-        
-        VStack {
-            Toggle("Collaboratif", isOn: $groupe.collaboratif)
-                .toggleStyle(.switch)  //.toggleStyle(.button)
             
-            Toggle("Valide",       isOn: $groupe.valide)
-                .toggleStyle(.switch) //.checkbox)
+            VStack {
+                VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
+    //            VueValeurItemPrincipal_2(groupe: groupe )
+                }
 
-
+            VStack {
+                Toggle("Collaboratif", isOn: $groupe.collaboratif)
+                    .toggleStyle(.switch)  //.toggleStyle(.button)
+                
+                Toggle("Valide",       isOn: $groupe.valide)
+                    .toggleStyle(.switch) //.checkbox)
+                }
             }
             .padding()
             .overlay( RoundedRectangle(cornerRadius: 15)
@@ -77,8 +68,10 @@ struct VueModifGroupe: View {
                 )
             .padding()
         
+        //TODO: Un truc plus logique ? et plus propre
         if groupe.collaboratif {
-            Button(action: enrôlerUnNouvelItem)    { Label("Enrôler",      systemImage: "plus.square.on.square")}
+            Button(action: enrôlerUnNouvelItem)
+                { Label("Enrôler", systemImage: "plus.square.on.square") }
             }
           else { Text("Individuel") }
         
@@ -107,7 +100,7 @@ struct VueModifGroupe: View {
     
     
     
-//MARK: --
+//MARK: -
     
     private func validerFormulaire() {
         
@@ -118,7 +111,7 @@ struct VueModifGroupe: View {
         //TODO : Enregistrer les autres changements
         persistance.sauverContexte("Groupe Item")
         let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
-        achevée(true)
+        laModificationDuGroupeEstRéalisée(true)
         }
     
     

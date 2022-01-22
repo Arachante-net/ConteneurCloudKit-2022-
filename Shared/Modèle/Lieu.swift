@@ -95,3 +95,11 @@ struct AnnotationGeographique: Identifiable, Hashable {
 //  let lieu: Lieu
 //  let couleur: UIColor
 //  }
+
+
+extension MKCoordinateRegion {
+    mutating func centrerSur(_ item:Item) {
+        center.latitude  = item.latitude
+        center.longitude = item.longitude
+    }
+}

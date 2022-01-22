@@ -24,7 +24,7 @@ import MapKit
 
 
 
-
+//TODO: A mettre à jour
 /// Affiche pour édition une région géographique, permet de définir un lieu sur une carte géographique
 ///
 ///     VueEditionCarte(
@@ -39,7 +39,7 @@ import MapKit
 ///         - sectionGeographique  Une région géographique rectangulaire centrée autour des coordonnées du lieu
 ///         - un tableau des lieux `(ici un seul élémént est utilisé (le dernier))`
 ///         - lieu sélectioné pour être édité
-struct VueCarteEdition: View {
+struct VueCarteEditionItem: View {
     
 
   @Binding var item:Item
