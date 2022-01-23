@@ -23,7 +23,7 @@ struct VueModifItem: View {
     
     /// Item en cours d'édition, propiété de VueDetailItem
     @Binding var item:Item
-    let achevée: (Bool) -> Void
+    let achevée: (Item) -> Void //(Bool) -> Void
 
     @State var feuilleAffectationGroupesPresentée:Bool = false
 
@@ -145,7 +145,7 @@ struct VueModifItem: View {
                     
                         // executer la closure fournie à cette Vue (VueModifItem) en parametre d'entrée
                         // par la vue appelante.
-                        achevée(true)
+                        achevée(item) //true)
                         }
                     ) { Text("VALIDER") }
                     .buttonStyle(.borderedProminent)
@@ -175,7 +175,9 @@ struct VueModifItem: View {
     }
 
 
-
+    
+    
+//MARK: -
 
     private func rallierGroupes(_ groupes: Set<Groupe>) {
         withAnimation {

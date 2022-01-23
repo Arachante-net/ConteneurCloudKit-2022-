@@ -35,19 +35,42 @@ import MapKit
 ///
 struct VueCarteItem: View {
     
-
-//  @Binding var item:Item
-//  @Binding var laRegion: MKCoordinateRegion
-//    
+   
     @State var item:Item
-    @State var laRegion: MKCoordinateRegion
+    
+    
+    
+    
+    // NON : @Binding pour laRégion car son évolution doit être retournée à la Vue appelante (VueDetailItem)
+    @State var laRegion: MKCoordinateRegion // ecrit dans init, car depend de item
 
-  @State var suivi:MapUserTrackingMode = .follow
-  @State var monSuivi:Bool = false
+    @State private var regionApplePark = MKCoordinateRegion(
+          center: CLLocationCoordinate2D(latitude: 37.334_900,
+                                         longitude: -122.009_020),
+          latitudinalMeters: 750,
+          longitudinalMeters: 750
+      )
+    
+    // Etats locaux
+    @State var suivi:MapUserTrackingMode = .follow
+    @State var monSuivi:Bool = false
     
     lazy var place:IdentifiablePlace = IdentifiablePlace(lat: item.latitude, long: item.longitude)
 //    lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
 
+    init(_ unItem: Item ) {
+        _item = State(initialValue: unItem)
+        
+        _laRegion = State(initialValue:  MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: unItem.latitude,
+                longitude: unItem.longitude),
+              latitudinalMeters:  10000,
+              longitudinalMeters: 10000
+          ))
+        }
+
+    
 //    init(_ unItem: Item, région:MKCoordinateRegion ) {
 //       item = unItem
 //       laRegion = région
@@ -73,12 +96,21 @@ struct VueCarteItem: View {
 
       VStack(alignment: .leading) {
           EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRegion.center.latitude,         longitude: laRegion.center.longitude,         font: .caption).padding(.leading)
-          EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
+//          EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
+//          HStack {
+//              Button(action: zoomPlus) { Image(systemName: "plus.circle") }
+//              Button(action: zoomMoins) { Image(systemName: "minus.circle") }
+//              }
+
           ZStack {
     //          GeometryReader { geometrie in
     //              let _ = geometrie.size.width
                   Map(
                     coordinateRegion: $laRegion,
+//                    coordinateRegion : MKCoordinateRegion(
+//                        center: item.coordonnées,
+//                        span: Lieu.étendueParDéfaut),
+                    interactionModes: .zoom,
                     showsUserLocation:true,
                     userTrackingMode: monSuivi ? .constant(.follow) : .constant(.none) , //$suivi, //.constant(.follow), //$suivi,
                     annotationItems: [IdentifiablePlace(lat: item.latitude, long: item.longitude)])
@@ -87,11 +119,27 @@ struct VueCarteItem: View {
                           MapPin(
 //                          coordinate: yPlace().location,
                             coordinate: IdentifiablePlace(lat: item.latitude, long: item.longitude).location,
-                            tint: laRegion.center == place.location ? Color.red : Color.clear)
+//                          tint: laRegion.center == place.location ? Color.red : Color.clear)
+                            tint: item.coloris)
                           }
 
                   
               HStack {
+                  VStack {
+                      HStack {
+                          Button(action: zoomPlus ) { Image(systemName: "plus.circle")  }
+                          Button(action: zoomMoins) { Image(systemName: "minus.circle") }
+
+                          }
+                          .background(.black.opacity(0.5))
+                          .foregroundColor(.yellow) //white)
+                          .font(.title)
+                          .clipShape(Capsule())
+                          .padding(.leading, 5)
+                          .padding(.top, 3)
+
+                      Spacer()
+                    }
                   Spacer()
                   VStack {
                       Button
@@ -125,10 +173,35 @@ struct VueCarteItem: View {
               
       }
       }
-    }
+    
+    
+    func zoomPlus()  {
+        let pas =  0.5
+        let max = 90.0
+        let nouvelleValeur = laRegion.span.latitudeDelta + pas
+        laRegion.span.latitudeDelta =
+            nouvelleValeur < max ?  nouvelleValeur : max
+        }
+    
+    func zoomMoins() {
+        let pas = 0.5
+        let min = 0.0
+        let nouvelleValeur = laRegion.span.latitudeDelta - pas
+        laRegion.span.latitudeDelta =
+            nouvelleValeur > min ?  nouvelleValeur : min
+        }
+
+    
+    
+  }
    
      
 //MARK: -
+
+//func zoom() {
+//    laRegion.span.latitudeDelta = 10
+//}
+
 struct Croix: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()

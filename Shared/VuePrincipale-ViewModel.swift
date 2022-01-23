@@ -40,7 +40,7 @@ extension VueModifItem {
             center: CLLocationCoordinate2D (
                 latitude: Lieu.exemple.latitude,
                 longitude: Lieu.exemple.longitude),
-            span: Lieu.régionParDéfaut
+            span: Lieu.étendueParDéfaut
             )
         /// Les lieux éditables (ici on en utilise qu'un seul)
         @Published  var locations = [Lieu]()

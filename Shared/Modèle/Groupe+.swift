@@ -230,7 +230,7 @@ extension Groupe {
                     center: CLLocationCoordinate2D(
                         latitude:  0,
                         longitude: 0),
-                    span: Lieu.régionMax
+                    span: Lieu.étendueMax
                     )
             }
         
@@ -240,7 +240,7 @@ extension Groupe {
                 center: CLLocationCoordinate2D(
                     latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
                     longitude: toutesLesCoordonnées.first?.longitude ?? 0),
-                span: Lieu.régionParDéfaut
+                span: Lieu.étendueParDéfaut
                 )
             }
         
@@ -334,7 +334,7 @@ extension Groupe {
             // Detecter et prévenir que l'on depasse le facteur de zoom MapKit.  C'est lequel ??
             // max latitudeDelta : 180
             // cf regionThatFits
-           _ = Lieu.régionMax
+           _ = Lieu.étendueMax
         
 //        MKCoordinateSpan(
 //                latitudeDelta:  180,

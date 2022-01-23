@@ -44,13 +44,31 @@ struct VueCarteEditionItem: View {
 
   @Binding var item:Item
   @Binding var laRegion: MKCoordinateRegion
+//  @State var laRegion: MKCoordinateRegion
 
   @State var suivi:MapUserTrackingMode = .follow
   @State var monSuivi:Bool = false
     
     lazy var place:IdentifiablePlace = IdentifiablePlace(lat: item.latitude, long: item.longitude)
     lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
-
+//    var uneRegion: MKCoordinateRegion
+    
+//    init(_ unItem: Binding<Item>) {
+//        _item = Binding(projectedValue: unItem)
+//        
+//        _laRegion = State(initialValue:  MKCoordinateRegion(
+//            center: CLLocationCoordinate2D(
+//                latitude: item.latitude,
+//                longitude: item.longitude),
+//              latitudinalMeters:  10000,
+//              longitudinalMeters: 10000
+//          ))
+//        
+////        _laRegion = State(initialValue: uneRegion)
+//
+////        _laRegion = Binding(uneRegion)
+//        }
+    
 //    init(_ unItem: Item, région:MKCoordinateRegion ) {
 //       item = unItem
 //       laRegion = région

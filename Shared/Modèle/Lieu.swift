@@ -37,12 +37,12 @@ struct Lieu: Identifiable, Codable, Equatable {
         latitude: 0,
         longitude: 0)
     
-    static let régionParDéfaut = MKCoordinateSpan(
+    static let étendueParDéfaut = MKCoordinateSpan(
         latitudeDelta:  0.5,
         longitudeDelta: 0.5
         )
     
-    static let régionMax = MKCoordinateSpan(
+    static let étendueMax = MKCoordinateSpan(
         latitudeDelta:  180,
         longitudeDelta: 360
         )
@@ -98,8 +98,14 @@ struct AnnotationGeographique: Identifiable, Hashable {
 
 
 extension MKCoordinateRegion {
+    /// recentrer la Région sur les coordonnées de l'Item
     mutating func centrerSur(_ item:Item) {
         center.latitude  = item.latitude
         center.longitude = item.longitude
-    }
+        }
+    
+    mutating func zoom() {
+        span.latitudeDelta  = 10
+        span.longitudeDelta = 10
+        }
 }

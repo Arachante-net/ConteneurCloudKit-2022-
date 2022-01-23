@@ -281,7 +281,7 @@ extension Item {
     var coordonnées:CLLocationCoordinate2D {
         get {CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)}
         set {
-            latitude = newValue.latitude
+            latitude  = newValue.latitude
             longitude = newValue.longitude
             }
         }
@@ -331,27 +331,30 @@ extension Item {
 //            longitudeDelta: 0.5)
 //        }
     
+    /// Coordonnées d'un Item et étendue géographique à considerer
     var région : MKCoordinateRegion {
         get {
             MKCoordinateRegion(
                 center: CLLocationCoordinate2D(
                     latitude:  latitude ,
                     longitude: longitude),
-                span : Lieu.régionParDéfaut)
+                span : Lieu.étendueParDéfaut)
             }
         set {
-            latitude = newValue.center.latitude
+            latitude  = newValue.center.latitude
             longitude = newValue.center.longitude
-            (latitude, longitude) = pointer(newValue.center)
+//            (latitude, longitude) = pointer(newValue.center)
             }
         }
         
+    /// Définir les coordonnées de l'Item en fonction du centre de la Région cartographique
     func centrerSurLaRégion() {
 //      longitude = région.center.longitude
 //      latitude  = région.center.latitude
         (latitude, longitude) = centrerSur(région)
       }
     
+    /// Centrer la Région géographique sur les coordonnées de l'Item
     func centrerSur(_ région: MKCoordinateRegion ) -> (latitude:Double, longitude:Double) {
        (latitude: région.center.latitude, longitude: région.center.longitude)
       }
@@ -361,7 +364,7 @@ extension Item {
        (latitude: point.latitude, longitude: point.longitude)
       }
     
-    
+   // func coordonnées
     override public func prepareForDeletion() {
 //        super.prepareForDeletion()
         print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
