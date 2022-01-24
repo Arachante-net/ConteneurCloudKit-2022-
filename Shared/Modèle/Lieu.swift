@@ -60,9 +60,10 @@ struct Lieu: Identifiable, Codable, Equatable {
 }
 
 
-struct IdentifiablePlace: Identifiable {
+struct PositionIdentifiable: Identifiable {
     let id: UUID
     let location: CLLocationCoordinate2D
+    
     init(id: UUID = UUID(), lat: Double, long: Double) {
         self.id = id
         self.location = CLLocationCoordinate2D(
@@ -77,9 +78,8 @@ struct IdentifiablePlace: Identifiable {
 //FIXME: Une Annotation c'est different d'un Lieu (A RATIONALISER)
 struct AnnotationGeographique: Identifiable, Hashable {
   let id = UUID()
-  let libellé : String
+  let libellé: String
   let coordonnées: CLLocationCoordinate2D
-    
   let couleur: UIColor
   }
 
@@ -108,4 +108,11 @@ extension MKCoordinateRegion {
         span.latitudeDelta  = 10
         span.longitudeDelta = 10
         }
+    
+    static let ApplePark = MKCoordinateRegion(
+          center: CLLocationCoordinate2D(latitude: 37.334_900,
+                                         longitude: -122.009_020),
+          latitudinalMeters: 750,
+          longitudinalMeters: 750
+      )
 }

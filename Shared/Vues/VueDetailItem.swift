@@ -21,11 +21,14 @@ struct VueDetailItem: View {
     
     @StateObject private var Ξ = ViewModel()
     
-    // l'appel depuis ListeItem impose que le @State item soit publics (pas private)
-    // 'VueDetailItem' initializer is inaccessible due to 'private' protection level
+    // l'appel depuis ListeItem impose que les @State item et laRegion soient publiques (pas private)
+    // 'VueDetailItem' initializer is inaccessible due to 'private' protection level ??
+    
+    // ♔ La Source de verité ♔
     /// Argument, Item en cours d'édition propriété de VueDetailItem
     @State var item : Item
-    @State var laRegion = MKCoordinateRegion()
+    /// Argument, Région géographique ou se situe l'Item
+    @State var laRegion : MKCoordinateRegion
 
     
     //TODO: A mettre dans un module utilitaires
@@ -53,25 +56,27 @@ struct VueDetailItem: View {
             .padding(.leading)
 
             Spacer()
+//            Text("VueDetailItem item      \(item.latitude), \(item.longitude)")
+//            Text("VueDetailItem $laRegion \(item.latitude), \(item.longitude)")
 
-            // NON : pas de Binding la position de l'Item n'est pas modifiée par la Vue
-            VueCarteItem( item
-//                item : item ,
-//                laRegion: item.région
-            )//.onAppear(perform: apparaitre) //perform: item.centrerSurLaRégion)
+            
+            // Besoin de retour d'informations de la part de VueCarteItem
+            // donc Binding pour item et laRegion
+            // RQ1 : la position de l'Item n'est pas modifiée par la Vue CarteItem
+            // RQ2 : la région affichée peut être deplacée par l'utilisateur
+            VueCarteItem( item: $item,  laRegion: $laRegion )
             
                 .isHidden( (item.isDeleted || item.isFault) ? true : false  )
                 .opacity(item.valide ? 1.0 : 0.1)
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
-                    VueModifItem( item: $item) { infoEnRetour in
-                        print("INFO RETOUR DE VUE MODIF ITEM", infoEnRetour.leTitre)
-                        print("RECENTRAGE AVANT", item.longitude, item.latitude )
-//                        laRegion.centrerSur(item)
-//                        item.centrerSur(infoEnRetour.région)
-//                        item.région.centrerSur(infoEnRetour)
-//                        item.centrerSurLaRégion()
-                        print("RECENTRAGE APRES", item.longitude, item.latitude )
+//                    Text("VueDetailItem $laRegion \(laRegion.center.longitude), \(laRegion.center.latitude)")
+                    VueModifItem( item: $item, laRegion: $laRegion) { infoEnRetour in
+                        print("INFO EN RETOUR DE VUE MODIF ITEM",
+                              infoEnRetour.leTitre,
+                              infoEnRetour.longitude,
+                              infoEnRetour.latitude )
+                        
                         Ξ.feuilleModificationItemPresentée = false
                         }
                     .border( .red, width: 0.3)
@@ -182,9 +187,6 @@ struct VueDetailItem: View {
             }
         }
     
-    func apparaitre() {
-//        laRegion = item.région
-//        print("RECENTRAGE APPARAITRE", laRegion.center.latitude, laRegion.center.longitude )
-    }
+    func apparaitre() {}
 }
 

@@ -17,22 +17,18 @@ struct VueModifGroupe: View {
     // parametres d'appel de la Vue
     /// Le groupe en cour d'édition, il est la propriétée de la Vue VueDetailGroupe
     @ObservedObject var groupe: Groupe
+    
     /// Closure en parametre, a executer lorsque l'utilisateur quitte cette vue
     var laModificationDuGroupeEstRéalisée: (Bool) -> Void
-//    @State var groupe_2:Groupe
     
     @Environment(\.managedObjectContext) var contexte
     @EnvironmentObject private var persistance : ControleurPersistance
     
+    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommé
+    /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
         self.groupe = unGroupe
-//        self.groupe_2 = unGroupe
-//        self.principalItem = unGroupe.principal!
         self.laModificationDuGroupeEstRéalisée = achevée
-////        if groupe.principal != nil {
-////            self.principalItem = groupe.principal!
-////            }
-////        else {self.principalItem = nil}
         }
 
     var body: some View {
@@ -51,7 +47,6 @@ struct VueModifGroupe: View {
             
             VStack {
                 VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
-    //            VueValeurItemPrincipal_2(groupe: groupe )
                 }
 
             VStack {
@@ -84,14 +79,7 @@ struct VueModifGroupe: View {
         Spacer()
         }
         .onDisappear() { let _ = groupe.verifierCohérence(depuis: #function) }
-        .onAppear()    { let _ = groupe.verifierCohérence(depuis: #function)
-            // recuperer les champs modifiables Groupe CoreData
-//            collaboration = groupe.collaboratif
-//            valide        = groupe.valide
-//            nom           = groupe.nom ?? "anonyme"
-            // d'autres champs ?
-//            laValeur = groupe.valeurPrincipale
-            }
+        .onAppear()    { let _ = groupe.verifierCohérence(depuis: #function) }
                     
         
     }

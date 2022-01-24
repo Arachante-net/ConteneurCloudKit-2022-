@@ -197,29 +197,19 @@ extension Item {
     /// Pour le Fun
     var signature: String      { return "arach" }
     
-//    var vide: <# Type #> {
-//        Item()
-//        }
-
-    public override var description: String {
-//        let tg = Array(groupes
-//        let g = lesGroupes.map {$0.nom ?? "..."}.joined(separator: ",")
-//        let lg = g.joined(separator: ",") //reduce("Groupes : ", { $0 ?? "" + $1 ?? "" })
-//        let lg = groupes?.reduce("G ", {$0 + $1})
-        "\(leTitre),  Valeur: \(valeur), Principal: \(principal?.leNom ?? ""), Membre de : \(lesGroupes.map {$0.nom ?? "..."}.joined(separator: ","))."
-//        return ""
-    }
     
     /// Fourni une valeur par defaut facilement identifiable (1 janvier 1970) si  Item.timestamp n'est pas défini
     var horodatage : Date {
         get { timestamp ?? Date(timeIntervalSince1970:0) }
         }
     
+    /// Le titre non optionel
     var leTitre:String {
         get {titre ?? "␀"}
         set {titre = newValue}
         }
     
+    /// Utilisé pour convertir une Couleur Core Data
     private struct Couleur: Codable {
       var rouge: Double
       var vert:  Double
@@ -229,6 +219,7 @@ extension Item {
     
     /// Encode une couleur  independante  de l'origine iOS ou macOS
     var coloris: Color {
+        
       get {
         guard let donnéesBinaires = couleur,
               let décodé = try? JSONDecoder().decode(Couleur.self, from: donnéesBinaires)
@@ -252,12 +243,7 @@ extension Item {
         
     }
 
-
-
-    
-    
-    
-    
+    /// A preciser
     enum Mode: String { case content, bien, triste }
     
     var mode:Mode {
@@ -278,6 +264,10 @@ extension Item {
     /// Convertir Set<Groupe> en NSSet
     func grouper(   groupes : Set<Groupe>) { self.groupes = groupes as NSSet }
     
+    
+    
+    
+    //MARK: géographie
     var coordonnées:CLLocationCoordinate2D {
         get {CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)}
         set {
@@ -303,7 +293,6 @@ extension Item {
             }
         }
     
-    
     // Pas utilisé
     var lieu_:Lieu {
         get {
@@ -325,11 +314,6 @@ extension Item {
             }
         }
     
-//    var spanDefaut : MKCoordinateSpan {
-//        MKCoordinateSpan(
-//            latitudeDelta:  0.5,
-//            longitudeDelta: 0.5)
-//        }
     
     /// Coordonnées d'un Item et étendue géographique à considerer
     var région : MKCoordinateRegion {
@@ -348,15 +332,18 @@ extension Item {
         }
         
     /// Définir les coordonnées de l'Item en fonction du centre de la Région cartographique
-    func centrerSurLaRégion() {
-//      longitude = région.center.longitude
-//      latitude  = région.center.latitude
-        (latitude, longitude) = centrerSur(région)
-      }
+    //TODO: A réecrire
+//    func centrerSurSaRégion__() {
+////      longitude = région.center.longitude
+////      latitude  = région.center.latitude
+//        (latitude, longitude) = centrerSur(région)
+//      }
     
-    /// Centrer la Région géographique sur les coordonnées de l'Item
-    func centrerSur(_ région: MKCoordinateRegion ) -> (latitude:Double, longitude:Double) {
-       (latitude: région.center.latitude, longitude: région.center.longitude)
+    /// Positioner  les coordonnées de l'Item sur le centre de la Région géographique 
+    func centrerSur(_ région: MKCoordinateRegion )  { //}-> (latitude:Double, longitude:Double) {
+//       (latitude: région.center.latitude, longitude: région.center.longitude)
+        latitude = région.center.latitude
+        longitude = région.center.longitude
       }
     
     /// Fournir  les coordonnées en argument sous forme de tuple
@@ -364,13 +351,8 @@ extension Item {
        (latitude: point.latitude, longitude: point.longitude)
       }
     
-   // func coordonnées
-    override public func prepareForDeletion() {
-//        super.prepareForDeletion()
-        print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
-              "délégué du groupe", principal?.nom ?? "␀",
-              "membre de", groupes?.count ?? 0, "autres groupes")
-        }
+    
+
 
 }
 
@@ -397,6 +379,25 @@ extension Item {
         
         return lesErreurs
         }
+    
+    // Actions qui seront effectuées avant la suppression d'un Item
+     override public func prepareForDeletion() {
+ //        super.prepareForDeletion()
+         print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
+               "délégué du groupe", principal?.nom ?? "␀",
+               "membre de", groupes?.count ?? 0, "autres groupes")
+         }
+    
+    public override var description: String {
+        "\(leTitre),  Valeur: \(valeur), Principal: \(principal?.leNom ?? ""), Membre de : \(lesGroupes.map {$0.nom ?? "..."}.joined(separator: ","))."
+      }
+    
+    override public var debugDescription: String {
+        "\(leTitre),  Valeur: \(valeur), Principal: \(principal?.leNom ?? ""), Membre de : \(lesGroupes.map {$0.nom ?? "..."}.joined(separator: ","))."
+       }
+    
+    
+    
     }
 
 

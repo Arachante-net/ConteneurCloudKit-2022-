@@ -41,7 +41,7 @@ extension Groupe {
     ///   - contexte:
     ///   - nom: du groupe
     /// - Returns: un Groupe
-    static func fournirNouveau(contexte:NSManagedObjectContext , nom:String="N/A") -> Groupe {
+    static func fournirNouveau(contexte:NSManagedObjectContext , nom:String="␀") -> Groupe {
         
         let    nouveauGroupe = Groupe(context: contexte)
                nouveauGroupe.id = UUID()
@@ -57,18 +57,18 @@ extension Groupe {
     ///   - titre: du groupe et du premier Item
     ///   - collaboratif: ou individuel par défaut
     static func creer(contexte:NSManagedObjectContext , titre:String="⚡︎⚡︎⚡︎", collaboratif:Bool=false) {
-        // créer un Groupe
+        // Créer un Groupe
         let nouveauGroupe = fournirNouveau(contexte: contexte, nom:titre)
             nouveauGroupe.collaboratif = collaboratif
 //            nouveauGroupe.createur = UserDefaults.standard.string(forKey: "UID") ?? "anonyme"
 //            nouveauGroupe.valide = true
         
-        // créer l'Item principal
+        // Créer l'Item principal
         let nouvelItem    = Item.fournirNouveau(
             contexte: contexte ,
             titre: "\(titre)_\(nouveauGroupe.items?.count ?? 0)"   )
             
-        nouvelItem.principal = nouveauGroupe
+        nouvelItem.principal    = nouveauGroupe
         nouveauGroupe.principal = nouvelItem
 
         // sauver le contexte
@@ -154,23 +154,24 @@ extension Groupe {
     
     // principal: Item?
     var lePrincipal:Item  {
-//        get throws {
         get  {
             if principal != nil { return principal! }
             else {
                 // plutot generer une erreur ?
-    //            appError = ErrorType(error: .groupeSansPrincipal)
-//                throw Nimbus.groupeSansPrincipal
+                // appError = ErrorType(error: .groupeSansPrincipal)
+                // throw Nimbus.groupeSansPrincipal
                 // donc la suite n'est pas executée
                 fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!")
-//                print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
-//                return Item.bidon() }
+//              print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
+//              return Item.bidon() }
+                }
+            }
         }
-        }
-    }
+    
     /// Convertir .items:NSSet? en .lesItems:Set<Item>
     var lesItems:Set<Item> { return items as? Set<Item> ?? [] }
     
+    /// Pas utilisé
     var talbeauItemTrié: [Item] {
         let set = items as? Set<Item> ?? []
         return set.sorted {
@@ -178,7 +179,7 @@ extension Groupe {
             }
         }
     
-    
+    /// Le nom  non optionel du groupe
     var leNom:String {
         get {nom ?? "␀"}
         set {nom = newValue}
@@ -189,6 +190,7 @@ extension Groupe {
         (items as? Set<Item>)? .reduce(principal?.valeur ?? 0) {$0 + $1.valeur} ?? 0)
         }
     
+    /// La valeur de l'Item Principal de ce groupe
     var valeurPrincipale: Int {
         get { Int(principal?.valeur ?? 0) }
         set { principal?.valeur = Int64(newValue) }
@@ -200,15 +202,20 @@ extension Groupe {
         return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
         }
     
+    /// L'ensemble des groupes  principaux des Items liés à ce Groupe
     var collaborateurs : Set<Groupe> {
         guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
         return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
         }
     
+    /// Le tableau des coordonnées des Items liés à ce groupe
     var lesCoordonnées:[CLLocationCoordinate2D] {
         lesItems.map {$0.coordonnées}
         }
-                
+          
+    //MARK: Géographie
+    
+    /// La région géographique qui  englobe  l'ensemble des Items du Groupe
     var régionEnglobante: MKCoordinateRegion  {
         print("\n\n🏁🏁 ")
             var toutesLesCoordonnées:[CLLocationCoordinate2D]
@@ -350,13 +357,14 @@ extension Groupe {
             return région
         }
     
-    // regroupe les descriptions des lieux des membres du groupe (sans celle du principal)
+    
+    /// Regroupe les descriptions des lieux des membres du groupe (sans celle du principal)
     var lesAnnotations_:[AnnotationGeographique] {
         lesItems.map {$0.annotationGeographiques}
         }
     
-    // Regroupe les descriptions des lieux des membres du groupe
-    // ET celle de l'item principal du groupe
+    /// Regroupe les descriptions des lieux des membres du groupe
+    /// ET celle de l'item principal du groupe
     var lesAnnotations:[AnnotationGeographique] {
         var toutesLesAnnotations:[AnnotationGeographique]
         
@@ -372,7 +380,9 @@ extension Groupe {
         return toutesLesAnnotations
         }
 
+    /// Vrai si ce Groupe est contenu dans l'ensemble des Groupes en argument
     func estContenu(dans groupes : Set<Groupe>) -> Bool { groupes.contains(self)}
+    
     
 //    override public func prepareForDeletion() {
 //        super.prepareForDeletion()

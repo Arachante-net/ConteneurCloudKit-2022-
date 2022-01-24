@@ -19,10 +19,10 @@ struct VueDetailGroupe: View {
     @EnvironmentObject private var persistance : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
 
-//    ou @State ? ou @ObservedObject ??
-//    @State l'etat n'est pas MàJ immediatement
+    // Source de veritée, c'est cette Vue qui est proprietaire de groupe
+    // Rq: avec @State l'etat n'est pas MàJ immediatement
     /// Argument, Le groupe en cours d'édition, propriétée de  la Vue  VuedetailGroupe
-    @StateObject var groupe: Groupe // idem qu'ObservedObject mais ici c'est cette Vue qui est proprietaire
+    @StateObject var groupe: Groupe
 
     // Etats 'locaux' de la Vue
     @State var collaboration = false
@@ -57,16 +57,7 @@ struct VueDetailGroupe: View {
                 }
                 .padding(.leading)
             }
-        
-//        Stepper("Valeur locale : \(groupe.valeurPrincipale)", value: $groupe.valeurPrincipale)
-//            .padding(.leading)
-
-
-//        Stepper(value: 0) { Etiquette( "Valeur" , valeur: $groupe.valeurPrincipale) } //principal?.valeur ) } //valeurLocale) }
-////                onIncrement: { incrementer(max:10) }
-////                onDecrement: { decrementer(min: 0) }
-//                .padding(.leading)
-        
+                
             VueCarteGroupe(
                 région:      groupe.régionEnglobante,
                 annotations: groupe.lesAnnotations
@@ -81,7 +72,6 @@ struct VueDetailGroupe: View {
         .onAppear() {
             let _ = groupe.verifierCohérence(depuis: #function)
             estFavoris = configUtilisateur.estFavoris(groupe)
-            print("❤️ onAppear" , "@state :" , estFavoris , configUtilisateur.estFavoris(groupe))
             }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
@@ -107,9 +97,7 @@ struct VueDetailGroupe: View {
             Spacer()
 
             Button(action: {
-                configUtilisateur.inverserFavoris(groupe, jeSuisFavoris: &estFavoris)                
-                print("❤️ MàJ liste des favoris :", configUtilisateur.listeFavoris, "devient", estFavoris)
-                
+                configUtilisateur.inverserFavoris(groupe, jeSuisFavoris: &estFavoris)
             }) {
                 VStack {
                     Image(systemName: "heart.fill").foregroundColor(estFavoris ? .red : .secondary)
@@ -165,15 +153,6 @@ struct VueDetailGroupe: View {
     
 }
 
-//struct FireballGroupDetails_Previews: PreviewProvider {
-//  static var groupe: Groupe {
-//    let controller = PersistenceController.preview
-//    return controller.makeRandomFireballGroup(context: controller.viewContext)
-//  }
 
-//  static var previews: some View {
-//      VueDetailGroupe(groupe: groupe)
-//  }
-//}
 
 

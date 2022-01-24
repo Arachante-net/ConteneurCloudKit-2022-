@@ -9,7 +9,7 @@
 import SwiftUI
 import MapKit
 
-/// Afficher un groupe d'item representés par des annotations
+/// Afficher  sur une carte un groupe d'item representés par des annotations
 struct VueCarteGroupe: View {
   @State var région: MKCoordinateRegion
   let annotations: [AnnotationGeographique]
@@ -24,8 +24,9 @@ struct VueCarteGroupe: View {
                 .background(Color(red: 1, green: 1, blue: 0) )
             RoundedRectangle(cornerRadius: 7.0)
                 .stroke(.red, lineWidth: 4.0)
-                .background(Color(red: 1, green: 1, blue: 0).opacity(0.5) )
+                .background(Color(annotation.couleur)) //      Color(red: 1, green: 1, blue: 0).opacity(0.5) )
                 .frame(width: 30, height: 30)
+                .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
             }
     }
   }

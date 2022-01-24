@@ -14,19 +14,17 @@ import MapKit
 ///     VueModifItem(item) { valeur in ... code à éxecuter afin de retourner des infos à la vue appelante }
 struct VueModifItem: View {
     
-//    @ObservedObject var item: Item
-//FIXME :  ou alors  @State var item:Item ou  Ξ.item  (ViewModel)
-//FIXME : c'est quoi un  @StateObject  ?
-    
-     
-//    @StateObject private var Ξ:ViewModel // = ViewModel(item)
-    
+
+    // La Source de vérité est la Vue DetailItem
     /// Item en cours d'édition, propiété de VueDetailItem
     @Binding var item:Item
-    let achevée: (Item) -> Void //(Bool) -> Void
+    /// Région géographique ou se situe l'Item
+    @Binding var laRegion: MKCoordinateRegion 
+    /// Code à effectuer lorsque terminée afin de retourner des info
+    let achevée: (Item) -> Void
 
+    
     @State var feuilleAffectationGroupesPresentée:Bool = false
-
 
     @Environment(\.managedObjectContext) var contexte
     @Environment(\.presentationMode)     var modePresentation
@@ -38,17 +36,6 @@ struct VueModifItem: View {
         
     @FocusState var champTexteActif: Bool
     
-
-    
-//    init(_ unItem: Item, région:MKCoordinateRegion, onSave: @escaping (Bool) -> Void ) {
-////        _item = State(initialValue: unItem) /////:
-////        item = unItem /////////:
-////        Ξ.item =  unItem
-//        _Ξ = StateObject(wrappedValue: ViewModel(unItem))
-//        self.achevée = onSave
-//        _région = Binding(projectedValue: unItem.région) //région
-////        print("🌐 Init de VueModifItem avec longitudes", Ξ.item.longitude,unItem.longitude )
-//        }
 
 
     var body: some View {
@@ -90,7 +77,7 @@ struct VueModifItem: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteEditionItem(item: $item, laRegion: $item.région)
+            VueCarteEditionItem(item: $item, laRegion: $laRegion)
             
         }
         .isHidden(item.isDeleted || item.isFault ? true : false)
@@ -132,21 +119,14 @@ struct VueModifItem: View {
                 }
                 
                 Button(action: {
-                    item.centrerSurLaRégion()
-                   ////////////:
-//                    if !Ξ.locations.isEmpty {
-//                        Ξ.item.longitude = (Ξ.locations.last?.coordonnées.longitude)! //?? 0
-//                        Ξ.item.latitude  = (Ξ.locations.last?.coordonnées.latitude)! // ?? 0
-//                        Ξ.régionItem.center.latitude = Ξ.locations.last?.coordonnées.latitude ?? 0
-//                        Ξ.régionItem.center.longitude = Ξ.locations.last?.coordonnées.longitude ?? 0
-//                        }
+                    item.centrerSur(laRegion)
                      
-                        persistance.sauverContexte("Item")
-                    
-                        // executer la closure fournie à cette Vue (VueModifItem) en parametre d'entrée
-                        // par la vue appelante.
-                        achevée(item) //true)
-                        }
+                    persistance.sauverContexte("Item")
+                
+                    // Executer le code (closure) fourni à cette Vue (VueModifItem) en parametre d'entrée
+                    // par la vue appelante. (permet une remontée d'information)
+                    achevée(item)
+                    }
                     ) { Text("VALIDER") }
                     .buttonStyle(.borderedProminent)
                 }
@@ -159,15 +139,6 @@ struct VueModifItem: View {
         
         .onAppear(perform: {
             let _ = item.verifierCohérence(depuis: #function)
-            // charger un Item en mémoire
-//            titre     = item.titre ?? "..."
-//            valeurLocale    = Int(item.valeur)
-//            ordre     = Int(item.ordre )
-//            latitude  = item.latitude
-//            longitude = item.longitude
-//            instant   = item.horodatage //timestamp!
-//            couleur   = item.coloris
-//            valide    = item.valide
             })
         
         }
