@@ -89,10 +89,10 @@ struct VueModifItem: View {
         .sheet(isPresented: $feuilleAffectationGroupesPresentée) {
             Text("Rallier les groupes")
             
-            VueAffectationItemGroupe(lesGroupesARetenir: item.lesGroupes ) {
-                rallierGroupes($0)
-                feuilleAffectationGroupesPresentée = false
-                }
+//            VueAffectationItemGroupe(groupe: groupe, lesGroupesARetenir: item.lesGroupes ) {
+//                rallierGroupes($0)
+//                feuilleAffectationGroupesPresentée = false
+//                }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
         

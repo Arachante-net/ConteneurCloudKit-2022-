@@ -41,7 +41,7 @@ struct VueAjouterGroupe: View {
             }.buttonStyle(.borderedProminent)
         }
         
-      .navigationBarTitle(Text("Création d'un nouveau groupe"))
+      .navigationTitle(Text("Création d'un nouveau groupe"))
     }
   }
 

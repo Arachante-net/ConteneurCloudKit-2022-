@@ -135,6 +135,19 @@ extension Item {
         }
 
     
+    /// Cet `Item`rejoint l'ensemble`lesItems` du  Groupe  `patron`
+    func rallier(groupeLeader:Groupe) {
+        if Groupe.tousCollaboratifs(self.lesGroupes) {print("OK")}
+        groupeLeader.lesItems.insert(self)
+        // et la réciproque ajouter le patron à ma liste de Groupe
+        self.lesGroupes.insert(groupeLeader)
+        }
+    
+    //FIXME: Ca a un sens qu'un Item enrole un Groupe ???
+    func enroler__(groupeParticipant:Groupe) {
+        if groupeParticipant.collaboratif {print("OK")}
+    }
+    
     /// Cet Item participera à  une communauté de  groupes collaboratifs existants
     /// - Parameters:
     ///   - contexte:
@@ -276,7 +289,7 @@ extension Item {
             }
         }
     
-    // Un lieu (Lat, Long) et quelques infos descriptions complementaires
+    // Un lieu (Lat, Long) et quelques infos descriptions complementaires extraites des propriétés de l'Item
     var annotationGeographiques:AnnotationGeographique {
         get {
             

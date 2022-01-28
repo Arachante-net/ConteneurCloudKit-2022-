@@ -10,6 +10,9 @@ import Foundation
 import SwiftUI
 import Combine
 
+// Pas utilisé ici (pour l'instant)
+
+/// Pour une navigation basée sur l'Etat de l'appli
 class Etat: ObservableObject {
     @Published var selection:Int = 2
     @Published var detailler:Bool = false
@@ -29,6 +32,7 @@ init () {
     
     }
 
+// Un exemple d'utilisation ici :
 // https://www.youtube.com/watch?v=vL0w3kvng0o
 //@EnvironmentObject var état:Etat
 //état.itemCourant = ...

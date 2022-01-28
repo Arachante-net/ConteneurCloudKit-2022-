@@ -91,8 +91,11 @@ struct ListeGroupe: View {
             }
       }
 
-    .navigationBarTitle(Text("Événements") + Text(Image(systemName: "sparkles")) + Text("."))
-        
+      .navigationTitle(
+        Text("Événements")
+        + Text(Image(systemName: "sparkles"))
+        + Text(".")
+        )
 
         
         
@@ -114,6 +117,7 @@ struct ListeGroupe: View {
                   let groupe = groupes[$0]
                   description = groupe.description
                   //TODO: verifier si collaboration à d'autre groupes et du coup si la suppression est possible
+                  // ??? groupe.collaborateursSansLePrincipal ???
                   groupe.collaborateurs.forEach
                     { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
                   }

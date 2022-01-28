@@ -74,7 +74,7 @@ struct ListeItem: View {
             
       }
       .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("SOS") }}
-      .navigationBarTitle(Text("Items"))
+      .navigationTitle(Text("Items"))
       .navigationBarItems(
         leading:
             barreMenuNavigation,

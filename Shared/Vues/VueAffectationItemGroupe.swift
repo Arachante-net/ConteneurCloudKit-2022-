@@ -21,16 +21,23 @@ struct VueAffectationItemGroupe: View {
     @EnvironmentObject private var persistence: ControleurPersistance //    PersistenceController
     @Environment(\.managedObjectContext) private var viewContext
       
+    @Binding var groupe:Groupe
 
-    @State var lesGroupesARetenir: Set<Groupe>
+    @State var lesGroupesARetenir = Set<Groupe>()
     let traitementTerminéDe: (Set<Groupe>) -> Void
 
     var body: some View {
         NavigationView {
-            List(groupesCollaboratifs, id: \.id, selection: $lesGroupesARetenir) { groupe in
-                VueCelluleItemGroupe(groupe: groupe, selection: $lesGroupesARetenir)
+            Text("\(lesGroupesARetenir.count)")
+            List(groupesCollaboratifs, id: \.id, selection: $lesGroupesARetenir) { gr in
+                VueCelluleAffectationGroupe(
+                    groupe,
+                    groupeCiblePotentielle: gr,
+//                    prisEnCompte: false,
+                    affectations: $lesGroupesARetenir)
+//                VueCelluleAffectationGroupe(groupe: groupe, selectionDeGroupes: $lesGroupesARetenir)
                 }
-              .navigationTitle(Text("Choisir les groupes à rallier"))
+              .navigationTitle(Text("Choisir les item groupes à affecter tes Thé"))
               .navigationBarItems(  trailing: Button("OK") { action_OK() }  )
             }
         }

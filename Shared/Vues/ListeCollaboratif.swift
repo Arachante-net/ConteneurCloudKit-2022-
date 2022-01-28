@@ -54,7 +54,7 @@ struct ListeCollaboratif: View {
                   }
             }
           .toolbar { EditButton() }
-          .navigationBarTitle(Text("Collaboratifs"))
+          .navigationTitle(Text("Collaboratifs"))
 
         } .listStyle(.plain)
         .toolbar { EditButton() }

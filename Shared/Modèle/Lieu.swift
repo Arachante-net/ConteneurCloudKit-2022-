@@ -104,10 +104,123 @@ extension MKCoordinateRegion {
         center.longitude = item.longitude
         }
     
-    mutating func zoom() {
-        span.latitudeDelta  = 10
-        span.longitudeDelta = 10
-        }
+//    mutating func zoom() {
+//        span.latitudeDelta  = 10
+//        span.longitudeDelta = 10
+//        }
+    
+    /// La région géographique qui  englobe  un ensemble de coordonnées
+    /// En entrée lesCoordonnées    : [CLLocationCoordinate2D]
+    /// En sortie la région: MKCoordinateRegion  englobant toutesLesCoordonnées
+    static func englobante(lesCoordonnées : [CLLocationCoordinate2D]) -> MKCoordinateRegion {
+#warning("Attention ...    ")
+//#error("Erreur ! ")
+        
+        let lesLongitudes = lesCoordonnées.map {$0.longitude}
+        let lesLatitudes  = lesCoordonnées.map {$0.latitude}
+        
+        let P1 = CLLocationCoordinate2D(latitude: lesLatitudes.min()!, longitude: lesLongitudes.min()!)
+        let P2 = CLLocationCoordinate2D(latitude: lesLatitudes.max()!, longitude: lesLongitudes.max()!)
+        
+        print("🏁 Min Min", P1.longitude, P1.latitude)
+        print("🏁 Max Max", P2.longitude, P2.latitude)
+
+        let   π = Double.pi
+        let _2π = 2 * π
+        let _3π = 3 * π
+
+        let Rad = π/180
+        let Deg = 180/π
+        
+        let φ1 = P1.latitude * Rad
+        let φ2 = P2.latitude * Rad
+        
+        let λ1 = P1.longitude * Rad
+        let λ2 = P2.longitude * Rad
+        
+        let Δλ = λ2 - λ1 // long
+        let Δφ = φ2 - φ1  // lat
+        
+        print("🏁 Delta long", Δλ ,  "lat", Δφ)
+
+
+// https://www.movable-type.co.uk/scripts/latlong.html
+//        Bx = cos φ2 ⋅ cos Δλ
+//        By = cos φ2 ⋅ sin Δλ
+//        φm = atan2( sin φ1 + sin φ2, √(cos φ1 + Bx)² + By² )
+//        λm = λ1 + atan2(By, cos(φ1)+Bx)
+//--------------------------------------------------------------
+// Voir aussi https://stackoverflow.com/questions/4169459/whats-the-best-way-to-zoom-out-and-fit-all-annotations-in-mapkit
+        
+// atan2 returne des valeurs entre -π ... +π ( -180° ... +180°)
+// afin de normaliser en une valeur entre 0° et 360°, with −ve values ttransformées entre 180° ... 360°),
+// convertir en degrees and then use (θ+360) % 360 ( % <=> truncatingRemainder(dividingBy) )
+        
+//        For final bearing, simply take the initial bearing from the end point to the start point and reverse it (using θ = (θ+180) % 360).
+        
+        let Bx = cos(φ2) * cos(Δλ)
+        let By = cos(φ2) * sin(Δλ)
+        let φm = atan2(sin(φ1) + sin(φ2), sqrt( (cos(φ1)+Bx)*(cos(φ1)+Bx) + By*By ) )
+        let λm = λ1 + atan2(By, cos(φ1) + Bx)
+        // Normaliser la longitude entre -180° et +180°
+        let λm_ = (λm + _3π).truncatingRemainder(dividingBy: _2π) -  π
+        // l'ecart de longitude
+        let Δλ_ = abs((Δλ + _3π).truncatingRemainder(dividingBy: _2π) -  π)
+        
+        // ??? Normaliser la latitude entre -90° et +90° ?
+//        let φm_ = φm * -1 //(φm + (3 * π / 2).truncatingRemainder(dividingBy: π) -  (π / 2))
+//        let φm_ = (φm + π) .truncatingRemainder(dividingBy:_2π) - π // INCHANGÉ ...
+//        let φm_ = (φm + (3 * π / 2)).truncatingRemainder(dividingBy: π) -  (π / 2) // INCHANGÉ
+        let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
+//        let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
+
+        print("🏁 φm brut", φm * Deg, "normalisé", φm_ * Deg)
+
+        // ???? l'ecart de latitude
+        let Δφ_ = (Δφ + (3 * π / 2).truncatingRemainder(dividingBy: π) -  (π / 2))
+
+
+        let P_milieu = CLLocationCoordinate2D(latitude:φm_ * Deg, longitude: λm_ * Deg)
+        print ("🏁 Le centre de ", P1.longitude, P1.latitude , "  et  ", P2.longitude, P2.latitude)
+        print ("🏁 est", P_milieu.longitude, P_milieu.latitude)
+        print ("🏁 l'écart en longitude est de", Δλ * Deg, Δλ_ * Deg ,"°" )
+        print ("🏁 l'écart en  latitude est de", Δφ * Deg, Δφ_ * Deg ,"°" )
+
+        // normaliser la longitude entre  −180…+180 : (lon+540)%360-180
+        // truncatingRemainder
+        // (λ3+540).truncatingRemainder(dividingBy: 360) - 180
+        
+        // Élargir l'envergure de la zone de 5% 0.5
+        // let envergure = MKCoordinateSpan(
+        // latitudeDelta:  (ecartLatitudes  + (ecartLatitudes  * 0.5)).truncatingRemainder(dividingBy: 180),
+        // longitudeDelta: (ecartLongitudes + (ecartLongitudes * 0.5)).truncatingRemainder(dividingBy: 360))
+            let envergure = MKCoordinateSpan(
+                // En degrée et un peu d'espace autour
+                latitudeDelta:  Δφ_ * Deg * 1.5,
+                longitudeDelta: Δλ_ * Deg * 1.5
+                )
+        
+            // MapKit ne peut pas afficher l'ensemble du globe,
+            // pour la région ci dessous il faut faire defiler la carte.
+            // Detecter et prévenir que l'on depasse le facteur de zoom MapKit.  C'est lequel ??
+            // max latitudeDelta : 180
+            // cf regionThatFits
+           _ = Lieu.étendueMax
+        
+//        MKCoordinateSpan(
+//                latitudeDelta:  180,
+//                longitudeDelta: 360
+//                )
+
+            print ("🏁 Carte Milieu", P_milieu.longitude, P_milieu.latitude )
+            print ("🏁 Carte Envergure long", envergure.longitudeDelta , "lat", envergure.latitudeDelta)
+
+            let région = MKCoordinateRegion(center: P_milieu, span: envergure) //envergureMondiale)
+//            let régionAdaptée = regionThatFits(région)
+//        MapKit.MKCoordinateRegion.   regionThatFits(région)
+            return région
+
+    }
     
     static let ApplePark = MKCoordinateRegion(
           center: CLLocationCoordinate2D(latitude: 37.334_900,

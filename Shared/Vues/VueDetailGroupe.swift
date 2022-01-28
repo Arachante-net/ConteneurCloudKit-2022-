@@ -46,7 +46,7 @@ struct VueDetailGroupe: View {
                 Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
                 Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
                 ForEach(Array(groupe.lesItems)) { item in
-                    Etiquette("⚬ \(item.titre ?? "␀")" , valeur : Int(item.valeur))
+                    Etiquette("⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))
                     }
                 Etiquette( "Valeur globale", valeur: groupe.valeur)
                 Etiquette( "Créateur"      , valeur: groupe.createur)
@@ -87,7 +87,7 @@ struct VueDetailGroupe: View {
             ToolbarItemGroup(placement: .navigationBarTrailing)
                 { barreMenu }
             }
-          .navigationBarTitle(Text(groupe.nom ?? ""))
+          .navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
     }
         
     
