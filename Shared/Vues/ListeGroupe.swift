@@ -49,13 +49,13 @@ struct ListeGroupe: View {
       List() {
           ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
-              NavigationLink(destination: VueDetailGroupe(groupe: groupe),
+              NavigationLink(destination: VueDetailGroupe(groupe: groupe), //.equatable(),
                              tag: groupe.nom ?? "",
                              selection: $courant) {
               HStack {
                 Text("\(groupe.nom ?? "sans nom")").fontWeight(groupe.collaboratif ? .heavy : .thin )
                 Spacer()
-              }.badge( Text("\(groupe.valeur)").foregroundColor(.purple)    )
+              }.badge( Text("\(groupe.valeur)")    )
             }
         }
         .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
@@ -93,8 +93,8 @@ struct ListeGroupe: View {
 
       .navigationTitle(
         Text("Événements")
-        + Text(Image(systemName: "sparkles"))
-        + Text(".")
+//        + Text(Image(systemName: "sparkles"))
+//        + Text(".")
         )
 
         

@@ -62,7 +62,7 @@ struct VueModifGroupe: View {
     /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommé
     /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
-        _groupe = State(wrappedValue: unGroupe)
+        _groupe = State(initialValue : unGroupe) //wrappedValue: unGroupe)
         self.laModificationDuGroupeEstRéalisée = achevée
         // Ca bagote sur la page détail et ca n'apparait pas sur la page d'affectation
 //        lesGroupesARetenir = groupe.collaborateursSansLePrincipal
@@ -70,15 +70,15 @@ struct VueModifGroupe: View {
 
     var body: some View {
     NavigationView {
-        VStack(alignment: .leading, spacing: 2){
+        VStack { //}(alignment: .leading, spacing: 2){
         Group {
-            VStack(alignment: .leading, spacing: 1) {
+            VStack { //(alignment: .leading, spacing: 1) {
                 Text(" Nom du groupe :")
                 TextField("Nouveau nom du groupe", text: $groupe.leNom)
                     .foregroundColor(Color.accentColor)
                     .submitLabel(.done)
                     .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
-                    .padding()
+//                    .padding()
                     .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
             }
             
@@ -94,17 +94,18 @@ struct VueModifGroupe: View {
                     .toggleStyle(.switch) //.checkbox)
                 }
             }
-            .padding()
+//            .padding()
             .overlay( RoundedRectangle(cornerRadius: 15)
                         .stroke(Color.secondary, lineWidth: 0.5)
                 )
-            .padding()
+//            .padding()
 
 
         }
         .sheet(isPresented: $feuilleAffectationPresentée) {
 //        .sheet(item: $modeAffectation) {
             VueAffectationGroupe(
+                id: groupe.id!,
                 groupe:$groupe,
                 lesGroupesAAffecter: $lesGroupesARetenir,
                 modeAffectation: $modeAffectation) { lesGroupesRetenus in
@@ -114,20 +115,31 @@ struct VueModifGroupe: View {
                     print(">>> ON SAUVE")
                     feuilleAffectationPresentée = false
                     }
+            
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing)
+            ToolbarItemGroup() //placement: .automatic )
                 { barreMenu }
+            
+            ToolbarItemGroup() //placement: .confirmationAction )
+                { Button(action: validerFormulaire) {
+                    VStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Valider").font(.caption)
+                        }
+                  }
+                .buttonStyle(.borderedProminent) }
+            
             }
-        .navigationTitle(Text("Edition groupe ") + Text("\(groupe.leNom)").bold().foregroundColor(.accentColor))
+        .navigationTitle(Text("Edition groupe \(groupe.leNom)"))
     }
 
         
         .onDisappear() { let _ = groupe.verifierCohérence(depuis: #function) }
         .onAppear()    {
             let _ = groupe.verifierCohérence(depuis: #function)
-            // initialiser (nb ne peut être dans init() ) la liste des collaborateurs,
+            // initialiser (NB: ne peut être dans init() ) la liste des collaborateurs,
             // qui sera eventuellement modifiée par la Vue Affectation Groupe
             lesGroupesARetenir = groupe.collaborateursSansLePrincipal
             }
@@ -145,53 +157,43 @@ struct VueModifGroupe: View {
     var barreMenu: some View {
         HStack {
 //            GeometryReader { geo in
+//                let _ = print("GEO", geo.size.height, geo.size.width)
             // enroler dock.arrow.down.rectangle  square.and.arrow.down square.and.arrow.down.on.square.fill
             // rallier menubar.arrow.up.rectangle square.and.arrow.up
+            Group {
             Button(action: enrôlerUnNouvelItem__)
-                { Label("Enrôler", systemImage: "plus.square.on.square") }//.isHidden(!groupe.collaboratif)
-                .buttonStyle(.bordered)
-//                .background(rectReader($hauteurBoutonMax))
-                .frame(minHeight: 50, alignment: .bottom) //geo.size.height)
+                { Label("Enrôler", systemImage: "plus.square.on.square")}//.frame(maxHeight: .infinity, alignment: .bottom) }
             
             Button(action: enrôlerUnGroupe) {
                 VStack {
-                    Image(systemName: "square.and.arrow.down.on.square.fill")
+                    Image(systemName: "square.and.arrow.down.on.square.fill")//.frame(height:20)
                     Text("Enrôler").font(.caption)
                     }
               }
-                    .frame(minHeight: 50) // geo.size.height)
-                    .buttonStyle(.bordered)
             
             Button(action: rallierUnGroupe) {
                 VStack {
-                    Image(systemName: "square.and.arrow.up")
+                    Image(systemName: "square.and.arrow.up")//.frame(height:20)
                     Text("Rallier").font(.caption)
                     }
               }
-//            .frame(minHeight: 20) //geo.size.height)
-            .buttonStyle(.bordered)
                         
             Button(action: editerPrincipal) {
                 VStack {
-                    Image(systemName: "rectangle.and.pencil.and.ellipsis")
-//                    Text("Editer le principal : ")
+                    Image(systemName: "rectangle.and.pencil.and.ellipsis")//.frame(height:20)
                     Text("\(groupe.lePrincipal.leTitre)").font(.caption)
                     }
               }
-            .frame(minHeight: 50) //geo.size.height)
-            .buttonStyle(.bordered)
+                }
+            frame(maxHeight: .infinity, alignment: .bottom).border(.yellow)
             
-            Button(action: validerFormulaire) {
-                VStack {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text("Valider").font(.caption)
-                    }
-              }
-            .frame(minHeight: 50) //geo.size.height)
-            .buttonStyle(.borderedProminent)
-            
-            }
+        }.border(.gray.opacity(0.5))
+//            } // fin de geometryReader
         }
+    
+    
+    
+    //MARK: -
     
     private func validerFormulaire() {
         persistance.sauverContexte("Groupe Item")
@@ -212,8 +214,7 @@ struct VueModifGroupe: View {
         }
 
     
-    
-    
+    //TODO: Cela correspond à quoi d'enrôler directement un Item ?
     private func enrôlerUnNouvelItem__() {
         withAnimation {
             let nouvelItem = Item.fournirNouveau(contexte : contexte , titre : "Nouvelle recrue de test")
@@ -221,7 +222,7 @@ struct VueModifGroupe: View {
             }
         }
     
-    private func enrôlerDesItems() {
+    private func enrôlerDesItems_() {
         withAnimation {
             let nouveaux: Set<Item> = []
             groupe.enrôler(contexte:contexte, recrues: nouveaux)

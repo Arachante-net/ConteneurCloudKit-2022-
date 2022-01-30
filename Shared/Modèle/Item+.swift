@@ -415,7 +415,11 @@ extension Item {
 
 
 
-
+extension Item:Comparable {
+    public static func < (lhs: Item, rhs: Item) -> Bool {
+        lhs.leTitre < rhs.leTitre
+    }
+}
 
 
 

@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreData
 
-/// Associer à cet Item les groupes collaboratifs auxquels il desire participer
+/// Associer (Rallier ou Abandonner,  Enrôler ou Révoquer)  ce groupe à d'autres groupes, avec lesquels il collaborera.
 struct VueAffectationGroupe: View {
       
     @FetchRequest(
@@ -17,42 +17,66 @@ struct VueAffectationGroupe: View {
         animation: .default)
     private var groupesCollaboratifs: FetchedResults<Groupe>
       
-          
+//    @FetchRequest var groupesCollaboratifsSaufMoi: FetchedResults<Groupe>
+
     @EnvironmentObject private var persistence: ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
       
     @Binding var groupe:Groupe
+    
+    // le choix de l'utilisateur
     @Binding var lesGroupesAAffecter: Set<Groupe>
     
+    // Enroler (aller chercher des collaborateurs) ou Collaborer (rejoindre un groupe)
     @Binding var modeAffectation :ModeAffectationGroupes
     
+    // retour vers la vue appelante du resultat de la feuille (sheet) d'affectation
     let traitementTerminéDe: (Set<Groupe>) -> Void
     
+    // On passe par un init() afin de construire la requête groupesCollaboratifsSaufMoi
+    // Nous avons alors deux methodes pour lister les affectations possibles :
+    //   List(groupesCollaboratifsSaufMoi) ...
+    //   List(groupesCollaboratifs.filter() { $0 != groupe} ...
+    //TODO: C'est quoi le mieux ?
+    init(id:UUID,
+         groupe             : Binding<Groupe>,
+         lesGroupesAAffecter: Binding<Set<Groupe>>,
+         modeAffectation    : Binding<ModeAffectationGroupes>,
+         traitementTerminéDe: @escaping (Set<Groupe>) -> Void) {
+        
+        _groupe              = groupe
+        _lesGroupesAAffecter = lesGroupesAAffecter
+        _modeAffectation     = modeAffectation
+        
+        self.traitementTerminéDe = traitementTerminéDe
+        
+//        _groupesCollaboratifsSaufMoi = FetchRequest<Groupe>(
+//            sortDescriptors: [],
+//            predicate: NSPredicate(format: "(collaboratif == true) AND (NOT id == %@)", id as CVarArg))
+        }
     
     var body: some View {
         NavigationView {
             VStack {
+//                List(groupesCollaboratifsSaufMoi) { Text($0.leNom)}
+                
                 Text("\(modeAffectation.description ?? "")")
                 List(groupesCollaboratifs.filter() { $0 != groupe}, id: \.id, selection: $lesGroupesAAffecter) { grp in
-//                List(test, id: \.id, selection: $lesGroupesAAffecter) { grp in
-//                    VueCelluleAffectationGroupe(groupe: gr, selectionDeGroupes: $lesGroupesARetenir)
-//                    let bip = groupe.estMonPrincipal(groupe: gr)
                     VueCelluleAffectationGroupe(
                         groupe,
                         groupeCiblePotentielle: grp,
-//                        prisEnCompte: groupe.estMonPrincipal(groupe: grp),
                         affectations: $lesGroupesAAffecter)
                     }
                 }
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ToolbarItemGroup() { //placement:   .automatic) { //}.navigationBarTrailing) {
                     Button("<< OK >>") { action_OK() }
                     }
                 }
-            .navigationTitle(Text("Choisir les groupes à affecter à \(groupe.leNom)"))
+//            .navigationTitle(Text("Choisir les groupes à affecter à \(groupe.leNom)"))
         }.onAppear() {
             var test = Set<Groupe>(groupesCollaboratifs)
-            var test2 = test.remove(groupe)
+            var _ = test.remove(groupe)
             
         } // as Set<Groupe>
 

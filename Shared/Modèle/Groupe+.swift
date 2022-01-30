@@ -175,10 +175,10 @@ extension Groupe {
     }
     
     /// Pas utilisé
-    var talbeauItemTrié: [Item] {
+    var tableauItemsTrié: [Item] {
         let set = items as? Set<Item> ?? []
         return set.sorted {
-            $0.titre ?? "" < $1.titre ?? ""
+            $0.leTitre < $1.leTitre
             }
         }
     
@@ -218,6 +218,7 @@ extension Groupe {
     
     var collaborateursSansLePrincipal : Set<Groupe> {
         guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
+
         lesItems.remove(lePrincipal)
         return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
         }

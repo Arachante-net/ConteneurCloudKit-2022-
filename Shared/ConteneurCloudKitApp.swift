@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-//let truc = ""
 @main
 struct ConteneurCloudKitApp: App {
     @Environment(\.scenePhase) private var scenePhase

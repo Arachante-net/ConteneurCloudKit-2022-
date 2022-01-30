@@ -21,6 +21,7 @@ struct VueDetailGroupe: View {
 
     // Source de veritée, c'est cette Vue qui est proprietaire de groupe
     // Rq: avec @State l'etat n'est pas MàJ immediatement
+    // https://stackoverflow.com/questions/60111947/swiftui-prevent-view-from-refreshing-when-presenting-a-sheet?rq=1
     /// Argument, Le groupe en cours d'édition, propriétée de  la Vue  VuedetailGroupe
     @StateObject var groupe: Groupe
 
@@ -35,18 +36,29 @@ struct VueDetailGroupe: View {
     // configUtilisateur.estFavoris(groupe) //TODO: comment faire ça ?
     //TODO: essayer estFavoris? = nil
 
-    @ViewBuilder
+//    static func == (lhs: VueDetailGroupe, rhs: VueDetailGroupe) -> Bool {
+//        // propriétés qui identifient que la vue est égale et ne doit pas être réactualisée
+//        
+//           // << return yes on view properties which identifies that the
+//           // view is equal and should not be refreshed (ie. `body` is not rebuilt)
+//        false
+//       }
+    
+    
+//    @ViewBuilder
     var body: some View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
-    VStack(alignment: .leading, spacing: 2) {
-        VStack(alignment: .leading, spacing: 2)  {
+    VStack { //}(alignment: .leading, spacing: 2) {
+        VStack { //}(alignment: .leading, spacing: 2)  {
             Group {
                 Etiquette( "Item principal", valeur: (groupe.principal != nil) ? groupe.principal!.titre ?? "␀" : "❌")
                 Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0))
                 Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
                 Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
-                ForEach(Array(groupe.lesItems)) { item in
-                    Etiquette("⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))
+                
+//                ForEach(Array(groupe.lesItems).sorted()    ) { item in
+                ForEach(Array(groupe.tableauItemsTrié) ) { item in
+                    Etiquette("⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
                     }
                 Etiquette( "Valeur globale", valeur: groupe.valeur)
                 Etiquette( "Créateur"      , valeur: groupe.createur)
@@ -68,6 +80,7 @@ struct VueDetailGroupe: View {
         .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
         .opacity(groupe.valide ? 1 : 0.1)
         .disabled(groupe.valide ? false : true)
+       // .blur(radius: feuilleModificationPresentée ? 50 : 0, opaque: false)
         
         .onAppear() {
             let _ = groupe.verifierCohérence(depuis: #function)
@@ -84,7 +97,7 @@ struct VueDetailGroupe: View {
             .transition(.opacity) //.move(edge: .top))
             
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing)
+            ToolbarItemGroup() //placement: .navigationBarTrailing)
                 { barreMenu }
             }
           .navigationTitle(Text("Détails du groupe \(groupe.leNom)"))

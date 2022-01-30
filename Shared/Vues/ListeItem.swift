@@ -68,7 +68,7 @@ struct ListeItem: View {
                 ))
             { Text(item.leTitre) }
             
-            .badge(Int(item.valeur))
+            .badge(String(item.valeur))
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
             
