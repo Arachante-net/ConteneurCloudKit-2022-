@@ -27,10 +27,11 @@ struct VueModifItem: View {
     @State var feuilleAffectationGroupesPresentée:Bool = false
 
     @Environment(\.managedObjectContext) var contexte
-    @Environment(\.presentationMode)     var modePresentation
+    @Environment(\.presentationMode)     var modePresentation  // Button("Rejettez moi") {modePresentation.wrappedValue.dismiss()}
     
     // Rejet de la présentation actuelle
     @Environment(\.dismiss) var cloreLaVueActuelle
+
 
     @EnvironmentObject private var persistance: ControleurPersistance
         
@@ -129,6 +130,8 @@ struct VueModifItem: View {
                     }
                     ) { Text("VALIDER") }
                     .buttonStyle(.borderedProminent)
+
+                Button("Rejet") { feuilleAffectationGroupesPresentée=false}
                 }
             }
 

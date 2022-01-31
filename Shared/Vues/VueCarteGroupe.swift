@@ -13,10 +13,10 @@ import MapKit
 struct VueCarteGroupe: View {
   @State var région: MKCoordinateRegion
   let annotations: [AnnotationGeographique]
-
-
+  let visible: Bool
+//    var région:Binding<MKCoordinateRegion> {return Binding(projectedValue: groupe.régionEnglobante)}
   var body: some View {
- 
+  
       Map(coordinateRegion: $région, annotationItems: annotations) { annotation in
         MapAnnotation(coordinate: annotation.coordonnées) {
             Text(annotation.libellé)
@@ -28,7 +28,9 @@ struct VueCarteGroupe: View {
                 .frame(width: 30, height: 30)
                 .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
             }
-    }
+      }.isHidden(!visible, remove: false)
+      
+      
   }
 }
 

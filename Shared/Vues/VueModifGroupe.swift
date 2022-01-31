@@ -45,6 +45,9 @@ struct VueModifGroupe: View {
     /// Closure en parametre, a executer lorsque l'utilisateur quitte cette vue
     var laModificationDuGroupeEstRéalisée: (Bool) -> Void
     
+    // Rejet de la présentation actuelle
+    @Environment(\.dismiss) var cloreLaVueActuelle
+    
     @Environment(\.managedObjectContext) var contexte
     @EnvironmentObject private var persistance : ControleurPersistance
     
@@ -59,7 +62,7 @@ struct VueModifGroupe: View {
 //    @State private var hauteurBoutonMax: CGFloat = .zero
 
     
-    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommé
+    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommer
     /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
         _groupe = State(initialValue : unGroupe) //wrappedValue: unGroupe)
@@ -119,11 +122,20 @@ struct VueModifGroupe: View {
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
         .toolbar {
-            ToolbarItemGroup() //placement: .automatic )
+            ToolbarItemGroup(placement: .automatic )
                 { barreMenu }
             
-            ToolbarItemGroup() //placement: .confirmationAction )
-                { Button(action: validerFormulaire) {
+            ToolbarItemGroup() {
+                Button(role: .cancel, action: abandonerFormulaire) {
+                    VStack {
+                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                        Text("Abandon").font(.caption)
+                        }
+                  }
+                }
+            
+            ToolbarItemGroup(placement: .confirmationAction )
+            { Button( action: validerFormulaire) {
                     VStack {
                         Image(systemName: "checkmark.circle.fill")
                         Text("Valider").font(.caption)
@@ -136,9 +148,9 @@ struct VueModifGroupe: View {
     }
 
         
-        .onDisappear() { let _ = groupe.verifierCohérence(depuis: #function) }
+        .onDisappear() {}// let _ = groupe.verifierCohérence(depuis: #function) }
         .onAppear()    {
-            let _ = groupe.verifierCohérence(depuis: #function)
+//            let _ = groupe.verifierCohérence(depuis: #function)
             // initialiser (NB: ne peut être dans init() ) la liste des collaborateurs,
             // qui sera eventuellement modifiée par la Vue Affectation Groupe
             lesGroupesARetenir = groupe.collaborateursSansLePrincipal
@@ -199,6 +211,12 @@ struct VueModifGroupe: View {
         persistance.sauverContexte("Groupe Item")
         let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
         laModificationDuGroupeEstRéalisée(true)
+        }
+    
+    private func abandonerFormulaire() {
+//        let _ = groupe.verifierCohérence(depuis: "abandon du formulaire" )
+        laModificationDuGroupeEstRéalisée(false)
+        print("====================================================================")
         }
     
     private func editerPrincipal() {}

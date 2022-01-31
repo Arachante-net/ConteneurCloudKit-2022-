@@ -314,54 +314,46 @@ extension Groupe {
         lesItems.map {$0.coordonnées}
         }
     
+    var régionEnglobante_: MKCoordinateRegion {
+        set {} //self.régionEnglobante_ = newValue}
+        get {MKCoordinateRegion()}
+    }
     
     /// La région géographique qui  englobe  l'ensemble des Items du Groupe
     var régionEnglobante: MKCoordinateRegion  {
 
-//        // Tableau vide
-//        var toutesLesCoordonnées:[CLLocationCoordinate2D]
-//
-//        // On commence avec les coordonnées de l'Item Principal
-//        if let lePrincipal = principal?.coordonnées {
-//            toutesLesCoordonnées = [lePrincipal]
-//            // Et on y ajoute Le tableau des coordonnées des Items liés à ce groupe
-//            toutesLesCoordonnées.append(contentsOf: lesCoordonnées)
-//            }
-//        else {
-//            toutesLesCoordonnées = lesCoordonnées
-//            }
-
-        var toutesLesCoordonnées = lesCoordonnées
-        if let lePrincipal = principal?.coordonnées {
-            toutesLesCoordonnées.append(lePrincipal)
-            }
-        
-//        toutesLesCoordonnées.forEach() {coord in print("🏁 º", coord.longitude, coord.latitude)}
-        
-        // Aucun point : on affiche le monde
-        if toutesLesCoordonnées.isEmpty {
-            return  MKCoordinateRegion(
+        get {
+            var toutesLesCoordonnées = lesCoordonnées
+            if let lePrincipal = principal?.coordonnées {
+                toutesLesCoordonnées.append(lePrincipal)
+                }
+                    
+            // Aucun point : on affiche le monde
+            if toutesLesCoordonnées.isEmpty {
+                return  MKCoordinateRegion(
+                        center: CLLocationCoordinate2D(
+                            latitude:  0,
+                            longitude: 0),
+                        span: Lieu.étendueMax
+                        )
+                }
+            
+            // Un seul point (normalement le Principal)
+            if toutesLesCoordonnées.count == 1 {
+                return  MKCoordinateRegion(
                     center: CLLocationCoordinate2D(
-                        latitude:  0,
-                        longitude: 0),
-                    span: Lieu.étendueMax
+                        latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
+                        longitude: toutesLesCoordonnées.first?.longitude ?? 0),
+                    span: Lieu.étendueParDéfaut
                     )
+                }
+            
+            // Sinon on fait un peu de trigonométrie
+            return MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
             }
+        set {régionEnglobante_ = newValue}
         
-        // Un seul point (normalement le Principal)
-        if toutesLesCoordonnées.count == 1 {
-            return  MKCoordinateRegion(
-                center: CLLocationCoordinate2D(
-                    latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
-                    longitude: toutesLesCoordonnées.first?.longitude ?? 0),
-                span: Lieu.étendueParDéfaut
-                )
-            }
-        
-        // Sinon on fait un peu de trigonométrie
-        return MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
-
-        
+        }
         //MARK: Géographie
         /// En entrée toutesLesCoordonnées    : [CLLocationCoordinate2D]
         /// En sortie la région: MKCoordinateRegion  englobant toutesLesCoordonnées
@@ -473,7 +465,7 @@ extension Groupe {
 //            let région = MKCoordinateRegion(center: P_milieu, span: envergure) //envergureMondiale)
 ////            let régionAdaptée = regionThatFits(région)
 ////        MapKit.MKCoordinateRegion.   regionThatFits(région)
-        }
+//        }
     
     
     /// Regroupe les descriptions des lieux des membres du groupe (sans celle du principal)

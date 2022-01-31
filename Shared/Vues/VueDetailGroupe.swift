@@ -30,6 +30,7 @@ struct VueDetailGroupe: View {
     @State var nom           = ""
 
     @State var feuilleModificationPresentée = false
+    @State var laCarteEstVisible = true
     
     /// Le groupe édité fait partie des favoris de l'utilisateur
     @State private var estFavoris = false
@@ -72,7 +73,8 @@ struct VueDetailGroupe: View {
                 
             VueCarteGroupe(
                 région:      groupe.régionEnglobante,
-                annotations: groupe.lesAnnotations
+                annotations: groupe.lesAnnotations,
+                visible: !feuilleModificationPresentée
                 )
         
         
@@ -88,13 +90,15 @@ struct VueDetailGroupe: View {
             }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
+//            laCarteEstVisible.toggle()
             VueModifGroupe(groupe) { quiterLaVue in
                             print("Retour de VueModifGroupe avec", quiterLaVue )
                             feuilleModificationPresentée = false
+                            laCarteEstVisible=true
                             }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
-            .transition(.opacity) //.move(edge: .top))
+//            .transition(.opacity) //.move(edge: .top))
             
         .toolbar {
             ToolbarItemGroup() //placement: .navigationBarTrailing)
