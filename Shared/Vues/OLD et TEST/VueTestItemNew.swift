@@ -20,7 +20,7 @@ struct VueTestItemNew: View {
     @StateObject private var Ξ = ViewModel()
 //    @StateObject private var Ξ : ViewModel //(Item.bidon())
     
-    @State var item : Item
+    @State private var item : Item
 //    @State var région : MKCoordinateRegion
     
 

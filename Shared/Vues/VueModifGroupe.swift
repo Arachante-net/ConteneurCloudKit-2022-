@@ -37,10 +37,11 @@ struct VueModifGroupe: View {
     /// Le groupe en cour d'édition, ( il est la propriétée de  la vue mere)
 //    @ObservedObject var groupe: Groupe
     /// Le groupe en cour d'édition, ( il est la propriétée de  .... moi)
-    @State var groupe: Groupe
+    // 1er Février 2
+    @State private var groupe: Groupe
     
     /// Aller chercher d'autres groupes ou integrer un groupe
-    @State var modeAffectation :ModeAffectationGroupes = .test//? = nil // = .test//? = nil
+    @State private var modeAffectation :ModeAffectationGroupes = .test//? = nil // = .test//? = nil
 
     /// Closure en parametre, a executer lorsque l'utilisateur quitte cette vue
     var laModificationDuGroupeEstRéalisée: (Bool) -> Void
@@ -57,15 +58,15 @@ struct VueModifGroupe: View {
       animation: .default)
     private var groupesCollaboratifs: FetchedResults<Groupe>
     
-    @State var feuilleAffectationPresentée = false
-    @State var lesGroupesARetenir  = Set<Groupe>() //  :  Set<Groupe> //
+    @State private var feuilleAffectationPresentée = false
+    @State private var lesGroupesARetenir  = Set<Groupe>() //  :  Set<Groupe> //
 //    @State private var hauteurBoutonMax: CGFloat = .zero
 
     
-    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommer
-    /// VueModifGroupe(groupe) { qui...
+//    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommer
+//    /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
-        _groupe = State(initialValue : unGroupe) //wrappedValue: unGroupe)
+        _groupe = State(initialValue : unGroupe) //TODO: wrappedValue: unGroupe)
         self.laModificationDuGroupeEstRéalisée = achevée
         // Ca bagote sur la page détail et ca n'apparait pas sur la page d'affectation
 //        lesGroupesARetenir = groupe.collaborateursSansLePrincipal
@@ -84,7 +85,7 @@ struct VueModifGroupe: View {
 //                    .padding()
                     .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
             }
-            
+
             VStack {
                 VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
                 }
@@ -92,21 +93,20 @@ struct VueModifGroupe: View {
             VStack {
                 Toggle("Collaboratif", isOn: $groupe.collaboratif)
                     .toggleStyle(.switch)  //.toggleStyle(.button)
-                
+
                 Toggle("Valide",       isOn: $groupe.valide)
                     .toggleStyle(.switch) //.checkbox)
                 }
             }
-//            .padding()
+            .padding()
             .overlay( RoundedRectangle(cornerRadius: 15)
                         .stroke(Color.secondary, lineWidth: 0.5)
                 )
-//            .padding()
+            .padding()
 
 
         }
         .sheet(isPresented: $feuilleAffectationPresentée) {
-//        .sheet(item: $modeAffectation) {
             VueAffectationGroupe(
                 id: groupe.id!,
                 groupe:$groupe,
@@ -118,14 +118,15 @@ struct VueModifGroupe: View {
                     print(">>> ON SAUVE")
                     feuilleAffectationPresentée = false
                     }
-            
+
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup(placement: .automatic )
+            ToolbarItemGroup(placement:  .principal)//  .automatic )
                 { barreMenu }
-            
-            ToolbarItemGroup() {
+//
+            ToolbarItem(placement: .cancellationAction) {
                 Button(role: .cancel, action: abandonerFormulaire) {
                     VStack {
                         Image(systemName: "arrowshape.turn.up.left.circle.fill")
@@ -133,8 +134,8 @@ struct VueModifGroupe: View {
                         }
                   }
                 }
-            
-            ToolbarItemGroup(placement: .confirmationAction )
+//
+            ToolbarItem(placement: .confirmationAction )
             { Button( action: validerFormulaire) {
                     VStack {
                         Image(systemName: "checkmark.circle.fill")
@@ -142,8 +143,9 @@ struct VueModifGroupe: View {
                         }
                   }
                 .buttonStyle(.borderedProminent) }
-            
-            }
+//
+        }//.background(Color(.gray))//.border(.gray.opacity(0.5))
+        
         .navigationTitle(Text("Edition groupe \(groupe.leNom)"))
     }
 
@@ -197,9 +199,10 @@ struct VueModifGroupe: View {
                     }
               }
                 }
-            frame(maxHeight: .infinity, alignment: .bottom).border(.yellow)
             
-        }.border(.gray.opacity(0.5))
+//MARK: - THE BUG  ! (sans le point) frame(maxHeight: .infinity, alignment: .bottom).border(.yellow) -
+            
+        }//.border(.gray.opacity(0.5))
 //            } // fin de geometryReader
         }
     

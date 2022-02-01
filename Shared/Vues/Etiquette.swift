@@ -15,7 +15,7 @@ struct Etiquette: View {
     var neutre:Bool = false
 //    static func == (lhs: Etiquette, rhs: Etiquette) -> Bool {
 //        // propriétés qui identifient que la vue est égale et ne doit pas être réactualisée
-//        
+//
 //           // << return yes on view properties which identifies that the
 //           // view is equal and should not be refreshed (ie. `body` is not rebuilt)
 //        true
@@ -33,7 +33,7 @@ struct Etiquette: View {
     
     init (_ libellé:String, valeur:Bool) {
         self.libellé = libellé
-        self.valeur = valeur ? "✔︎" : "✖️"
+        self.valeur = valeur ? "✔︎" : "❌"
         }
     
     init (_ libellé:String, valeur:Int) {

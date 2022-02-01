@@ -383,7 +383,7 @@ extension Item {
         if (id == nil )
             { lesErreurs.append(ErrorType(.itemSansID )) }
         if principal == nil
-            { lesErreurs.append(ErrorType(.itemSansPrincipal ))}
+        { lesErreurs.append(ErrorType(.itemSansPrincipal(item: leTitre)  ))}
         
         if lesErreurs.isEmpty {print(" ✅")}
         else {

@@ -25,10 +25,11 @@ struct VueDetailItem: View {
     // 'VueDetailItem' initializer is inaccessible due to 'private' protection level ??
     
     // ♔ La Source de verité ♔
+    // 1er Février 4 & 5
     /// Argument, Item en cours d'édition propriété de VueDetailItem
-    @State var item : Item
+    @State  private var item : Item
     /// Argument, Région géographique ou se situe l'Item
-    @State var laRegion : MKCoordinateRegion
+    @State  private var laRégion : MKCoordinateRegion
 
     
     //TODO: A mettre dans un module utilitaires
@@ -40,7 +41,10 @@ struct VueDetailItem: View {
     }()
     
     
-    
+    init (item:Item, laRégion:MKCoordinateRegion) {
+        _item     = State(wrappedValue: item)
+        _laRégion = State(wrappedValue: laRégion)
+    }
     
 
     
@@ -64,14 +68,14 @@ struct VueDetailItem: View {
             // donc Binding pour item et laRegion
             // RQ1 : la position de l'Item n'est pas modifiée par la Vue CarteItem
             // RQ2 : la région affichée peut être deplacée par l'utilisateur
-            VueCarteItem( item: $item,  laRegion: $laRegion )
+            VueCarteItem( item: $item,  laRegion: $laRégion )
             
                 .isHidden( (item.isDeleted || item.isFault) ? true : false  )
                 .opacity(item.valide ? 1.0 : 0.1)
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
 //                    Text("VueDetailItem $laRegion \(laRegion.center.longitude), \(laRegion.center.latitude)")
-                    VueModifItem( item: $item, laRegion: $laRegion) { infoEnRetour in
+                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
                         print("INFO EN RETOUR DE VUE MODIF ITEM",
                               infoEnRetour.leTitre,
                               infoEnRetour.longitude,

@@ -40,9 +40,9 @@ struct VueCarteTestNew: View {
 
 //  let annotations: [Lieu]
 //  @State var annotations: [Lieu]
-    @State var latitudeMem:  Double = 0
-    @State var longitudeMem: Double = 0
-    @State var actuelle = false
+    @State private var latitudeMem:  Double = 0
+    @State private var longitudeMem: Double = 0
+    @State private var actuelle = false
     
      lazy var place:IdentifiablePlace = IdentifiablePlace(lat: item.latitude, long: item.longitude)
    

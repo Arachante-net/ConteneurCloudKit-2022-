@@ -49,11 +49,11 @@ struct ListeGroupe: View {
       List() {
           ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
-              NavigationLink(destination: VueDetailGroupe(groupe: groupe), //.equatable(),
-                             tag: groupe.nom ?? "",
+              NavigationLink(destination: VueDetailGroupe(groupe), //.equatable(),
+                             tag: groupe.leNom,
                              selection: $courant) {
               HStack {
-                Text("\(groupe.nom ?? "sans nom")").fontWeight(groupe.collaboratif ? .heavy : .thin )
+                  Text("\(groupe.leNom)").fontWeight(groupe.collaboratif ? .heavy : .thin )
                 Spacer()
               }.badge( Text("\(groupe.valeur)")    )
             }
@@ -96,6 +96,8 @@ struct ListeGroupe: View {
 //        + Text(Image(systemName: "sparkles"))
 //        + Text(".")
         )
+
+        Bienvenue()
 
         
         

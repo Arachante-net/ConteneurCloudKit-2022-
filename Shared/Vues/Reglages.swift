@@ -27,7 +27,7 @@ struct Reglages: View {
     @EnvironmentObject private var persistance: ControleurPersistance
     @Environment(\.managedObjectContext) private var contexte
 
-    @State var transacs : [NSPersistentHistoryTransaction] = []
+    @State private var transacs : [NSPersistentHistoryTransaction] = []
        
     let utilisateur = Utilisateur()
 

@@ -24,7 +24,7 @@ struct VueModifItem: View {
     let achevée: (Item) -> Void
 
     
-    @State var feuilleAffectationGroupesPresentée:Bool = false
+    @State private var feuilleAffectationGroupesPresentée:Bool = false
 
     @Environment(\.managedObjectContext) var contexte
     @Environment(\.presentationMode)     var modePresentation  // Button("Rejettez moi") {modePresentation.wrappedValue.dismiss()}

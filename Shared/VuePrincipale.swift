@@ -79,9 +79,15 @@ struct VuePrincipale: View {
             .tag(3)
             .badge("!")
 
-  
+//              Bienvenue()
+         Text("BOF")
+              
+              
           } // tab view
+//          Text("OUI")
+
       }
+//      Text("NON")
 //      .environmentObject(appError ?? <#default value#>)
       .alert(item: $viewModel.appError) {appError in
           Alert(title: Text("!!!!!"),
@@ -90,6 +96,7 @@ struct VuePrincipale: View {
           )
           
       }
+      
   }
         // body
 }

@@ -11,10 +11,17 @@ import MapKit
 
 /// Afficher  sur une carte un groupe d'item representés par des annotations
 struct VueCarteGroupe: View {
-  @State var région: MKCoordinateRegion
+    // 1er Février 3
+  @State private var région: MKCoordinateRegion
   let annotations: [AnnotationGeographique]
-  let visible: Bool
+//  let visible: Bool
 //    var région:Binding<MKCoordinateRegion> {return Binding(projectedValue: groupe.régionEnglobante)}
+   
+  init(région:MKCoordinateRegion, annotations: [AnnotationGeographique]) {
+      _région = State(wrappedValue: région)
+      self.annotations = annotations
+      }
+    
   var body: some View {
   
       Map(coordinateRegion: $région, annotationItems: annotations) { annotation in
@@ -28,7 +35,7 @@ struct VueCarteGroupe: View {
                 .frame(width: 30, height: 30)
                 .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
             }
-      }.isHidden(!visible, remove: false)
+      }//.isHidden(!visible, remove: false)
       
       
   }

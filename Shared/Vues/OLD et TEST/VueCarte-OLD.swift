@@ -21,10 +21,10 @@ import MapKit
 ///
 struct VueCarteOLD: View {
     
-  @State var item:Item
-  @State var laRegion: MKCoordinateRegion 
+  @State private var item:Item
+  @State private var laRegion: MKCoordinateRegion
 //  let annotations: [Lieu]
-  @State var annotations: [Lieu]
+  @State private var annotations: [Lieu]
 
 
     

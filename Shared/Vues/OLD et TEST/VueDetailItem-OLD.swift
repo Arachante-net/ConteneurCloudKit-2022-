@@ -54,7 +54,7 @@ struct VueDetailItemOLD: View {
 //      )
 //    }
     
-    @State var lieuDeEvenement: Lieu
+    @State private var lieuDeEvenement: Lieu
     
 //    var lieuCartographique: Lieu {
 //      return Lieu(

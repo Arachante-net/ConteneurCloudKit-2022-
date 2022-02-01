@@ -23,7 +23,7 @@ struct VueAffectationItemGroupe: View {
       
     @Binding var groupe:Groupe
 
-    @State var lesGroupesARetenir = Set<Groupe>()
+    @State private var lesGroupesARetenir = Set<Groupe>()
     let traitementTerminéDe: (Set<Groupe>) -> Void
 
     var body: some View {

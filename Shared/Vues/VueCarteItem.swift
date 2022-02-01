@@ -44,8 +44,8 @@ struct VueCarteItem: View {
 
     
     // Etats locaux
-    @State var suivi:MapUserTrackingMode = .follow
-    @State var monSuivi:Bool = false
+    @State private var suivi:MapUserTrackingMode = .follow
+    @State private var monSuivi:Bool = false
     
     lazy var place:PositionIdentifiable = PositionIdentifiable(lat: item.latitude, long: item.longitude)
 

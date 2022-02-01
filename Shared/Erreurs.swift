@@ -13,7 +13,7 @@ import Foundation
         case trucQuiVaPas(num : Int)
         case erreurInterne
         
-        case itemSansPrincipal
+        case itemSansPrincipal(item:String)
         case itemSansTitre
         case itemSansID
         
@@ -21,6 +21,8 @@ import Foundation
         case groupeSansNom
         case groupeSansID
         case groupeInvalide
+        
+        case incoherenceDesPrincipaux
         
         case erreurAPreciser
         
@@ -30,7 +32,7 @@ import Foundation
                 case .erreurInterne:              return NSLocalizedString("Erreur interne, reinstallez l'appli !", comment: "")
                 case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ..."    , comment: "")
                 
-                case .itemSansPrincipal:          return NSLocalizedString("Item sans Groupe referent (Principal)", comment: "Pourquoi pas")
+                case .itemSansPrincipal(item: let item):          return NSLocalizedString("Item \(item) sans Groupe referent (Principal)", comment: "Pourquoi pas")
                 case .itemSansTitre:              return NSLocalizedString("Item sans Titre"                      , comment: "")
                 case .itemSansID:                 return NSLocalizedString("Item sans Identifiant"                         , comment: "")
 
@@ -38,7 +40,7 @@ import Foundation
                 case .groupeSansNom:              return NSLocalizedString("Groupe sans Nom"                      , comment: "")
                 case .groupeSansID:               return NSLocalizedString("Groupe sans ID"                       , comment: "")
                 case .groupeInvalide:             return NSLocalizedString("Groupe Invalide"                      , comment: "")
-                
+                case .incoherenceDesPrincipaux:   return NSLocalizedString("Le lien entre les principaux n'est pas symetrique", comment: "")
                 case .erreurAPreciser:            return NSLocalizedString("", comment:"")
             }
         }

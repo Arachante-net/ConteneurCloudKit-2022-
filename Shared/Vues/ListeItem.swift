@@ -64,7 +64,7 @@ struct ListeItem: View {
         ForEach(items) { item in
             NavigationLink( destination: VueDetailItem (
                 item: item ,
-                laRegion: item.région
+                laRégion: item.région
                 ))
             { Text(item.leTitre) }
             

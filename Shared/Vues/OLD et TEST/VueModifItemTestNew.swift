@@ -21,11 +21,11 @@ struct VueModifItemTestNew: View {
      
 //    @StateObject private var Ξ:ViewModel // = ViewModel(item)
     
-    @State var item:Item
+    @State private var item:Item
 //    @Binding var région : MKCoordinateRegion
     let achevée: (Bool) -> Void
 
-    @State var feuilleAffectationGroupesPresentée:Bool = false
+    @State private var feuilleAffectationGroupesPresentée:Bool = false
 
 
     @Environment(\.managedObjectContext) var contexte

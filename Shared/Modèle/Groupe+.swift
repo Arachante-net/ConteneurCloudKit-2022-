@@ -218,9 +218,14 @@ extension Groupe {
     
     var collaborateursSansLePrincipal : Set<Groupe> {
         guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
-
+        
         lesItems.remove(lePrincipal)
-        return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
+        return Set( ((items as? Set<Item>)?.map {
+            if let pr = $0.principal { return pr}
+            else {
+                print("☑️❌ ERREUR sur Item", $0.leTitre)
+                return Groupe()}
+                })! )
         }
 
     func estMonPrincipal(groupe:Groupe) -> Bool {
@@ -511,6 +516,7 @@ extension Groupe {
     
 extension Groupe {
 
+    var estCoherent:Bool {verifierCohérence().isEmpty}
     
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
@@ -526,14 +532,30 @@ extension Groupe {
             { lesErreurs.append(ErrorType(.groupeSansID )) }
         
         if principal == nil
-            { lesErreurs.append(ErrorType(.itemSansPrincipal ))}
+            { lesErreurs.append(ErrorType(.groupeSansPrincipal )) }
         
+        else {
+            if self != principal?.principal
+                // le lien double entre principaux
+                { lesErreurs.append(ErrorType(.incoherenceDesPrincipaux ))}
+            
+            // Ajouter les incoherences de l'Item Principal
+            lesErreurs.append(contentsOf: principal?.verifierCohérence(depuis:depuis) ?? [])
+            }
         
+        // Ajouter les incoherences des Items liés à ce Groupe
+        lesErreurs.append(contentsOf: lesItems.flatMap{$0.verifierCohérence()})
+        
+//        lesItems.forEach() {$0.verifierCohérence()}
+//        if !lesItems.isEmpty {
+//
+//        }
         
         if lesErreurs.isEmpty {print(" ✅")}
         else {
             print("")
-            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}}
+            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}
+            }
         
         return lesErreurs
         }
