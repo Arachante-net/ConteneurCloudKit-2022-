@@ -11,15 +11,15 @@ import SwiftUI
 struct Bienvenue: View {
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [.primary, .accentColor, .secondary]), startPoint: .top, endPoint: .bottom)
-        VStack {
-            Text("Bienvenue").font(.largeTitle)
-            Text("⬅️ Choisissez un événement dans le menu de gauche.").foregroundColor(.secondary)
+            LinearGradient(gradient: Gradient(colors: [.black, .primary, .accentColor, .secondary, .black]), startPoint: .top, endPoint: .bottom)
+            VStack {
+                Text("Bienvenue").font(.largeTitle)
+                Text("⇠ ⇠ Choisissez un événement dans le menu de gauche.").foregroundColor(.secondary)
+                }
+            .padding()
             }
-        .padding()
-            }
+        }
     }
-}
 
 struct Bienvenue_Previews: PreviewProvider {
     static var previews: some View {
