@@ -31,8 +31,8 @@ struct VueAffectationGroupe: View {
     @Binding var modeAffectation :ModeAffectationGroupes
     
     // retour vers la vue appelante du resultat de la feuille (sheet) d'affectation
-    let traitementTerminéDe: (Set<Groupe>) -> Void
-    
+    let traitementTerminéDe: (Bool, Set<Groupe>) -> Void
+    let lesGroupesInitialementAffectés: Set<Groupe>
     // On passe par un init() afin de construire la requête groupesCollaboratifsSaufMoi
     // Nous avons alors deux methodes pour lister les affectations possibles :
     //   List(groupesCollaboratifsSaufMoi) ...
@@ -42,11 +42,13 @@ struct VueAffectationGroupe: View {
          groupe             : Binding<Groupe>,
          lesGroupesAAffecter: Binding<Set<Groupe>>,
          modeAffectation    : Binding<ModeAffectationGroupes>,
-         traitementTerminéDe: @escaping (Set<Groupe>) -> Void) {
+         traitementTerminéDe: @escaping (Bool, Set<Groupe>) -> Void) {
         
         _groupe              = groupe
         _lesGroupesAAffecter = lesGroupesAAffecter
         _modeAffectation     = modeAffectation
+        
+        lesGroupesInitialementAffectés = lesGroupesAAffecter.wrappedValue
         
         self.traitementTerminéDe = traitementTerminéDe
         
@@ -69,8 +71,27 @@ struct VueAffectationGroupe: View {
                     }
                 }
             .toolbar {
-                ToolbarItemGroup() { //placement:   .automatic) { //}.navigationBarTrailing) {
-                    Button("<< OK >>") { action_OK() }
+//                ToolbarItemGroup() { //placement:   .automatic) { //}.navigationBarTrailing) {
+//                    Button("<< OK >>") { action_OK() }
+//                    }
+                
+                ToolbarItem(placement: .confirmationAction ) {
+                    Button( action: action_OK ) {
+                        VStack {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Valider").font(.caption)
+                            }
+                      }
+                    .buttonStyle(.borderedProminent) }
+                
+                
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .cancel, action: abandonerAffectation) {
+                        VStack {
+                            Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                            Text("Abandon").font(.caption)
+                            }
+                      }
                     }
                 }
 //            .navigationTitle(Text("Choisir les groupes à affecter à \(groupe.leNom)"))
@@ -89,9 +110,13 @@ struct VueAffectationGroupe: View {
 //MARK: -
   private func action_OK() {
       print(">>>" ,lesGroupesAAffecter.count , "groupes collaboratifs retenus." )
-      traitementTerminéDe(lesGroupesAAffecter)
+      traitementTerminéDe(true, lesGroupesAAffecter)
     }
-    
+ 
+    private func abandonerAffectation() {
+        print(" On revient à \(lesGroupesInitialementAffectés.count), plutot qu'à \(lesGroupesAAffecter.count) ")
+        traitementTerminéDe(false, lesGroupesInitialementAffectés)
+        }
     
 }
 

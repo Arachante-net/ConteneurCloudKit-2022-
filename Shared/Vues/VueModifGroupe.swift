@@ -22,7 +22,7 @@ enum ModeAffectationGroupes {
             case .ralliement:
                 return "Rejoindre ou abandonner l'objectif."
             case .enrôlement:
-                return "Recruter ou congédier des participants qui contriburons à l'objectif."
+                return "Recruter ou congédier des contributeurs."
             case .test:
                 return "Tester"
             }
@@ -66,10 +66,11 @@ struct VueModifGroupe: View {
 //    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommer
 //    /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
-        _groupe = State(initialValue : unGroupe) //TODO: wrappedValue: unGroupe)
+        _groupe = State(wrappedValue : unGroupe) //initialValue ancien nom
         self.laModificationDuGroupeEstRéalisée = achevée
         // Ca bagote sur la page détail et ca n'apparait pas sur la page d'affectation
 //        lesGroupesARetenir = groupe.collaborateursSansLePrincipal
+        _lesGroupesARetenir = State(wrappedValue : groupe.collaborateursSansLePrincipal)
         }
 
     var body: some View {
@@ -111,11 +112,13 @@ struct VueModifGroupe: View {
                 id: groupe.id!,
                 groupe:$groupe,
                 lesGroupesAAffecter: $lesGroupesARetenir,
-                modeAffectation: $modeAffectation) { lesGroupesRetenus in
-                    lesGroupesRetenus.forEach() {
-                        groupe.enroler(recrue: $0)
+                modeAffectation: $modeAffectation) { (modif, lesGroupesRetenus) in
+                    if modif {
+                        lesGroupesRetenus.forEach() {
+                            groupe.enroler(recrue: $0)
+                            }
                         }
-                    print(">>> ON SAUVE")
+                    print(">>> MODIF", modif.description)
                     feuilleAffectationPresentée = false
                     }
 
@@ -123,7 +126,8 @@ struct VueModifGroupe: View {
             }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup(placement:  .principal)//  .automatic )
+
+            ToolbarItemGroup(placement:  .bottomBar) //.principal)//  .automatic )
                 { barreMenu }
 //
             ToolbarItem(placement: .cancellationAction) {
@@ -135,15 +139,15 @@ struct VueModifGroupe: View {
                   }
                 }
 //
-            ToolbarItem(placement: .confirmationAction )
-            { Button( action: validerFormulaire) {
+            ToolbarItem(placement: .confirmationAction ) {
+                Button( action: validerFormulaire) {
                     VStack {
                         Image(systemName: "checkmark.circle.fill")
                         Text("Valider").font(.caption)
                         }
                   }
                 .buttonStyle(.borderedProminent) }
-//
+ //
         }//.background(Color(.gray))//.border(.gray.opacity(0.5))
         
         .navigationTitle(Text("Edition groupe \(groupe.leNom)"))
@@ -155,7 +159,7 @@ struct VueModifGroupe: View {
 //            let _ = groupe.verifierCohérence(depuis: #function)
             // initialiser (NB: ne peut être dans init() ) la liste des collaborateurs,
             // qui sera eventuellement modifiée par la Vue Affectation Groupe
-            lesGroupesARetenir = groupe.collaborateursSansLePrincipal
+            ///////////////lesGroupesARetenir = groupe.collaborateursSansLePrincipal
             }
                     
         
@@ -169,6 +173,8 @@ struct VueModifGroupe: View {
     
     
     var barreMenu: some View {
+        GeometryReader { geo in
+
         HStack {
 //            GeometryReader { geo in
 //                let _ = print("GEO", geo.size.height, geo.size.width)
@@ -176,25 +182,25 @@ struct VueModifGroupe: View {
             // rallier menubar.arrow.up.rectangle square.and.arrow.up
             Group {
             Button(action: enrôlerUnNouvelItem__)
-                { Label("Enrôler", systemImage: "plus.square.on.square")}//.frame(maxHeight: .infinity, alignment: .bottom) }
+                { Label("Enrôler", systemImage: "plus.square.on.square") .frame(maxWidth: geo.size.width / 16, alignment: .bottom)   }//.frame(maxWeight: .infinity, alignment: .bottom) }
             
             Button(action: enrôlerUnGroupe) {
                 VStack {
-                    Image(systemName: "square.and.arrow.down.on.square.fill")//.frame(height:20)
+                    Image(systemName: "square.and.arrow.down.on.square.fill")  .frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
                     Text("Enrôler").font(.caption)
                     }
               }
             
             Button(action: rallierUnGroupe) {
                 VStack {
-                    Image(systemName: "square.and.arrow.up")//.frame(height:20)
+                    Image(systemName: "square.and.arrow.up").frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
                     Text("Rallier").font(.caption)
                     }
               }
                         
             Button(action: editerPrincipal) {
                 VStack {
-                    Image(systemName: "rectangle.and.pencil.and.ellipsis")//.frame(height:20)
+                    Image(systemName: "rectangle.and.pencil.and.ellipsis").frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
                     Text("\(groupe.lePrincipal.leTitre)").font(.caption)
                     }
               }
@@ -203,7 +209,8 @@ struct VueModifGroupe: View {
 //MARK: - THE BUG  ! (sans le point) frame(maxHeight: .infinity, alignment: .bottom).border(.yellow) -
             
         }//.border(.gray.opacity(0.5))
-//            } // fin de geometryReader
+            
+            } // fin de geometryReader
         }
     
     

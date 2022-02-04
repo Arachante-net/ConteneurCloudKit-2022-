@@ -24,7 +24,7 @@ struct VueAffectationItemGroupe: View {
     @Binding var groupe:Groupe
 
     @State private var lesGroupesARetenir = Set<Groupe>()
-    let traitementTerminéDe: (Set<Groupe>) -> Void
+    let traitementTerminéDe: (Bool, Set<Groupe>) -> Void
 
     var body: some View {
         NavigationView {
@@ -44,7 +44,7 @@ struct VueAffectationItemGroupe: View {
 
 //MARK: -
   private func action_OK() {
-    traitementTerminéDe(lesGroupesARetenir)
+    traitementTerminéDe(true, lesGroupesARetenir)
     }
     
     

@@ -18,6 +18,12 @@ struct VueDetailGroupe: View {
 
     @EnvironmentObject private var persistance : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
+    
+//    @StateObject private var viewModel = ViewModel()
+//    @State var appError: ErrorType? = nil
+//    @State var coherenceGroupe: Coherence? = nil //[ErrorType]? = nil
+    @State private var coherenceGroupe: Coherence? = nil
+
 
     // Source de veritée, c'est cette Vue qui est proprietaire de groupe
     // Rq: avec @State l'etat n'est pas MàJ immediatement
@@ -36,9 +42,13 @@ struct VueDetailGroupe: View {
     /// Le groupe édité fait partie des favoris de l'utilisateur
     @State private var estFavoris = false
     
+    @State private var voirDétailsCollaboration = false
+    
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
         _groupe = StateObject<Groupe>(wrappedValue: leGroupe)
+//        coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
+
         }
     
     
@@ -57,6 +67,11 @@ struct VueDetailGroupe: View {
 //    @ViewBuilder
     var body: some View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
+//    let appError = ErrorType( .trucQuiVaPas(num: 666))
+//       let coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
+//      self.coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
+
+
     VStack {
     Form { //}(alignment: .leading, spacing: 2) {
         Section { //}(alignment: .leading, spacing: 2)  {
@@ -64,24 +79,47 @@ struct VueDetailGroupe: View {
             Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0))
             Etiquette( "Créateur"      , valeur: groupe.createur).help("créateur")
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
-            Etiquette( "Valide"        , valeur: groupe.valide)
-            Etiquette( "Coherent"      , valeur: groupe.estCoherent)
+//            Etiquette( "Valide"        , valeur: groupe.valide)
+//            Etiquette( "Cohérent"      , valeur: groupe.estCoherent)
 
-//            Etiquette( "Suppression"   , valeur: groupe.isDeleted)
-            Etiquette( "En erreur"     , valeur: groupe.isFault)
+//            Etiquette( "Suppression"   , valeur: groupe.isDeleted) //TODO: Mettre dans estCoherent ?
+//            Etiquette( "Status CoreData" , valeur: !groupe.isFault)
             }
         Section {
-            Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
-//            Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
-                
-            Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
-//                ForEach(Array(groupe.lesItems).sorted()    ) { item in
-                ForEach(Array(groupe.tableauItemsTrié) ) { item in
-                    Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
-                    }
+            HStack {
+                Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
+                Spacer()
+                Text(" ")
+                Spacer()
+                Toggle("Détails >", isOn: $voirDétailsCollaboration.animation())
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.leading, 50)
+//                    .border(Color.secondary, width: 0.5) //.border(.)
                 }
-            Etiquette( "Valeur globale", valeur: groupe.valeur)
+             if voirDétailsCollaboration {
+                 Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
+     //                ForEach(Array(groupe.lesItems).sorted()    ) { item in
+                     ForEach(Array(groupe.tableauItemsTrié) ) { item in
+                         Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
+                         }
+                     }
+                 Etiquette( "Valeur globale", valeur: groupe.valeur)
+             }
             }
+            
+//        Section {
+////            Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
+////            Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
+//                
+////            Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
+//////                ForEach(Array(groupe.lesItems).sorted()    ) { item in
+////                ForEach(Array(groupe.tableauItemsTrié) ) { item in
+////                    Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
+////                    }
+////                }
+////            Etiquette( "Valeur globale", valeur: groupe.valeur)
+//            }
         }
         VStack {
             VueCarteGroupe(
@@ -89,24 +127,29 @@ struct VueDetailGroupe: View {
                 annotations: groupe.lesAnnotations
 //                visible: !feuilleModificationPresentée
             ).frame( alignment: .top)
-                .overlay(
-                      RoundedRectangle(cornerRadius: 16)
-                          .stroke(Color.secondary, lineWidth: 1)
-                  )
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay(  RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.secondary, lineWidth: 0.5)
+                        )
                 .padding()
-
-        
             Spacer()
             }
         }
-        .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
-        .opacity(groupe.valide ? 1 : 0.1)
-        .disabled(groupe.valide ? false : true)
+//        .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
+//        .opacity(groupe.valide ? 1 : 0.1)
+//        .disabled(groupe.valide ? false : true)
         .blur(radius: feuilleModificationPresentée ? 5 : 0, opaque: false)
+        .overlay(groupe.estCoherent ? Color(.clear): Color("rougeâtre").opacity(0.2))
         
+        .alert(item: $coherenceGroupe) {coherence in
+            Alert(title: Text("⚠️ ERREUR ⚠️"),
+                  // Recuperer les descriptions des erreurs consignées
+                  message : Text("\(coherence.erreurs.map {$0.error.localizedDescription }.joined(separator: "\n")) ‼️")
+            )}
+
         .onAppear() {
-//            let _ = groupe.verifierCohérence(depuis: #function)
             estFavoris = configUtilisateur.estFavoris(groupe)
+            coherenceGroupe = Coherence( err: groupe.verifierCohérence() )
             }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
@@ -132,6 +175,14 @@ struct VueDetailGroupe: View {
     var barreMenu: some View {
         HStack {
             Spacer()
+            //  Button("Alert") {
+            //self.coherenceGroupe = Coherence(groupe.verifierCohérence()) //text: "Hi!")
+//                      }
+            Button(action: {
+                self.coherenceGroupe = Coherence(err: groupe.verifierCohérence())
+            }) {Image(systemName: "heart")}
+            
+            
 
             Button(action: {
                 configUtilisateur.inverserFavoris(groupe, jeSuisFavoris: &estFavoris)

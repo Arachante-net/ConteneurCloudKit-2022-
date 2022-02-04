@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D49" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Groupe" representedClassName="Groupe" syncable="YES">
         <attribute name="collaboratif" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="createur" optional="YES" attributeType="String"/>
@@ -29,7 +29,7 @@
         <relationship name="principal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Groupe" inverseName="principal" inverseEntity="Groupe"/>
     </entity>
     <elements>
-        <element name="Groupe" positionX="-243.40625" positionY="-750.31640625" width="128" height="179"/>
-        <element name="Item" positionX="-56.40625" positionY="-910.31640625" width="128" height="239"/>
+        <element name="Groupe" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Item" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

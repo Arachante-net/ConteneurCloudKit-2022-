@@ -67,9 +67,14 @@ extension VueEditionLieu {
 
 extension VueDetailItem {
     @MainActor class ViewModel: ObservableObject {
-
+        @Published var appError: ErrorType? = nil
         @Published var feuilleModificationItemPresentée   = false
         }
 }
 
-
+extension VueDetailGroupe {
+    @MainActor class ViewModel: ObservableObject {
+        @Published var appError: ErrorType? = nil
+//        @Published var feuilleModificationItemPresentée   = false
+        }
+}

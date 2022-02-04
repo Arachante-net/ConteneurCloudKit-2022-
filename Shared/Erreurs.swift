@@ -23,6 +23,7 @@ import Foundation
         case groupeInvalide
         
         case incoherenceDesPrincipaux
+        case objetCoreDataenDéfaut
         
         case erreurAPreciser
         
@@ -32,7 +33,7 @@ import Foundation
                 case .erreurInterne:              return NSLocalizedString("Erreur interne, reinstallez l'appli !", comment: "")
                 case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ..."    , comment: "")
                 
-                case .itemSansPrincipal(item: let item):          return NSLocalizedString("Item \(item) sans Groupe referent (Principal)", comment: "Pourquoi pas")
+                case .itemSansPrincipal(item: let item):          return NSLocalizedString("Item \(item) sans Groupe référent (Principal)", comment: "Pourquoi pas")
                 case .itemSansTitre:              return NSLocalizedString("Item sans Titre"                      , comment: "")
                 case .itemSansID:                 return NSLocalizedString("Item sans Identifiant"                         , comment: "")
 
@@ -41,6 +42,8 @@ import Foundation
                 case .groupeSansID:               return NSLocalizedString("Groupe sans ID"                       , comment: "")
                 case .groupeInvalide:             return NSLocalizedString("Groupe Invalide"                      , comment: "")
                 case .incoherenceDesPrincipaux:   return NSLocalizedString("Le lien entre les principaux n'est pas symetrique", comment: "")
+                case .objetCoreDataenDéfaut:      return NSLocalizedString("CoreData signale le NSManagedObject en défaut",   comment:"A investiguer, risques de dégradation des performances.")
+
                 case .erreurAPreciser:            return NSLocalizedString("", comment:"")
             }
         }
@@ -54,13 +57,28 @@ struct ErrorType: Identifiable {
     
     }
 
-    enum Stratus: Error {
-        case overflow
-        case invalide(Character)
-        }
+ 
 
+struct Coherence: Identifiable {
+    let id = UUID()
+    let erreurs : [ErrorType]
     
+    init?(err : [ErrorType]) {
+        erreurs = err
+        if err.isEmpty {return nil}
+//        else {erreurs = err}
+        }
+    }
 
+struct MessageCoherence: Identifiable {
+    let id = UUID()
+    let text: String
+    let erreurs: [ErrorType]   // enum Nimbus erreur
+    }
 
 // throw Nimbus.trucQuiVaPas(num: 5)
 
+//enum Stratus: Error {
+//    case overflow
+//    case invalide(Character)
+//    }

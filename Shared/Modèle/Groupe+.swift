@@ -531,6 +531,10 @@ extension Groupe {
         if (id == nil )
             { lesErreurs.append(ErrorType(.groupeSansID )) }
         
+        if isFault { lesErreurs.append(ErrorType(.objetCoreDataenDéfaut)) }
+        
+        
+        
         if principal == nil
             { lesErreurs.append(ErrorType(.groupeSansPrincipal )) }
         
@@ -541,6 +545,9 @@ extension Groupe {
             
             // Ajouter les incoherences de l'Item Principal
             lesErreurs.append(contentsOf: principal?.verifierCohérence(depuis:depuis) ?? [])
+            
+            if principal!.isFault { lesErreurs.append(ErrorType(.objetCoreDataenDéfaut)) }
+
             }
         
         // Ajouter les incoherences des Items liés à ce Groupe

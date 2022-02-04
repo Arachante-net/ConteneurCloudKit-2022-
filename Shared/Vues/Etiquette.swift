@@ -45,9 +45,13 @@ struct Etiquette: View {
         HStack {
             Text(" \(libellé) : ")
                 .foregroundColor(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
             Text(valeur)
                 .foregroundColor( neutre ? .secondary : .accentColor)
                 .padding(.horizontal)
+                .lineLimit(1)
+                .truncationMode(.middle)
                 
         } .clipShape(Capsule() )
             .overlay( Capsule()
