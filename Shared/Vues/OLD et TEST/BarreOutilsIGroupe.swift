@@ -15,6 +15,8 @@ struct BarreOutilsGroupe:  View {
 
     @Binding var feuilleModificationPresentée:Bool
     @Binding var estFavoris:Bool
+    
+    //    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
     @Binding var groupe:Groupe
     
     @EnvironmentObject private var configUtilisateur : Utilisateur

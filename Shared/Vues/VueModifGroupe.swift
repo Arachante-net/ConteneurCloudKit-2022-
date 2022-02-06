@@ -39,7 +39,7 @@ struct VueModifGroupe: View {
     /// Le groupe en cour d'édition, ( il est la propriétée de  .... moi)
     // 1er Février 2
     @State private var groupe: Groupe
-    
+    //TODO: Source de verité de groupe ? et diff Binding ObservedObject     State StateObject
     /// Aller chercher d'autres groupes ou integrer un groupe
     @State private var modeAffectation :ModeAffectationGroupes = .test//? = nil // = .test//? = nil
 

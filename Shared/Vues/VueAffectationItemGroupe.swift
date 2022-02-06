@@ -21,6 +21,7 @@ struct VueAffectationItemGroupe: View {
     @EnvironmentObject private var persistence: ControleurPersistance //    PersistenceController
     @Environment(\.managedObjectContext) private var viewContext
       
+    //    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
     @Binding var groupe:Groupe
 
     @State private var lesGroupesARetenir = Set<Groupe>()

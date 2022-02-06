@@ -22,6 +22,7 @@ struct VueAffectationGroupe: View {
     @EnvironmentObject private var persistence: ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
       
+    //    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
     @Binding var groupe:Groupe
     
     // le choix de l'utilisateur
