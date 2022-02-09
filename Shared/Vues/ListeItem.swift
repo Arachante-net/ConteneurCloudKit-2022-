@@ -49,7 +49,7 @@ struct ListeItem: View {
 //  @State private var itemEnCours: Item?
 //  @State private var itemsEnCourDeSuppression: IndexSet? //SetIndex<Item>?
    
-  @Binding var appError: ErrorType? // = nil
+//  @Binding var appError: ErrorType? // = nil
 
 
     
@@ -201,7 +201,7 @@ struct ListeItem: View {
     
     
     private func GenererErreur() {
-        appError = ErrorType( .trucQuiVaPas(num: 666))
+//        appError = ErrorType( .trucQuiVaPas(num: 666))
         }
 
 }

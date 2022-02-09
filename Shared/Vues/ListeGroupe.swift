@@ -19,14 +19,15 @@ struct ListeGroupe: View {
     fetchRequest: Groupe.extractionGroupes,
     animation: .default)
   private var groupes: FetchedResults<Groupe>
+    { didSet { print("SET ###### groupes", groupes) } }
 
   @State private var groupesEnCourDeSuppression: IndexSet? //SetIndex<Item>?
-
-  @State private var presenterCréationGroupe = false
-  @State private var nouveauNom              = ""
-  @State private var courant:String?         = nil
-  @State private var recherche               = ""
-  @State private var groupesFiltrés          = [Groupe]()
+    { didSet { print("SET ###### groupesEnCourDeSuppression", groupesEnCourDeSuppression ?? "") } }
+  @State private var presenterCréationGroupe = false { didSet { print("SET ###### presenterCréationGroupe", presenterCréationGroupe) } }
+  @State private var nouveauNom              = ""    { didSet { print("SET ###### nouveauNom", nouveauNom) } }
+  @State private var courant:String?         = nil   { didSet { print("SET ###### courant", courant ?? "") } }
+  @State private var recherche               = ""    { didSet { print("SET ###### recherche", recherche) } }
+  @State private var groupesFiltrés          = [Groupe]() { didSet { print("SET ###### groupesFiltrés", groupesFiltrés) } }
     
 //  @State  static var rafraichir              = false
 
@@ -41,13 +42,17 @@ struct ListeGroupe: View {
         return formateur
     }()
     
+    init () {print("ListeGroupe ######")}
 
 
   var body: some View {
-
+    let _ = print("ListeGroupe BODY ###### !!!!!!!!!!!!!!!!!!!!!!")
     NavigationView {
       List() {
-          ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
+          let _ = print("ListeGroupe LIST ######")
+//          ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
+          ForEach(groupes) { groupe in
+              let _ = print("ListeGroupe ForEach ######", groupe.leNom)
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
               NavigationLink(destination: VueDetailGroupe(groupe), //.equatable(),
                              tag: groupe.leNom,

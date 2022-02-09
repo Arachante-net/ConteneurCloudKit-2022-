@@ -171,7 +171,9 @@ extension Groupe {
     /// Convertir .items:NSSet? en .lesItems:Set<Item> et reciproquement
     var lesItems:Set<Item> {
         get {return items as? Set<Item> ?? []}
-        set {items =  newValue as NSSet } // adding(newValue)
+        set {items =  newValue as NSSet } //FIXME: DANGEREUX set lesItems fait boucler collaborateursSansLePrincipal_ !?
+
+        //adding(newValue)
     }
     
     /// Pas utilisé
@@ -221,13 +223,40 @@ extension Groupe {
         
         lesItems.remove(lePrincipal)
         return Set( ((items as? Set<Item>)?.map {
-            if let pr = $0.principal { return pr}
+            if let pr = $0.principal {
+                // Si l'item a un groupe principal, on l'inclu
+                return pr}
             else {
+                // Sinon on retourne un groupe vide
                 print("☑️❌ ERREUR sur Item", $0.leTitre)
                 return Groupe()}
                 })! )
         }
+    
+    var collaborateursSansLePrincipal_ : Set<Groupe> {
+        // Garantir qu'il y a des iems sinon retourner un ensemble vide
+        guard items?.count ?? 0 > 0 else {
+            print("☑️❌ Pas de collaborateurs")
+            return Set<Groupe>() }
+        
+        //MARK: DANGER set lesItems fait boucler (lesItems.remove ça plante)
+        //TODO: donc à corriger (probablement écrire le remove)
+        // en attendant on doit passer par une variable temporaire intermédiaire
+        var tmp = lesItems
+        
+        // Enlever ce groupe du résultat, cela ne devrait pas arriver !
+        tmp.remove(self.lePrincipal)
+        
+        // Convertir les items en un ensemble de Groupes principaux
+        let résultatGroupes = Set(tmp.map { $0.principal!})
+        print("☑️❌ résultat groupes sans principal :", résultatGroupes.count, résultatGroupes.map {$0.leNom})
 
+        return résultatGroupes
+        }
+
+    
+    
+    
     func estMonPrincipal(groupe:Groupe) -> Bool {
         groupe.lePrincipal == self.lePrincipal
         }
@@ -328,6 +357,7 @@ extension Groupe {
     var régionEnglobante: MKCoordinateRegion  {
 
         get {
+            print("régionEnglobante ###### GET")
             var toutesLesCoordonnées = lesCoordonnées
             if let lePrincipal = principal?.coordonnées {
                 toutesLesCoordonnées.append(lePrincipal)
@@ -356,7 +386,9 @@ extension Groupe {
             // Sinon on fait un peu de trigonométrie
             return MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
             }
-        set {régionEnglobante_ = newValue}
+        set {
+            print("régionEnglobante ###### SET")
+            régionEnglobante_ = newValue}
         
         }
         //MARK: Géographie
@@ -366,111 +398,6 @@ extension Groupe {
         
 #warning("Attention ...    ")
 //#error("Erreur ! ")
-//        let région = MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
-        
-//        let lesLongitudes = toutesLesCoordonnées.map {$0.longitude}
-//        let lesLatitudes  = toutesLesCoordonnées.map {$0.latitude}
-//
-//
-//        let P1 = CLLocationCoordinate2D(latitude: lesLatitudes.min()!, longitude: lesLongitudes.min()!)
-//        let P2 = CLLocationCoordinate2D(latitude: lesLatitudes.max()!, longitude: lesLongitudes.max()!)
-//        print("🏁 Min Min", P1.longitude, P1.latitude)
-//        print("🏁 Max Max", P2.longitude, P2.latitude)
-//
-//        let   π = Double.pi
-//        let _2π = 2 * π
-//        let _3π = 3 * π
-//
-//        let Rad = π/180
-//        let Deg = 180/π
-//
-//        let φ1 = P1.latitude * Rad
-//        let φ2 = P2.latitude * Rad
-//
-//        let λ1 = P1.longitude * Rad
-//        let λ2 = P2.longitude * Rad
-//
-//        let Δλ = λ2 - λ1 // long
-//        let Δφ = φ2 - φ1  // lat
-//
-//        print("🏁 Delta long", Δλ ,  "lat", Δφ)
-//
-//
-//// https://www.movable-type.co.uk/scripts/latlong.html
-////        Bx = cos φ2 ⋅ cos Δλ
-////        By = cos φ2 ⋅ sin Δλ
-////        φm = atan2( sin φ1 + sin φ2, √(cos φ1 + Bx)² + By² )
-////        λm = λ1 + atan2(By, cos(φ1)+Bx)
-////--------------------------------------------------------------
-//// Voir aussi https://stackoverflow.com/questions/4169459/whats-the-best-way-to-zoom-out-and-fit-all-annotations-in-mapkit
-//
-//// atan2 returne des valeurs entre -π ... +π ( -180° ... +180°)
-//// afin de normaliser en une valeur entre 0° et 360°, with −ve values ttransformées entre 180° ... 360°),
-//// convertir en degrees and then use (θ+360) % 360 ( % <=> truncatingRemainder(dividingBy) )
-//
-////        For final bearing, simply take the initial bearing from the end point to the start point and reverse it (using θ = (θ+180) % 360).
-//
-//        let Bx = cos(φ2) * cos(Δλ)
-//        let By = cos(φ2) * sin(Δλ)
-//        let φm = atan2(sin(φ1) + sin(φ2), sqrt( (cos(φ1)+Bx)*(cos(φ1)+Bx) + By*By ) )
-//        let λm = λ1 + atan2(By, cos(φ1) + Bx)
-//        // Normaliser la longitude entre -180° et +180°
-//        let λm_ = (λm + _3π).truncatingRemainder(dividingBy: _2π) -  π
-//        // l'ecart de longitude
-//        let Δλ_ = abs((Δλ + _3π).truncatingRemainder(dividingBy: _2π) -  π)
-//
-//        // ??? Normaliser la latitude entre -90° et +90° ?
-////        let φm_ = φm * -1 //(φm + (3 * π / 2).truncatingRemainder(dividingBy: π) -  (π / 2))
-////        let φm_ = (φm + π) .truncatingRemainder(dividingBy:_2π) - π // INCHANGÉ ...
-////        let φm_ = (φm + (3 * π / 2)).truncatingRemainder(dividingBy: π) -  (π / 2) // INCHANGÉ
-//        let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
-////        let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
-//
-//        print("🏁 φm brut", φm * Deg, "normalisé", φm_ * Deg)
-//
-//        // ???? l'ecart de latitude
-//        let Δφ_ = (Δφ + (3 * π / 2).truncatingRemainder(dividingBy: π) -  (π / 2))
-//
-//
-//        let P_milieu = CLLocationCoordinate2D(latitude:φm_ * Deg, longitude: λm_ * Deg)
-//        print ("🏁 Le centre de ", P1.longitude, P1.latitude , "  et  ", P2.longitude, P2.latitude)
-//        print ("🏁 est", P_milieu.longitude, P_milieu.latitude)
-//        print ("🏁 l'écart en longitude est de", Δλ * Deg, Δλ_ * Deg ,"°" )
-//        print ("🏁 l'écart en  latitude est de", Δφ * Deg, Δφ_ * Deg ,"°" )
-//
-//        // normaliser la longitude entre  −180…+180 : (lon+540)%360-180
-//        // truncatingRemainder
-//        // (λ3+540).truncatingRemainder(dividingBy: 360) - 180
-//
-//        // Élargir l'envergure de la zone de 5% 0.5
-//        // let envergure = MKCoordinateSpan(
-//        // latitudeDelta:  (ecartLatitudes  + (ecartLatitudes  * 0.5)).truncatingRemainder(dividingBy: 180),
-//        // longitudeDelta: (ecartLongitudes + (ecartLongitudes * 0.5)).truncatingRemainder(dividingBy: 360))
-//            let envergure = MKCoordinateSpan(
-//                // En degrée et un peu d'espace autour
-//                latitudeDelta:  Δφ_ * Deg * 1.5,
-//                longitudeDelta: Δλ_ * Deg * 1.5
-//                )
-//
-//            // MapKit ne peut pas afficher l'ensemble du globe,
-//            // pour la région ci dessous il faut faire defiler la carte.
-//            // Detecter et prévenir que l'on depasse le facteur de zoom MapKit.  C'est lequel ??
-//            // max latitudeDelta : 180
-//            // cf regionThatFits
-//           _ = Lieu.étendueMax
-//
-////        MKCoordinateSpan(
-////                latitudeDelta:  180,
-////                longitudeDelta: 360
-////                )
-//
-//            print ("🏁 Carte Milieu", P_milieu.longitude, P_milieu.latitude )
-//            print ("🏁 Carte Envergure long", envergure.longitudeDelta , "lat", envergure.latitudeDelta)
-//
-//            let région = MKCoordinateRegion(center: P_milieu, span: envergure) //envergureMondiale)
-////            let régionAdaptée = regionThatFits(région)
-////        MapKit.MKCoordinateRegion.   regionThatFits(région)
-//        }
     
     
     /// Regroupe les descriptions des lieux des membres du groupe (sans celle du principal)
@@ -516,7 +443,7 @@ extension Groupe {
     
 extension Groupe {
 
-    var estCoherent:Bool {verifierCohérence().isEmpty}
+    var estCoherent:Bool {verifierCohérence(depuis: "Propriété estCoherent Groupe").isEmpty}
     
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
@@ -534,13 +461,12 @@ extension Groupe {
         if isFault { lesErreurs.append(ErrorType(.objetCoreDataenDéfaut)) }
         
         
-        
         if principal == nil
             { lesErreurs.append(ErrorType(.groupeSansPrincipal )) }
         
         else {
             if self != principal?.principal
-                // le lien double entre principaux
+                // Le lien double entre principaux
                 { lesErreurs.append(ErrorType(.incoherenceDesPrincipaux ))}
             
             // Ajouter les incoherences de l'Item Principal
@@ -551,18 +477,18 @@ extension Groupe {
             }
         
         // Ajouter les incoherences des Items liés à ce Groupe
-        lesErreurs.append(contentsOf: lesItems.flatMap{$0.verifierCohérence()})
+        lesErreurs.append(contentsOf: lesItems.flatMap{$0.verifierCohérence(depuis : (depuis + "les items") )})
         
 //        lesItems.forEach() {$0.verifierCohérence()}
 //        if !lesItems.isEmpty {
 //
 //        }
         
-        if lesErreurs.isEmpty {print(" ✅")}
-        else {
-            print("")
-            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}
-            }
+//        if lesErreurs.isEmpty {print(" ✅")}
+//        else {
+//            print("")
+//            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}
+//            }
         
         return lesErreurs
         }

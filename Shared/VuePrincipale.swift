@@ -33,6 +33,7 @@ struct VuePrincipale: View {
 
   @StateObject private var viewModel = ViewModel()
 
+    init () {print("VuePrincipale ######")}
     
   var body: some View {
       
@@ -53,7 +54,7 @@ struct VuePrincipale: View {
 //            .badge(0)
 
         
-              ListeItem(appError: $viewModel.appError)
+              ListeItem() //appError: $viewModel.appError)
                   .tabItem {
                     VStack {
                         Image(systemName: "sparkle")
@@ -86,16 +87,16 @@ struct VuePrincipale: View {
           } // tab view
 //          Text("OUI")
 
-      }
+      } .background(Color.red, ignoresSafeAreaEdges: .all)
 //      Text("NON")
 //      .environmentObject(appError ?? <#default value#>)
-      .alert(item: $viewModel.appError) {appError in
-          Alert(title: Text("!!!!!"),
-                message: Text(appError.error.localizedDescription)//,
-  //              dismissButton: <#T##Alert.Button?#>
-          )
-          
-      }
+//      .alert(item: $viewModel.appError) {appError in
+//          Alert(title: Text("!!!!!"),
+//                message: Text(appError.error.localizedDescription)//,
+//  //              dismissButton: <#T##Alert.Button?#>
+//          )
+//          
+//      }
       
   }
         // body

@@ -105,7 +105,7 @@ struct VueCarteEditionItem: View {
           
           
           }
-          .onAppear()    {}
+          .onAppear()    {print("onAppear VueCarteEditionItem")}
           .onDisappear() { monSuivi = false }
         }
       }

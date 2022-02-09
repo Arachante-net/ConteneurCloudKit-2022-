@@ -95,9 +95,12 @@ struct VueDetailItem: View {
 
         
         
-        .onAppear(perform: { let _ = item.verifierCohérence(depuis: #file) })
+        .onAppear(perform: {
+            print("onAppear VueDetailItem")
+            let _ = item.verifierCohérence(depuis: #file) })
         
-        }.onAppear(perform: apparaitre)
+        }.onAppear() {print("onAppear VueDetailItem")
+                   apparaitre() }
         }
     
     

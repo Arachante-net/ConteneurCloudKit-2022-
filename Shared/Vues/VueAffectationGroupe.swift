@@ -22,8 +22,8 @@ struct VueAffectationGroupe: View {
     @EnvironmentObject private var persistence: ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
       
-    //    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
-    @Binding var groupe:Groupe
+    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
+//    @Binding var groupe:Groupe
     
     // le choix de l'utilisateur
     @Binding var lesGroupesAAffecter: Set<Groupe>
@@ -40,12 +40,12 @@ struct VueAffectationGroupe: View {
     //   List(groupesCollaboratifs.filter() { $0 != groupe} ...
     //TODO: C'est quoi le mieux ?
     init(id:UUID,
-         groupe             : Binding<Groupe>,
+         groupe             : ObservedObject<Groupe>,
          lesGroupesAAffecter: Binding<Set<Groupe>>,
          modeAffectation    : Binding<ModeAffectationGroupes>,
          traitementTerminéDe: @escaping (Bool, Set<Groupe>) -> Void) {
         
-        _groupe              = groupe
+        _groupe              = groupe  
         _lesGroupesAAffecter = lesGroupesAAffecter
         _modeAffectation     = modeAffectation
         
@@ -97,6 +97,7 @@ struct VueAffectationGroupe: View {
                 }
 //            .navigationTitle(Text("Choisir les groupes à affecter à \(groupe.leNom)"))
         }.onAppear() {
+            print("onAppear VueAffectationGroupe")
             var test = Set<Groupe>(groupesCollaboratifs)
             var _ = test.remove(groupe)
             

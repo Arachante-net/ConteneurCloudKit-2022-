@@ -9,7 +9,7 @@ import MapKit
 
 extension VuePrincipale {
     @MainActor class ViewModel: ObservableObject {
-        @Published var appError: ErrorType? = nil
+//        @Published var appError: ErrorType? = nil
         @Published var xxx = Date()
         @Published private (set) var ttt = [String]()
 
@@ -74,7 +74,14 @@ extension VueDetailItem {
 
 extension VueDetailGroupe {
     @MainActor class ViewModel: ObservableObject {
+//        init () {
+////            self.groupe = groupe
+//          }
         @Published var appError: ErrorType? = nil
 //        @Published var feuilleModificationItemPresentée   = false
+        @Published var groupe:Groupe? = nil
+        
+        func definirGroupe(groupe:Groupe) {self.groupe = groupe}
+        func obtenirGroupe() -> Groupe {self.groupe!}
         }
 }

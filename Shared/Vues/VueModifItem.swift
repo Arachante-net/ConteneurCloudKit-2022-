@@ -141,6 +141,7 @@ struct VueModifItem: View {
         .onDisappear() {let _ = item.verifierCohérence(depuis: #function)}
         
         .onAppear(perform: {
+            print("onAppear VueModifItem")
             let _ = item.verifierCohérence(depuis: #function)
             })
         

@@ -16,21 +16,33 @@ struct VueDetailGroupe: View {
     
     @Environment(\.managedObjectContext) private var contexte
 
-    @EnvironmentObject private var persistance : ControleurPersistance
+    @EnvironmentObject private var persistance       : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
     
-//    @StateObject private var viewModel = ViewModel()
-//    @State var appError: ErrorType? = nil
-//    @State var coherenceGroupe: Coherence? = nil //[ErrorType]? = nil
-    @State private var coherenceGroupe: Coherence? = nil
-
-
-    // Source de veritée, c'est cette Vue qui est proprietaire de groupe
+    
+    //MARK: - ♔ Source de veritée, c'est cette Vue qui est proprietaire et créatrive de `groupe`
     // Rq: avec @State l'etat n'est pas MàJ immediatement
     // https://stackoverflow.com/questions/60111947/swiftui-prevent-view-from-refreshing-when-presenting-a-sheet?rq=1
     /// Argument, Le groupe en cours d'édition, propriétée de  la Vue  VuedetailGroupe
     /// // 1er Février 1
-    @StateObject private var groupe: Groupe
+    @StateObject private var groupe: Groupe //= Groupe()
+    // le groupe est fourni par ListeGroupe, il est instancié plus bas, dans l'init()
+    //MARK: -
+    //TODO: ? Faire un StateObject Groupe accedé directement par toutes les sous-vues ou le passer par argument
+   
+    @StateObject private var viewModel = ViewModel()
+    
+    
+//    @State var appError: ErrorType? = nil
+//    @State var coherenceGroupe: Coherence? = nil //[ErrorType]? = nil
+    
+    @State private var coherenceGroupe: Coherence? = nil
+    @State private var estCoherent:Bool? = nil
+
+////////////////   6 février
+    @State private var régionEnglobante: MKCoordinateRegion //= nil
+    @State private var lesAnnotations: [AnnotationGeographique]? = nil
+
 
     // Etats 'locaux' de la Vue
     @State private var collaboration = false
@@ -42,13 +54,19 @@ struct VueDetailGroupe: View {
     /// Le groupe édité fait partie des favoris de l'utilisateur
     @State private var estFavoris = false
     
+    
     @State private var voirDétailsCollaboration = false
     
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
         _groupe = StateObject<Groupe>(wrappedValue: leGroupe)
+//        _groupe = ObservedObject<Groupe>(wrappedValue: leGroupe)
+//        _estCoherent = State(wrappedValue: groupe.estCoherent)
 //        coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
-
+        print("VueDetailGroupe ######  INIT", leGroupe.leNom)
+ ////////////////////   6 février
+        _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)    //régionEnglobante)
+ ///
         }
     
     
@@ -64,7 +82,6 @@ struct VueDetailGroupe: View {
 //       }
     
     
-//    @ViewBuilder
     var body: some View {
     let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
 //    let appError = ErrorType( .trucQuiVaPas(num: 666))
@@ -92,6 +109,7 @@ struct VueDetailGroupe: View {
                 Text(" ")
                 Spacer()
                 Toggle("Détails >", isOn: $voirDétailsCollaboration.animation())
+                    .toggleStyle(.button)
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .padding(.leading, 50)
@@ -107,24 +125,12 @@ struct VueDetailGroupe: View {
                  Etiquette( "Valeur globale", valeur: groupe.valeur)
              }
             }
-            
-//        Section {
-////            Etiquette( "Collaboratif"  , valeur: groupe.collaboratif)
-////            Etiquette( "Collaborateurs", valeur: Int(groupe.nombre))
-//                
-////            Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
-//////                ForEach(Array(groupe.lesItems).sorted()    ) { item in
-////                ForEach(Array(groupe.tableauItemsTrié) ) { item in
-////                    Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
-////                    }
-////                }
-////            Etiquette( "Valeur globale", valeur: groupe.valeur)
-//            }
         }
         VStack {
             VueCarteGroupe(
+                // la vue carte groupe ne modifie pas la région et les annotations
                 région:      groupe.régionEnglobante,
-                annotations: groupe.lesAnnotations
+                annotations: lesAnnotations ??  []
 //                visible: !feuilleModificationPresentée
             ).frame( alignment: .top)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
@@ -132,6 +138,11 @@ struct VueDetailGroupe: View {
                             .stroke(Color.secondary, lineWidth: 0.5)
                         )
                 .padding()
+                .onAppear() {
+                    print("régionEnglobante ###### GET ONAPPEAR 1")
+//                    régionEnglobante = groupe.régionEnglobante
+                    print("onAppear ###### VueCarteGroupe depuis détail")//, régionEnglobante)
+                    }
             Spacer()
             }
         }
@@ -139,8 +150,9 @@ struct VueDetailGroupe: View {
 //        .opacity(groupe.valide ? 1 : 0.1)
 //        .disabled(groupe.valide ? false : true)
         .blur(radius: feuilleModificationPresentée ? 5 : 0, opaque: false)
-        .overlay(groupe.estCoherent ? Color(.clear): Color("rougeâtre").opacity(0.2))
-        
+//        .overlay(groupe.estCoherent ? Color(.clear): Color("rougeâtre").opacity(0.2))
+        .overlay(estCoherent ?? false ? Color(.clear): Color("rougeâtre").opacity(0.2))
+
         .alert(item: $coherenceGroupe) {coherence in
             Alert(title: Text("⚠️ ERREUR ⚠️"),
                   // Recuperer les descriptions des erreurs consignées
@@ -148,16 +160,28 @@ struct VueDetailGroupe: View {
             )}
 
         .onAppear() {
-            estFavoris = configUtilisateur.estFavoris(groupe)
-            coherenceGroupe = Coherence( err: groupe.verifierCohérence() )
+//            viewModel.definirGroupe(groupe: leGroupe)
+            print("régionEnglobante ###### GET ONAPPEAR 2")
+//            régionEnglobante = groupe.régionEnglobante
+            print("onAppear ###### régionEnglobante")//, régionEnglobante)
+            lesAnnotations   = groupe.lesAnnotations
+            estFavoris       = configUtilisateur.estFavoris(groupe)
+            estCoherent      = groupe.estCoherent
+            coherenceGroupe  = Coherence( err: groupe.verifierCohérence(depuis: "OnAppear de vueDetailGroupe") )
             }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
 //            laCarteEstVisible.toggle()
+            // Cannot convert value of type 'ObservedObject<Groupe>.Wrapper' to expected argument type 'ObservedObject<Groupe>'
+            // groupe : Groupe
+            // $groupe : ObservedObject<Groupe>.Wrapper
+            // _groupe : StateObject<Groupe>
+            // ObservedObject<Groupe>
             VueModifGroupe(groupe) { quiterLaVue in
                             print("Retour de VueModifGroupe avec", quiterLaVue )
                             feuilleModificationPresentée = false
 //                            laCarteEstVisible=true
+//                self.  refresh()
                             }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
@@ -179,7 +203,7 @@ struct VueDetailGroupe: View {
             //self.coherenceGroupe = Coherence(groupe.verifierCohérence()) //text: "Hi!")
 //                      }
             Button(action: {
-                self.coherenceGroupe = Coherence(err: groupe.verifierCohérence())
+                self.coherenceGroupe = Coherence(err: groupe.verifierCohérence(depuis : "Bouton"))
             }) {Image(systemName: "heart")}
             
             

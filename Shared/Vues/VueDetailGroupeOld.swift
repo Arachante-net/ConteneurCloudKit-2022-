@@ -95,6 +95,7 @@ struct VueDetailGroupeOld: View {
                             print("Retour de VueModifGroupe avec", quiterLaVue )
                             feuilleModificationPresentée = false
                             laCarteEstVisible=true
+//                            self.refresh()
                             }
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }

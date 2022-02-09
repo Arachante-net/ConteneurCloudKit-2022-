@@ -10,28 +10,28 @@ import SwiftUI
 import MapKit
 import CoreData
 
-enum ModeAffectationGroupes {
-    case ralliement //= "rallier"
-    case enrôlement //= "enrôler"
-    case test       //= "test"
-    // Enrôler / Révoquer
-    // Rallier / Abandonner
-
-    var description:String? {
-        switch self {
-            case .ralliement:
-                return "Rejoindre ou abandonner l'objectif."
-            case .enrôlement:
-                return "Recruter ou congédier des contributeurs."
-            case .test:
-                return "Tester"
-            }
-        }
-    }
+//enum ModeAffectationGroupes {
+//    case ralliement //= "rallier"
+//    case enrôlement //= "enrôler"
+//    case test       //= "test"
+//    // Enrôler / Révoquer
+//    // Rallier / Abandonner
+//
+//    var description:String? {
+//        switch self {
+//            case .ralliement:
+//                return "Rejoindre ou abandonner l'objectif."
+//            case .enrôlement:
+//                return "Recruter ou congédier des contributeurs."
+//            case .test:
+//                return "Tester"
+//            }
+//        }
+//    }
 
 
 /// Edition et modification des caracteristique du groupe passé en parametre
-struct VueModifGroupe: View {
+struct VueModifGroupeOld: View {
     
     // parametres d'appel de la Vue
     /// Le groupe en cour d'édition, ( il est la propriétée de  la vue mere)
@@ -62,9 +62,7 @@ struct VueModifGroupe: View {
     
     /// Etats locaux
     @State private var feuilleAffectationPresentée = false
-    @State private var lesGroupesARetenir  : Set<Groupe> //() //  :  Set<Groupe> //
-    
-    
+    @State private var lesGroupesARetenir  = Set<Groupe>() //  :  Set<Groupe> //
 //    @State private var hauteurBoutonMax: CGFloat = .zero
 
     
@@ -75,7 +73,7 @@ struct VueModifGroupe: View {
         self.laModificationDuGroupeEstRéalisée = achevée
         // Ca bagote sur la page détail et ca n'apparait pas sur la page d'affectation
 //        lesGroupesARetenir = groupe.collaborateursSansLePrincipal
-        _lesGroupesARetenir = State(wrappedValue : unGroupe.collaborateursSansLePrincipal_)//   collaborateurs) //SansLePrincipal)
+        _lesGroupesARetenir = State(wrappedValue : groupe.collaborateursSansLePrincipal)
         }
 
     var body: some View {
@@ -115,25 +113,19 @@ struct VueModifGroupe: View {
         .sheet(isPresented: $feuilleAffectationPresentée) {
             VueAffectationGroupe(
                 id: groupe.id!,
-
+                
                 //  groupe : ObservedObject<Groupe>
                 // $groupe : ObservedObject<Groupe>.Wrapper
                 // _groupe : ObservedObject<Groupe>
                 groupe:_groupe,
                 lesGroupesAAffecter: $lesGroupesARetenir,
                 modeAffectation: $modeAffectation) { (modif, lesGroupesRetenus) in
-                    print("☑️❌ MODIF", modif.description)
-                    print("☑️❌", lesGroupesARetenir.count, lesGroupesRetenus.count)
                     if modif {
-                        // Si évolution
-                        // Vider la liste des items
-                        groupe.items = NSSet()
-                        // Et la recreer avec les nouveaux groupes
                         lesGroupesRetenus.forEach() {
-                            print("☑️❌ Enrôler le groupe :", $0.leNom)
                             groupe.enroler(recrue: $0)
                             }
                         }
+                    print(">>> MODIF", modif.description)
                     feuilleAffectationPresentée = false
                     }
 
@@ -142,7 +134,7 @@ struct VueModifGroupe: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
 
-            ToolbarItemGroup(placement: .principal) //.automatic )// .bottomBar) //.principal)//  .automatic )
+            ToolbarItemGroup(placement:  .bottomBar) //.principal)//  .automatic )
                 { barreMenu }
 //
             ToolbarItem(placement: .cancellationAction) {
@@ -248,7 +240,6 @@ struct VueModifGroupe: View {
     private func editerPrincipal() {}
     
     private func enrôlerUnGroupe() {
-        print("ENROLER")
         modeAffectation = .enrôlement
         feuilleAffectationPresentée=true
         }

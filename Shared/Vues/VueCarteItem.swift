@@ -154,7 +154,7 @@ struct VueCarteItem: View {
 //                   .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
                  
 
-              .onAppear()    { }
+              .onAppear()    { print("onAppear VueCarteItem")}
               .onDisappear() { }
               }
             }
