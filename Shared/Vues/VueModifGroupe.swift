@@ -35,9 +35,7 @@ struct VueModifGroupe: View {
     
     // parametres d'appel de la Vue
     /// Le groupe en cour d'édition, ( il est la propriétée de  la vue mere)
-//    @ObservedObject var groupe: Groupe
-    /// Le groupe en cour d'édition, ( il est la propriétée de  .... moi)
-    // 1er Février 2
+ 
     
     //MARK: La source de verité de groupe est VueDetailGroupe
     @ObservedObject var groupe: Groupe
@@ -65,16 +63,10 @@ struct VueModifGroupe: View {
     @State private var lesGroupesARetenir  : Set<Groupe> //() //  :  Set<Groupe> //
     
     
-//    @State private var hauteurBoutonMax: CGFloat = .zero
 
-    
-//    /// ici le seul interet de l'init c'est de passer a la vue le parametre groupe sans le nommer
-//    /// VueModifGroupe(groupe) { qui...
     init(_ unGroupe: Groupe /*ObservedObject<Groupe>*/, achevée: @escaping  (Bool) -> Void) {
         _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe) //initialValue ancien nom
         self.laModificationDuGroupeEstRéalisée = achevée
-        // Ca bagote sur la page détail et ca n'apparait pas sur la page d'affectation
-//        lesGroupesARetenir = groupe.collaborateursSansLePrincipal
         _lesGroupesARetenir = State(wrappedValue : unGroupe.collaborateursSansLePrincipal_)//   collaborateurs) //SansLePrincipal)
         }
 
@@ -114,22 +106,22 @@ struct VueModifGroupe: View {
         }
         .sheet(isPresented: $feuilleAffectationPresentée) {
             VueAffectationGroupe(
-                id: groupe.id!,
-
                 //  groupe : ObservedObject<Groupe>
                 // $groupe : ObservedObject<Groupe>.Wrapper
                 // _groupe : ObservedObject<Groupe>
                 groupe:_groupe,
+                id: groupe.id!,
+
                 lesGroupesAAffecter: $lesGroupesARetenir,
-                modeAffectation: $modeAffectation) { (modif, lesGroupesRetenus) in
-                    print("☑️❌ MODIF", modif.description)
-                    print("☑️❌", lesGroupesARetenir.count, lesGroupesRetenus.count)
-                    if modif {
+                modeAffectation: $modeAffectation) { (lesAffectationsOntChangées) in
+                    print("☑️❌ MODIF", lesAffectationsOntChangées.description)
+//                    print("☑️❌〽️", lesGroupesARetenir.count, lesGroupesRetenus.count, (lesGroupesARetenir == lesGroupesRetenus).description )
+                    if lesAffectationsOntChangées {
                         // Si évolution
                         // Vider la liste des items
                         groupe.items = NSSet()
                         // Et la recreer avec les nouveaux groupes
-                        lesGroupesRetenus.forEach() {
+                          lesGroupesARetenir.forEach() {
                             print("☑️❌ Enrôler le groupe :", $0.leNom)
                             groupe.enroler(recrue: $0)
                             }

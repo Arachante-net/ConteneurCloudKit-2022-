@@ -14,21 +14,38 @@ struct VueCarteGroupe: View {
     // 1er Février 3
 //  @State
 //    @Binding  var
-  @State private var région: MKCoordinateRegion
-  let annotations: [AnnotationGeographique]
+    
+//  @State private var région: MKCoordinateRegion
+//  let annotations: [AnnotationGeographique]
+    
+   // 9 février
+//    @Binding private var région: MKCoordinateRegion
+//    @Binding var annotations: [AnnotationGeographique]?
+    
+    //MARK: La source de verité de groupe est VueDetailGroupe
+    @ObservedObject var groupe: Groupe
+
+    
 //  let visible: Bool
 //    var région:Binding<MKCoordinateRegion> {return Binding(projectedValue: groupe.régionEnglobante)}
    
-    init(région: MKCoordinateRegion /*région:Binding<MKCoordinateRegion>*/, annotations: [AnnotationGeographique]) {
-    /////// 6 février /  _région =  région  //wrappedValue: région)
-      self.région      = région
-      _région = State(wrappedValue: région)
-      self.annotations = annotations
-      }
+//    init(région: Binding<MKCoordinateRegion> /*région:Binding<MKCoordinateRegion>*/, annotations: Binding<[AnnotationGeographique]?>) {
+//    /////// 6 février /  _région =  région  //wrappedValue: région)
+////      self.région      = région
+//        // 9 février
+////      _région = State(wrappedValue: région)
+////      _région      = région //Binding<MKCoordinateRegion>(initialValue: région)
+////      _annotations = annotations
+//      }
+    
+    
+    init(_ unGroupe: Groupe)  {
+        _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe)
+        }
     
   var body: some View {
   
-      Map(coordinateRegion: $région, annotationItems: annotations) { annotation in
+      Map(coordinateRegion: $groupe.régionEnglobante, annotationItems: groupe.lesAnnotations ) { annotation in
         MapAnnotation(coordinate: annotation.coordonnées) {
             Text(annotation.libellé)
                 .foregroundColor(.black)

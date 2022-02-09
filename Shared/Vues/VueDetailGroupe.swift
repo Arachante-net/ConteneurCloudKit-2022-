@@ -66,7 +66,7 @@ struct VueDetailGroupe: View {
         print("VueDetailGroupe ######  INIT", leGroupe.leNom)
  ////////////////////   6 février
         _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)    //régionEnglobante)
- ///
+        _lesAnnotations   = State(wrappedValue: lesAnnotations ?? [])
         }
     
     
@@ -128,11 +128,11 @@ struct VueDetailGroupe: View {
         }
         VStack {
             VueCarteGroupe(
-                // la vue carte groupe ne modifie pas la région et les annotations
-                région:      groupe.régionEnglobante,
-                annotations: lesAnnotations ??  []
+                // ?? La vue carte groupe ne modifie pas la région et les annotations
+//                région:      $groupe.régionEnglobante,
+//                annotations: $lesAnnotations
 //                visible: !feuilleModificationPresentée
-            ).frame( alignment: .top)
+                groupe).frame( alignment: .top)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(  RoundedRectangle(cornerRadius: 16)
                             .stroke(Color.secondary, lineWidth: 0.5)
