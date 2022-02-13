@@ -14,3 +14,10 @@ class Horloge: ObservableObject {
     lazy var chronometre = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in self.temps += 1 }
     init() { chronometre.fire() }
     }
+
+let formatDate: DateFormatter = {
+    let formateur = DateFormatter()
+        formateur.dateStyle = .long
+        formateur.locale    = Locale(identifier: "fr_FR") //FR-fr")
+ return formateur
+}()

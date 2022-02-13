@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// recuperer les informations minimles pour creer un nouveau Groupe
+// Recuperer les informations minimales pour créer un nouveau Groupe
 // son Nom et son eventuelle collaboration
 struct VueAjouterGroupe: View {
   @State private var nom = ""
@@ -29,7 +29,7 @@ struct VueAjouterGroupe: View {
                 .focused($focusSurLeChampNom)
                 .textFieldStyle(.roundedBorder)
                 .border(focusSurLeChampNom ?  Color.accentColor : .secondary , width: 2)
-                .onChange(of: nom, perform: {newValue in })
+                .onChange(of: nom, perform: {_ in })
 
             
             Toggle("Collaboratif", isOn: $collaboratif)

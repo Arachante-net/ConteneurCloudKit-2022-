@@ -140,6 +140,30 @@ extension Groupe {
                   "groupes :", lesGroupesDeLaNouvelleRecrue)
             }
         }
+    
+    func supprimerAdhérences(mode:modeSuppression = .simulation) {
+        
+        switch mode {
+            case .brut:
+                removeFromItems(lePrincipal)
+                if items != nil {removeFromItems(items!)}
+            case .avecPrincipal:
+                print("P:", lePrincipal)
+            case .accordCollaborateurs:
+                print("? ", collaborateurs)
+            case .forceCollaborateurs:
+                print("! ", collaborateurs)
+            case .simulation:
+                print("\t🔘colaborateurs :", collaborateurs)
+                print("\t🔘principal :", lePrincipal)
+                print("\t🔘moi :", leNom)
+        }
+    }
+    
+    enum modeSuppression {
+        case brut, avecPrincipal, accordCollaborateurs, forceCollaborateurs, simulation
+        }
+    
    }
 
 
@@ -218,7 +242,7 @@ extension Groupe {
         return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
         }
     
-    var collaborateursSansLePrincipal : Set<Groupe> {
+    var collaborateursSansLePrincipal__ : Set<Groupe> {
         guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
         
         lesItems.remove(lePrincipal)
@@ -233,11 +257,9 @@ extension Groupe {
                 })! )
         }
     
-    var collaborateursSansLePrincipal_ : Set<Groupe> {
+    var collaborateursSansLePrincipal : Set<Groupe> {
         // Garantir qu'il y a des iems sinon retourner un ensemble vide
-        guard items?.count ?? 0 > 0 else {
-            print("☑️❌ Pas de collaborateurs")
-            return Set<Groupe>() }
+        guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
         
         //MARK: DANGER set lesItems fait boucler (lesItems.remove ça plante)
         //TODO: donc à corriger (probablement écrire le remove)
@@ -248,9 +270,8 @@ extension Groupe {
         tmp.remove(self.lePrincipal)
         
         // Convertir les items en un ensemble de Groupes principaux
-        let résultatGroupes = Set(tmp.map { $0.principal!})
-        print("☑️❌ résultat groupes sans principal :", résultatGroupes.count, résultatGroupes.map {$0.leNom})
-
+        let résultatGroupes = Set(tmp.compactMap { $0.principal  })
+            
         return résultatGroupes
         }
 
@@ -267,17 +288,21 @@ extension Groupe {
     
     /// Recruter un autre `Groupe`,  c'est à dire recruter l'`Item Principal` de ce `Groupe`
     func enroler(recrue:Groupe) {
-        guard recrue.principal != nil else {return}
-        print(">>> LES ITEMS AVANT", lesItems)
-        print(">>> LES GROUPES AVANT", recrue.principal!.lesGroupes)
+//        guard recrue.principal != nil else {return}
+        guard let recruePrincipal = recrue.principal else {return}
+
+//        print(">>> LES ITEMS AVANT", lesItems)
+//        print(">>> LES GROUPES AVANT", recruePrincipal.lesGroupes)
 
         // Ajouter à ma liste d'Items, l'Item Principal de la recrue
-        self.lesItems.insert(recrue.principal!)
+        self.lesItems.insert(recruePrincipal)
         // M'ajouter aux groupes de l'Item Principal de la recrue
-        recrue.principal?.lesGroupes.insert(self)
+//        recrue.principal?.lesGroupes.insert(self)
+        recruePrincipal.lesGroupes.insert(self)
+
         
-        print(">>> LES ITEMS APRES", lesItems)
-        print(">>> LES APRES", recrue.principal!.lesGroupes)
+//        print(">>> LES ITEMS APRES", lesItems)
+//        print(">>> LES APRES", recruePrincipal.lesGroupes)
         }
     
     func enroler_(recrue:Groupe) {
@@ -434,6 +459,9 @@ extension Groupe {
 //        }
 
     
+    
+
+    
 }
     
     
@@ -492,6 +520,17 @@ extension Groupe {
         
         return lesErreurs
         }
+    
+    
+    public override var description: String {
+        "\(leNom), valeur: \(valeur), collaborateurs : \(lesItems.map {$0.principal?.leNom as! String}.joined(separator: ", "))."
+      }
+    
+//    override public var debugDescription: String {
+//        ""
+//       }
+    
+    
     }
 
 

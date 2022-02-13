@@ -17,57 +17,56 @@ struct VueAffectationGroupe: View {
         animation: .default)
     private var groupesCollaboratifs: FetchedResults<Groupe>
       
-//    @FetchRequest var groupesCollaboratifsSaufMoi: FetchedResults<Groupe>
+    @FetchRequest var groupesCollaboratifsSaufMoi: FetchedResults<Groupe>
 
     @EnvironmentObject private var persistence: ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
-      
-    @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
-//    @Binding var groupe:Groupe
     
-    // le choix de l'utilisateur
-    @Binding var lesGroupesAAffecter: Set<Groupe>
+    // La source de veritée, le StateObject, est dans VuedetailGroupe
+    @ObservedObject var groupe: Groupe
     
-    // Enroler (aller chercher des collaborateurs) ou Collaborer (rejoindre un groupe)
-    @Binding var modeAffectation :ModeAffectationGroupes
+    /// Les choix de l'utilisateur
+    @Binding var groupesAReaffecter: Set<Groupe>
+    
+    /// Enrôler (aller chercher des collaborateurs) ou Collaborer (rejoindre un groupe)
+    @Binding var modeAffectation: ModeAffectationGroupes
     
     // Retour vers la vue appelante du resultat de la feuille (sheet) d'affectation
-    let lesRéaffectationsSontRéalisées: (Bool) -> Void //, Set<Groupe>) -> Void
-    let lesGroupesInitialementAffectés: Set<Groupe>
+    let lesRéaffectationsSontRéalisées: (Bool) -> Void
+    
+    
     // On passe par un init() afin de construire la requête groupesCollaboratifsSaufMoi
     // Nous avons alors deux methodes pour lister les affectations possibles :
     //   List(groupesCollaboratifsSaufMoi) ...
     //   List(groupesCollaboratifs.filter() { $0 != groupe} ...
-    //TODO: C'est quoi le mieux ?
-    init(groupe               : ObservedObject<Groupe>,
-         id                   : UUID,
+    //TODO: C'est quoi le mieux ? Valider le NSPredicate
+    init(_ unGroupe           : Groupe,
          lesGroupesAAffecter  : Binding<Set<Groupe>>,
          modeAffectation      : Binding<ModeAffectationGroupes>,
-         affectationsRéalisées: @escaping (Bool) -> Void) { //}, Set<Groupe>) -> Void) {
+         affectationsRéalisées: @escaping (Bool) -> Void) {
         
-        _groupe              = groupe  
-        _lesGroupesAAffecter = lesGroupesAAffecter
-        _modeAffectation     = modeAffectation
-        
-        lesGroupesInitialementAffectés      = lesGroupesAAffecter.wrappedValue
-        self.lesRéaffectationsSontRéalisées = affectationsRéalisées 
-        
-//        _groupesCollaboratifsSaufMoi = FetchRequest<Groupe>(
-//            sortDescriptors: [],
-//            predicate: NSPredicate(format: "(collaboratif == true) AND (NOT id == %@)", id as CVarArg))
+            _groupe              = ObservedObject<Groupe>(wrappedValue : unGroupe)
+            _groupesAReaffecter  = lesGroupesAAffecter
+            _modeAffectation     = modeAffectation
+            
+            lesRéaffectationsSontRéalisées = affectationsRéalisées
+            
+        _groupesCollaboratifsSaufMoi = FetchRequest<Groupe>(
+            sortDescriptors: [],
+            predicate: NSPredicate(format: "(collaboratif == true) AND (NOT id == %@)", unGroupe.id! as CVarArg))
         }
     
     var body: some View {
         NavigationView {
             VStack {
-//                List(groupesCollaboratifsSaufMoi) { Text($0.leNom)}
+                List(groupesCollaboratifsSaufMoi) { Text($0.leNom)}
                 
                 Text("\(modeAffectation.description ?? "")")
-                List(groupesCollaboratifs.filter() { $0 != groupe}, id: \.id, selection: $lesGroupesAAffecter) { grp in
+                List(groupesCollaboratifs.filter() { $0 != groupe}, id: \.id, selection: $groupesAReaffecter) { grp in
                     VueCelluleAffectationGroupe(
                         groupe,
                         groupeCiblePotentielle: grp,
-                        affectations: $lesGroupesAAffecter)
+                        affectations: $groupesAReaffecter)
                     }
                 }
             .toolbar {
@@ -76,7 +75,7 @@ struct VueAffectationGroupe: View {
 //                    }
                 
                 ToolbarItem(placement: .confirmationAction ) {
-                    Button( action: action_OK ) {
+                    Button( action: validerAffectations ) {
                         VStack {
                             Image(systemName: "checkmark.circle.fill")
                             Text("Valider").font(.caption)
@@ -86,7 +85,7 @@ struct VueAffectationGroupe: View {
                 
                 
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .cancel, action: abandonerAffectation) {
+                    Button(role: .cancel, action: abandonerAffectations) {
                         VStack {
                             Image(systemName: "arrowshape.turn.up.left.circle.fill")
                             Text("Abandon").font(.caption)
@@ -109,14 +108,12 @@ struct VueAffectationGroupe: View {
     
     
 //MARK: -
-  private func action_OK() {
-      print(">>>" ,lesGroupesAAffecter.count , "groupes collaboratifs retenus." )
-      lesRéaffectationsSontRéalisées(true) //, lesGroupesAAffecter)
+  private func validerAffectations() {
+      lesRéaffectationsSontRéalisées(true)
     }
  
-    private func abandonerAffectation() {
-        print(" On revient à \(lesGroupesInitialementAffectés.count), plutot qu'à \(lesGroupesAAffecter.count) ")
-        lesRéaffectationsSontRéalisées(false) //, lesGroupesInitialementAffectés)
+    private func abandonerAffectations() {
+        lesRéaffectationsSontRéalisées(false)
         }
     
 }

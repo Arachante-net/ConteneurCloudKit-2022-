@@ -64,10 +64,10 @@ struct VueModifGroupe: View {
     
     
 
-    init(_ unGroupe: Groupe /*ObservedObject<Groupe>*/, achevée: @escaping  (Bool) -> Void) {
-        _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe) //initialValue ancien nom
+    init(_ unGroupe: Groupe, achevée: @escaping  (Bool) -> Void) {
+        _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe)
         self.laModificationDuGroupeEstRéalisée = achevée
-        _lesGroupesARetenir = State(wrappedValue : unGroupe.collaborateursSansLePrincipal_)//   collaborateurs) //SansLePrincipal)
+        _lesGroupesARetenir = State(wrappedValue : unGroupe.collaborateursSansLePrincipal)
         }
 
     var body: some View {
@@ -105,28 +105,11 @@ struct VueModifGroupe: View {
 
         }
         .sheet(isPresented: $feuilleAffectationPresentée) {
-            VueAffectationGroupe(
-                //  groupe : ObservedObject<Groupe>
-                // $groupe : ObservedObject<Groupe>.Wrapper
-                // _groupe : ObservedObject<Groupe>
-                groupe:_groupe,
-                id: groupe.id!,
+            VueAffectationGroupe( groupe,
 
                 lesGroupesAAffecter: $lesGroupesARetenir,
                 modeAffectation: $modeAffectation) { (lesAffectationsOntChangées) in
-                    print("☑️❌ MODIF", lesAffectationsOntChangées.description)
-//                    print("☑️❌〽️", lesGroupesARetenir.count, lesGroupesRetenus.count, (lesGroupesARetenir == lesGroupesRetenus).description )
-                    if lesAffectationsOntChangées {
-                        // Si évolution
-                        // Vider la liste des items
-                        groupe.items = NSSet()
-                        // Et la recreer avec les nouveaux groupes
-                          lesGroupesARetenir.forEach() {
-                            print("☑️❌ Enrôler le groupe :", $0.leNom)
-                            groupe.enroler(recrue: $0)
-                            }
-                        }
-                    feuilleAffectationPresentée = false
+                    reaffecter(lesAffectationsOntChangées)
                     }
 
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
@@ -134,7 +117,7 @@ struct VueModifGroupe: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
 
-            ToolbarItemGroup(placement: .principal) //.automatic )// .bottomBar) //.principal)//  .automatic )
+            ToolbarItemGroup(placement: .principal) //.automatic .bottomBar .principal
                 { barreMenu }
 //
             ToolbarItem(placement: .cancellationAction) {
@@ -165,9 +148,6 @@ struct VueModifGroupe: View {
         .onAppear()    {
             print("onAppear vueModifGroupe")
 //            let _ = groupe.verifierCohérence(depuis: #function)
-            // initialiser (NB: ne peut être dans init() ) la liste des collaborateurs,
-            // qui sera eventuellement modifiée par la Vue Affectation Groupe
-            ///////////////lesGroupesARetenir = groupe.collaborateursSansLePrincipal
             }
                     
         
@@ -251,7 +231,7 @@ struct VueModifGroupe: View {
         }
 
     
-    //TODO: Cela correspond à quoi d'enrôler directement un Item ?
+    //RQ: Cela correspond à quoi d'enrôler directement un Item ?
     private func enrôlerUnNouvelItem__() {
         withAnimation {
             let nouvelItem = Item.fournirNouveau(contexte : contexte , titre : "Nouvelle recrue de test")
@@ -266,6 +246,20 @@ struct VueModifGroupe: View {
             }
         }
     
+    func reaffecter(_ lesAffectationsOntChangées:Bool) -> Void {
+        if lesAffectationsOntChangées {
+            // Si évolution
+            // Vider la liste des items
+            groupe.items = NSSet()
+            // Et la recréer avec les nouveaux groupes
+              lesGroupesARetenir.forEach() {
+                print("☑️❌ Enrôler le groupe :", $0.leNom)
+                groupe.enroler(recrue: $0)
+                }
+            }
+        feuilleAffectationPresentée = false
+        }
+        
 }
 
 

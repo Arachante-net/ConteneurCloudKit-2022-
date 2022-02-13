@@ -79,8 +79,10 @@ struct PositionIdentifiable: Identifiable {
 struct AnnotationGeographique: Identifiable, Hashable {
   let id = UUID()
   let libellé: String
+  let message:String
   let coordonnées: CLLocationCoordinate2D
   let couleur: UIColor
+  let valeur : Int
   }
 
 

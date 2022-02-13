@@ -42,7 +42,7 @@ struct VueValeurItemPrincipal_2: View {
             .padding(.leading)
             .onChange(of: groupe.principal?.valeur) { val in
                 print("☑️ ----\(val ?? 0)----")
-                //FIXME: !! Y-a vraiment besoin de cette bidouille ??
+                //FIXME : !! Y-a vraiment besoin de cette bidouille ??
                 groupe.integration.toggle() //+= 1 // pour se rafraichir
                 
                 persistance.sauverContexte("Item")

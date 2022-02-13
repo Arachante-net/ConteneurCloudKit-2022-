@@ -94,8 +94,6 @@
 		D0E897282789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
 		D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
-		D0F187AB279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187AA279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift */; };
-		D0F187AC279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F187AA279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -473,7 +471,6 @@
 				D06D875927567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D04B259127747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
 				D018308027464271000889E2 /* VueAffectationItemGroupe.swift in Sources */,
-				D0F187AB279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift in Sources */,
 				D034CC4B27A97DE60067FB04 /* Bienvenue.swift in Sources */,
 				D04B259327747C5800AD171D /* Item+CoreDataProperties.swift in Sources */,
 				D0E22A2C278058D700F4F89C /* ConteneurCloudKit.xcdatamodeld in Sources */,
@@ -523,7 +520,6 @@
 				D06D875A27567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D04B259227747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
 				D018308127464271000889E2 /* VueAffectationItemGroupe.swift in Sources */,
-				D0F187AC279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift in Sources */,
 				D034CC4C27A97DE60067FB04 /* Bienvenue.swift in Sources */,
 				D04B259427747C5800AD171D /* Item+CoreDataProperties.swift in Sources */,
 				D0E22A2D278058D700F4F89C /* ConteneurCloudKit.xcdatamodeld in Sources */,

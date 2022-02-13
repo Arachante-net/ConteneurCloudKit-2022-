@@ -11,32 +11,10 @@ import MapKit
 
 /// Afficher  sur une carte un groupe d'item representés par des annotations
 struct VueCarteGroupe: View {
-    // 1er Février 3
-//  @State
-//    @Binding  var
-    
-//  @State private var région: MKCoordinateRegion
-//  let annotations: [AnnotationGeographique]
-    
-   // 9 février
-//    @Binding private var région: MKCoordinateRegion
-//    @Binding var annotations: [AnnotationGeographique]?
     
     //MARK: La source de verité de groupe est VueDetailGroupe
     @ObservedObject var groupe: Groupe
 
-    
-//  let visible: Bool
-//    var région:Binding<MKCoordinateRegion> {return Binding(projectedValue: groupe.régionEnglobante)}
-   
-//    init(région: Binding<MKCoordinateRegion> /*région:Binding<MKCoordinateRegion>*/, annotations: Binding<[AnnotationGeographique]?>) {
-//    /////// 6 février /  _région =  région  //wrappedValue: région)
-////      self.région      = région
-//        // 9 février
-////      _région = State(wrappedValue: région)
-////      _région      = région //Binding<MKCoordinateRegion>(initialValue: région)
-////      _annotations = annotations
-//      }
     
     
     init(_ unGroupe: Groupe)  {
@@ -46,15 +24,33 @@ struct VueCarteGroupe: View {
   var body: some View {
   
       Map(coordinateRegion: $groupe.régionEnglobante, annotationItems: groupe.lesAnnotations ) { annotation in
-        MapAnnotation(coordinate: annotation.coordonnées) {
-            Text(annotation.libellé)
-                .foregroundColor(.black)
-                .background(Color(red: 1, green: 1, blue: 0) )
-            RoundedRectangle(cornerRadius: 7.0)
-                .stroke(.red, lineWidth: 4.0)
-                .background(Color(annotation.couleur)) //      Color(red: 1, green: 1, blue: 0).opacity(0.5) )
-                .frame(width: 30, height: 30)
-                .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
+          MapAnnotation(coordinate: annotation.coordonnées, anchorPoint: CGPoint(x: 0.5, y: 1)) {
+//            Text(annotation.libellé)
+//                .foregroundColor(.black)
+//                .background(Color(red: 1, green: 1, blue: 0) )
+//            RoundedRectangle(cornerRadius: 7.0)
+//                .stroke(.red, lineWidth: 4.0)
+//                .background(Color(annotation.couleur)) //      Color(red: 1, green: 1, blue: 0).opacity(0.5) )
+//                .frame(width: 30, height: 30)
+//                .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
+              VStack {
+                  Text(annotation.libellé)
+                      .fixedSize(horizontal: false, vertical: true)
+                      .multilineTextAlignment(.center)
+                      .background(Color.black)
+                  Text(annotation.message).font(.caption2)
+                  Text("\(annotation.valeur)").bold().font(.body).foregroundColor(.accentColor)
+                  }
+              .padding(5) //.vertical)
+//                .frame(width: 300, height: 200)
+                .background(Blason()//.stroke(lineWidth:0.5)
+                                .fill(Color(annotation.couleur))
+                                .opacity(0.75)
+                                .clipShape(Blason())
+                                .shadow(radius: 3))
+
+
+            
             }
       }//.isHidden(!visible, remove: false)
       .onAppear() { print("onAppear ###### Map")}
@@ -63,3 +59,16 @@ struct VueCarteGroupe: View {
 }
 
 
+struct Blason: Shape {
+    func path(in rect: CGRect) -> Path {
+        let d = rect.height / 3
+        var path = Path()
+            path.move(   to: CGPoint(x: rect.minX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY-d))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY-d))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+     return path
+    }
+}

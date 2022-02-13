@@ -18,7 +18,7 @@ import SwiftUI
 struct VueCelluleAffectationGroupe: View {
     
   // Les arguments de la vue
-  /// Le groupe  pour lequel on définit les collaborateurs
+  /// Le groupe  parent, pour lequel on définit les collaborateurs
   var groupeEnCoursEdition: Groupe
     
   ///  Le groupe en cours de réaffectation
@@ -50,20 +50,21 @@ struct VueCelluleAffectationGroupe: View {
 
       Spacer()
         Image(systemName: "checkmark").isHidden(!estSelectioné)
-    }//.isHidden(estPrincipal) //.disabled(estPrincipal)
-//    .background(Color(.purple))
+    }
     .onTapGesture { alternerSelection() }
 
   }
     
    
-//    }
+
     
 //MARK: -
 func alternerSelection() {
     if estSelectioné { selectionDeGroupes.remove(groupeAAffecter) }
               else   { selectionDeGroupes.insert(groupeAAffecter) }
     }
+ 
+    
     
 }
 

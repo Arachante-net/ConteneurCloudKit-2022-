@@ -250,13 +250,13 @@ struct VueModifGroupeOld: View {
         }
 
     
-    //TODO: Cela correspond à quoi d'enrôler directement un Item ?
-    private func enrôlerUnNouvelItem__() {
-        withAnimation {
-            let nouvelItem = Item.fournirNouveau(contexte : contexte , titre : "Nouvelle recrue de test")
-            groupe.enrôler(contexte:contexte, recrues: [nouvelItem])
-            }
-        }
+//    //RQ: Cela correspond à quoi d'enrôler directement un Item ?
+//    private func enrôlerUnNouvelItem__() {
+//        withAnimation {
+//            let nouvelItem = Item.fournirNouveau(contexte : contexte , titre : "Nouvelle recrue de test")
+//            groupe.enrôler(contexte:contexte, recrues: [nouvelItem])
+//            }
+//        }
     
     private func enrôlerDesItems_() {
         withAnimation {

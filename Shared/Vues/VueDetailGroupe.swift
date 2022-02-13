@@ -28,7 +28,6 @@ struct VueDetailGroupe: View {
     @StateObject private var groupe: Groupe //= Groupe()
     // le groupe est fourni par ListeGroupe, il est instancié plus bas, dans l'init()
     //MARK: -
-    //TODO: ? Faire un StateObject Groupe accedé directement par toutes les sous-vues ou le passer par argument
    
     @StateObject private var viewModel = ViewModel()
     
@@ -60,18 +59,12 @@ struct VueDetailGroupe: View {
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
         _groupe = StateObject<Groupe>(wrappedValue: leGroupe)
-//        _groupe = ObservedObject<Groupe>(wrappedValue: leGroupe)
-//        _estCoherent = State(wrappedValue: groupe.estCoherent)
-//        coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
-        print("VueDetailGroupe ######  INIT", leGroupe.leNom)
- ////////////////////   6 février
-        _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)    //régionEnglobante)
+        
+        _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)
         _lesAnnotations   = State(wrappedValue: lesAnnotations ?? [])
         }
     
     
-    // configUtilisateur.estFavoris(groupe) //TODO: comment faire ça ?
-    //TODO: essayer estFavoris? = nil
 
 //    static func == (lhs: VueDetailGroupe, rhs: VueDetailGroupe) -> Bool {
 //        // propriétés qui identifient que la vue est égale et ne doit pas être réactualisée
@@ -83,23 +76,21 @@ struct VueDetailGroupe: View {
     
     
     var body: some View {
-    let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
-//    let appError = ErrorType( .trucQuiVaPas(num: 666))
-//       let coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
-//      self.coherenceGroupe = Coherence( erreurs: groupe.verifierCohérence() )
-
-
+    //let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
+    if let lePrincipal = groupe.principal {
+    // Si ce n'est pas un groupe isolé de son principal on présente la fiche
+        
     VStack {
     Form { //}(alignment: .leading, spacing: 2) {
         Section { //}(alignment: .leading, spacing: 2)  {
-            Etiquette( "Item principal", valeur: (groupe.principal != nil) ? groupe.principal!.titre ?? "␀" : "❌")
-            Etiquette( "Valeur locale" , valeur: Int(groupe.principal?.valeur ?? 0))
+            Etiquette( "Item principal", valeur: (groupe.principal != nil) ? lePrincipal.titre ?? "␀" : "❌")
+            Etiquette( "Valeur locale" , valeur: Int(lePrincipal.valeur))
             Etiquette( "Créateur"      , valeur: groupe.createur).help("créateur")
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
 //            Etiquette( "Valide"        , valeur: groupe.valide)
 //            Etiquette( "Cohérent"      , valeur: groupe.estCoherent)
 
-//            Etiquette( "Suppression"   , valeur: groupe.isDeleted) //TODO: Mettre dans estCoherent ?
+//            Etiquette( "Suppression"   , valeur: groupe.isDeleted) //RQ: Mettre dans estCoherent ?
 //            Etiquette( "Status CoreData" , valeur: !groupe.isFault)
             }
         Section {
@@ -127,22 +118,14 @@ struct VueDetailGroupe: View {
             }
         }
         VStack {
-            VueCarteGroupe(
-                // ?? La vue carte groupe ne modifie pas la région et les annotations
-//                région:      $groupe.régionEnglobante,
-//                annotations: $lesAnnotations
-//                visible: !feuilleModificationPresentée
-                groupe).frame( alignment: .top)
+            VueCarteGroupe(groupe)
+                .frame( alignment: .top)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(  RoundedRectangle(cornerRadius: 16)
                             .stroke(Color.secondary, lineWidth: 0.5)
                         )
                 .padding()
-                .onAppear() {
-                    print("régionEnglobante ###### GET ONAPPEAR 1")
-//                    régionEnglobante = groupe.régionEnglobante
-                    print("onAppear ###### VueCarteGroupe depuis détail")//, régionEnglobante)
-                    }
+                .onAppear() { }
             Spacer()
             }
         }
@@ -192,6 +175,8 @@ struct VueDetailGroupe: View {
                 { barreMenu }
             }
           .navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
+        
+        }
     } // body
         
     
@@ -202,9 +187,9 @@ struct VueDetailGroupe: View {
             //  Button("Alert") {
             //self.coherenceGroupe = Coherence(groupe.verifierCohérence()) //text: "Hi!")
 //                      }
-            Button(action: {
-                self.coherenceGroupe = Coherence(err: groupe.verifierCohérence(depuis : "Bouton"))
-            }) {Image(systemName: "heart")}
+//            Button(action: {
+//                self.coherenceGroupe = Coherence(err: groupe.verifierCohérence(depuis : "Bouton"))
+//            }) {Image(systemName: "heart")}
             
             
 

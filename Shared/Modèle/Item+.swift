@@ -300,8 +300,10 @@ extension Item {
         #endif
             return AnnotationGeographique( // id = UUID(),
                 libellé:  self.titre ?? "␀",
+                message: "",
                 coordonnées : self.coordonnées, //: CLLocationCoordinate2D
-                couleur : coul
+                couleur : coul,
+                valeur : Int(self.valeur)
                )
             }
         }

@@ -24,21 +24,14 @@ struct VueDetailItem: View {
     // l'appel depuis ListeItem impose que les @State item et laRegion soient publiques (pas private)
     // 'VueDetailItem' initializer is inaccessible due to 'private' protection level ??
     
-    // ♔ La Source de verité ♔
-    // 1er Février 4 & 5
+    // ♔ La Source de verité pour Item ♔
+    //
     /// Argument, Item en cours d'édition propriété de VueDetailItem
     @State  private var item : Item
     /// Argument, Région géographique ou se situe l'Item
     @State  private var laRégion : MKCoordinateRegion
 
     
-    //TODO: A mettre dans un module utilitaires
-    let formatDate: DateFormatter = {
-        let formateur = DateFormatter()
-            formateur.dateStyle = .long
-            formateur.locale    = Locale(identifier: "fr_FR") //FR-fr")
-     return formateur
-    }()
     
     
     init (item:Item, laRégion:MKCoordinateRegion) {
@@ -170,7 +163,7 @@ struct VueDetailItem: View {
     
           
     
-    // l'avantage d'une proprieté comme ici, sur une vue décrite dans un autre fichier
+    // L'avantage d'une proprieté comme ici, sur une vue décrite dans un autre fichier
     // c'est le partage d'information qui est direct
     var barreMenu: some View {
         HStack {

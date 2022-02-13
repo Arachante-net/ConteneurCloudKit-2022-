@@ -112,22 +112,23 @@ struct ListeGroupe: View {
             }
       
           .alert(item: $groupesEnCourDeSuppression) { jeuIndices in
-              assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
-      //        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
-              
-              let nom = (jeuIndices.map {groupes[$0].nom}.first ?? "")!
-
-              var description:String=""
-              
-              //TODO: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
-              jeuIndices.forEach {
-                  let groupe = groupes[$0]
-                  description = groupe.description
-                  //TODO: verifier si collaboration à d'autre groupes et du coup si la suppression est possible
-                  // ??? groupe.collaborateursSansLePrincipal ???
-                  groupe.collaborateurs.forEach
-                    { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
-                  }
+              let (nom, description) = preparerSuppression(jeuIndices: jeuIndices)
+//              assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+//      //        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
+//
+//              let nom = (jeuIndices.map {groupes[$0].nom}.first ?? "")!
+//
+//              var description:String=""
+//
+//              //TODO : Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
+//              jeuIndices.forEach {
+//                  let groupe = groupes[$0]
+//                  description = groupe.description
+//                  //TODO : verifier si collaboration à d'autre groupes et du coup si la suppression est possible
+//                  // ??? groupe.collaborateursSansLePrincipal ???
+//                  groupe.collaborateurs.forEach
+//                    { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
+//                  }
               
               return Alert(
                   title: Text("Suppression du groupe ") + Text("'\(nom)'").foregroundColor(.accentColor),
@@ -171,6 +172,25 @@ struct ListeGroupe: View {
         }
     
     
+    private func preparerSuppression (jeuIndices:IndexSet) -> (nom:String, description:String) {
+        assert(jeuIndices.count == 1, "IndexSet non unitaire") // seulement pendant le dev
+//        precondition(jeuIndices.count == 1, "IndexSet non unitaire") // Même une fois en prod
+        
+        let nom = (jeuIndices.map {groupes[$0].nom}.first ?? "")!
+
+        var description:String = ""
+        
+        //RQ: Si certitude d'avoir un jeu de taille 1, pas la peine de boucler
+        jeuIndices.forEach {
+            let groupe = groupes[$0]
+            description = groupe.description
+            //TODO: verifier si collaboration à d'autre groupes et du coup si la suppression est possible
+            // ??? groupe.collaborateursSansLePrincipal ???
+            groupe.collaborateurs.forEach
+              { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
+            }
+        return (nom: nom, description: description)
+    }
     
     private func proposerSuppressionGroupes(positions: IndexSet) {
         print("🔘 Proposition de suppression de :", positions.map { groupes[$0].nom ?? ""} )
@@ -178,16 +198,28 @@ struct ListeGroupe: View {
         }
     
 
+    
+    
     private func supprimerVraimentGroupes(positions: IndexSet) {
-        print("🔘 Suppression réeel de :", positions.map { groupes[$0].nom ?? ""} )
-        positions.forEach {
-            print("\t🔘 Suppression de :", groupes[$0].nom ?? "" )
-//TODO: -    items[$0].removeFromGroupes(items[$0].groupes ?? []) -
+        let lesGroupes = positions.map { groupes[$0] }
+        let lesNoms    = lesGroupes.map {$0.leNom}
+        print("🔘 Suppression réelle de :", lesNoms) //positions.map { groupes[$0].leNom} )
+//        positions.forEach {
+//            let leGroupe = groupes[$0]
+//            print("\t🔘 Suppression de :", leGroupe.leNom) //groupes[$0].leNom )
+//            leGroupe.supprimerAdhérences() //mode: .brut)
+//            persistance.sauverContexte()
+//            }
+        
+        lesGroupes.forEach { leGroupe in
+//            let leGroupe = groupes[$0]
+            print("\t🔘 Suppression de :", leGroupe.leNom) //groupes[$0].leNom )
+            leGroupe.supprimerAdhérences() //mode: .brut)
             persistance.sauverContexte()
             }
-                    
+        
         withAnimation {
-            persistance.supprimerObjets(positions.map { groupes[$0] })
+           /////////////// persistance.supprimerObjets(lesGroupes) //positions.map { groupes[$0] })
             }
         }
     
