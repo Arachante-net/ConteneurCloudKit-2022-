@@ -278,6 +278,12 @@ extension Item {
     func grouper(   groupes : Set<Groupe>) { self.groupes = groupes as NSSet }
     
     
+    //MARK: Vie de l'Item
+    func notifierDemission(_ groupe:Groupe, mode: Suppression) {
+        print("\t🔘 L'item", leTitre, "recoit une notification (", mode, ") de la disparition du groupe :", groupe.leNom)
+        }
+    
+    
     
     
     //MARK: géographie

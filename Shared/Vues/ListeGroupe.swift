@@ -33,20 +33,14 @@ struct ListeGroupe: View {
 
 
 
-    private let formatHorodatage: DateFormatter = {
-        let formateur = DateFormatter()
-            formateur.dateStyle = .short
-            formateur.timeStyle = .medium
-            formateur.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-//          formatter.timeZone = TimeZone(     "UTC")
-        return formateur
-    }()
     
     init () {print("ListeGroupe ######")}
 
+    var maCouleur = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)   //  #colorLiteral()
 
   var body: some View {
     let _ = print("ListeGroupe BODY ###### !!!!!!!!!!!!!!!!!!!!!!")
+      
     NavigationView {
       List() {
           let _ = print("ListeGroupe LIST ######")
@@ -138,7 +132,7 @@ struct ListeGroupe: View {
                                   action: abandoner
                               ),
                   secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
-                      supprimerVraimentGroupes(positions: jeuIndices)
+                      supprimerVraimentGroupes(positions: jeuIndices, mode: .simulation)
                   })
                   )
 
@@ -193,37 +187,24 @@ struct ListeGroupe: View {
     }
     
     private func proposerSuppressionGroupes(positions: IndexSet) {
-        print("🔘 Proposition de suppression de :", positions.map { groupes[$0].nom ?? ""} )
+        print("🔘 Proposition de suppression de :", positions.map { groupes[$0].leNom } )
         groupesEnCourDeSuppression = positions
         }
     
 
-    
-    
-    private func supprimerVraimentGroupes(positions: IndexSet) {
+    private func supprimerVraimentGroupes(positions: IndexSet, mode: Suppression = .simulation) {
         let lesGroupes = positions.map { groupes[$0] }
         let lesNoms    = lesGroupes.map {$0.leNom}
-        print("🔘 Suppression réelle de :", lesNoms) //positions.map { groupes[$0].leNom} )
-//        positions.forEach {
-//            let leGroupe = groupes[$0]
-//            print("\t🔘 Suppression de :", leGroupe.leNom) //groupes[$0].leNom )
-//            leGroupe.supprimerAdhérences() //mode: .brut)
-//            persistance.sauverContexte()
-//            }
-        
-        lesGroupes.forEach { leGroupe in
-//            let leGroupe = groupes[$0]
-            print("\t🔘 Suppression de :", leGroupe.leNom) //groupes[$0].leNom )
-            leGroupe.supprimerAdhérences() //mode: .brut)
-            persistance.sauverContexte()
-            }
-        
+        print("🔘 Suppression confirmée (", mode, ") de :", lesNoms)
+        Groupe.supprimerAdhérences(groupes: lesGroupes, mode:mode)
         withAnimation {
-           /////////////// persistance.supprimerObjets(lesGroupes) //positions.map { groupes[$0] })
+            print("\t🔘 Suppression (", mode, ") du(des) groupe(s) :", lesNoms) //groupes[$0].leNom )
+            persistance.supprimerObjets(lesGroupes, mode: mode) //positions.map { groupes[$0] })
             }
         }
     
-    private func abandoner() {}
+    
+  private func abandoner() {}
     
   /// Supprimer les groupes passés en parametre,
   /// et enlever les references à ces groupes presentes dans lleurs .items

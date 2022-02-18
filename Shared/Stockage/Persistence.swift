@@ -309,18 +309,21 @@ class ControleurPersistance : ObservableObject {
         }
       }
     
-    func supprimerObjets(_ objects: [NSManagedObject]) {
-        conteneur.viewContext.perform { [context = conteneur.viewContext] in
-            objects.forEach {objet in
-                print("🔘 supprimer objet ", objet.entity, objet.debugDescription)
-//              objet.prepareForDeletion() // automatique
-                context.delete(objet)
-            }
-            
-//            objects.forEach(context.delete)
+    func supprimerObjets(_ objects: [NSManagedObject], mode:Suppression = .défaut) {
+        if mode == .simulation {print ("🔘 simulation de suppression de" , objects)}
+        else {
+            conteneur.viewContext.perform { [context = conteneur.viewContext] in
+                objects.forEach {objet in
+                    print("🔘 supprimer objet ", objet.entity, objet.debugDescription)
+    //              objet.prepareForDeletion() // automatique
+                    context.delete(objet)
+                }
+                
+    //            objects.forEach(context.delete)
 
 
-            self.sauverContexte()
+                self.sauverContexte()
+                }
             }
         }
     

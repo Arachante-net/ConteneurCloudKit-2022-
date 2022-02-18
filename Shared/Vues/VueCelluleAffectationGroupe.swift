@@ -10,22 +10,22 @@ import SwiftUI
 
 /// Visualise pour le groupe en cours d'édition :
 ///
-/// - un des groupe declaré collaboratif
-/// - S'ils est déjà en collaboration avec le groupe en cours
+/// - un des groupe partie prenante (collaborateur ou responasable)
+/// - S'il est déjà en collaboration avec le groupe en cours
 ///
-/// Retourne :
-/// - Le nouvel ensemble des groupes collaborateurs affectés
+/// - returns  :
+/// - Le nouvel ensemble des groupes  affectés ($selectionDeGroupes)
 struct VueCelluleAffectationGroupe: View {
     
   // Les arguments de la vue
-  /// Le groupe  parent, pour lequel on définit les collaborateurs
+  /// Le groupe  parent, pour lequel on définit les affectations
   var groupeEnCoursEdition: Groupe
     
-  ///  Le groupe en cours de réaffectation
+  ///  Le groupe en cours de réaffectation eventuelle
   var groupeAAffecter: Groupe
     
     
-  /// La liste des groupes selectionés
+  /// La liste des groupes selectionés (collaborateurs ou  leaders)
   @Binding var selectionDeGroupes: Set<Groupe>
     
     
@@ -35,11 +35,10 @@ struct VueCelluleAffectationGroupe: View {
     
     init (_ leGroupe:Groupe,
           groupeCiblePotentielle:Groupe,
-          
           affectations:Binding<Set<Groupe>>) {
+        
                 groupeEnCoursEdition = leGroupe
                 groupeAAffecter      = groupeCiblePotentielle
-                
                 _selectionDeGroupes  = Binding(projectedValue: affectations)
         }
     
@@ -49,7 +48,9 @@ struct VueCelluleAffectationGroupe: View {
             .foregroundColor(estSelectioné ? .primary : .secondary)
 
       Spacer()
-        Image(systemName: "checkmark").isHidden(!estSelectioné)
+        Image(systemName: "checkmark")
+            .foregroundColor(estSelectioné ? .accentColor : .secondary)
+            .isHidden(!estSelectioné)
     }
     .onTapGesture { alternerSelection() }
 

@@ -21,3 +21,12 @@ let formatDate: DateFormatter = {
         formateur.locale    = Locale(identifier: "fr_FR") //FR-fr")
  return formateur
 }()
+
+let formatHorodatage: DateFormatter = {
+    let formateur = DateFormatter()
+        formateur.dateStyle = .short
+        formateur.timeStyle = .medium
+        formateur.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+//          formatter.timeZone = TimeZone(     "UTC")
+    return formateur
+}()

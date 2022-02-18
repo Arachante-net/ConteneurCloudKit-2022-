@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreData
 
-/// Associer à cet Item les groupes collaboratifs auxquels il desire participer
+/// Associer à cet Item les groupes collaboratifs auxquels il desire participer ou ceux auxquels il participe
 struct VueAffectationItemGroupe: View {
       
     @FetchRequest(
@@ -18,13 +18,15 @@ struct VueAffectationItemGroupe: View {
     private var groupesCollaboratifs: FetchedResults<Groupe>
       
           
-    @EnvironmentObject private var persistence: ControleurPersistance //    PersistenceController
+    @EnvironmentObject private var persistence: ControleurPersistance
     @Environment(\.managedObjectContext) private var viewContext
       
     @ObservedObject var groupe: Groupe // le StateObject est dans VuedetailGroupe
-//    @Binding var groupe:Groupe
 
+    /// Les groupes à affecter , initialisé vide et  renseigné par la  vue fille VueCelluleAffectationGroupe
     @State private var lesGroupesARetenir = Set<Groupe>()
+    
+    /// Retour d'information
     let traitementTerminéDe: (Bool, Set<Groupe>) -> Void
 
     var body: some View {
@@ -36,7 +38,6 @@ struct VueAffectationItemGroupe: View {
                     groupeCiblePotentielle: gr,
 //                    prisEnCompte: false,
                     affectations: $lesGroupesARetenir)
-//                VueCelluleAffectationGroupe(groupe: groupe, selectionDeGroupes: $lesGroupesARetenir)
                 }
               .navigationTitle(Text("Choisir les item groupes à affecter tes Thé"))
               .navigationBarItems(  trailing: Button("OK") { action_OK() }  )
@@ -44,6 +45,7 @@ struct VueAffectationItemGroupe: View {
         }
 
 //MARK: -
+  /// Validation, par l'utilisateur, de la liste d'affectations actuellement affichée
   private func action_OK() {
     traitementTerminéDe(true, lesGroupesARetenir)
     }

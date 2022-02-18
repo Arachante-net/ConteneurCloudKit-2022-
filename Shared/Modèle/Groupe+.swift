@@ -32,7 +32,7 @@ extension Groupe {
 }
 
 
-//MARK: - Manipulation -
+//MARK: - Cycle de vie -
 extension Groupe {
 
     
@@ -140,29 +140,83 @@ extension Groupe {
                   "groupes :", lesGroupesDeLaNouvelleRecrue)
             }
         }
+//    
+//    public enum modeSuppression {
+//        /// Comportement par défaut
+//        case défaut
+//        /// Suppression uniquement du groupe sans réfléchir
+//        case brut
+//        /// Suppression du groupe et de son item Principal
+//        case avecPrincipal
+//        /// Informer collaborateurs et autres parties prenantes
+//        case informer
+//        ///  supprimer (quoi ?) sans demander l'avis des parties prenantes
+//        case forcer
+//        /// Faire seulement semblant
+//        case simulation
+//        }
     
-    func supprimerAdhérences(mode:modeSuppression = .simulation) {
+    func demanderAccordSuppression() {
+        print("\t🔘accord de suppression pour :", leNom)
+        }
+    
+    func notifierDemission(_ groupe:Groupe, mode: Suppression) {
+        print("\t🔘 Le groupe", leNom, "recoit une notification (", mode, ") de la démission de :", groupe.leNom)
+        }
+    
+    func notifierAbdication(_ groupe:Groupe, mode: Suppression) {
+        print("\t🔘 Le groupe", leNom, "recoit une notification (", mode, ") de l'abdication de :", groupe.leNom)
+        }
+    
+    func supprimerAdhérences(mode: Suppression = .simulation) {
         
         switch mode {
             case .brut:
+                // Enlever de son item principal la reference a ce groupe
                 removeFromItems(lePrincipal)
+                // Enlever aussi la referene, de la listes des items qui collaborent
                 if items != nil {removeFromItems(items!)}
-            case .avecPrincipal:
+//                persistance.supprimerObjets(self)  // NON CAR UNIQUEMENT LES ADHERENCES
+            case .avecPrincipal, .défaut:
                 print("P:", lePrincipal)
-            case .accordCollaborateurs:
+                lePrincipal.notifierDemission(self, mode: mode)
+            case .informer:
                 print("? ", collaborateurs)
-            case .forceCollaborateurs:
+                collaborateurs.forEach() {$0.demanderAccordSuppression()}
+            case .forcer:
                 print("! ", collaborateurs)
+                collaborateurs.forEach() {$0.demanderAccordSuppression()}
             case .simulation:
-                print("\t🔘colaborateurs :", collaborateurs)
-                print("\t🔘principal :", lePrincipal)
-                print("\t🔘moi :", leNom)
+//                print("🔘Les colaborateurs de", leNom, "sont :", collaborateurs.map {$0.leNom}.joined(separator: ", ") )
+                collaborateurs.forEach() {$0.notifierAbdication(self, mode: mode)}
+//                print("🔘L'item principal de", leNom, "est :", lePrincipal.leTitre)
+                lePrincipal.notifierDemission(self, mode: mode)
+//                print("🔘", leNom, "Démissione des groupes :", lePrincipal.lesGroupes.map {$0.nom ?? "..."}.joined(separator: ", "), "auxquels il participe.")
+                lePrincipal.lesGroupes.forEach() {$0.notifierDemission(self, mode: mode)}
         }
     }
     
-    enum modeSuppression {
-        case brut, avecPrincipal, accordCollaborateurs, forceCollaborateurs, simulation
+
+    
+    static func supprimerAdhérences(groupes: [Groupe], mode: Suppression = .simulation) {
+        print("🔘 Suppression adhérences (", mode, ") de :", groupes.map {$0.leNom}) //positions.map { groupes[$0].leNom} )
+        
+        groupes.forEach { leGroupe in
+            print("\t🔘 Suppression (", mode, ") des adhérences du groupe :", leGroupe.leNom) //groupes[$0].leNom )
+            leGroupe.supprimerAdhérences(mode: mode) //mode: .brut)
+    //        persistance.sauverContexte()
+            }
+
         }
+    
+    override public func prepareForDeletion() {
+        super.prepareForDeletion()
+        print("🔘 Suppresion imminente du groupe ", leNom ,
+              ", maitre de l'item principal", lePrincipal.leTitre,
+              "et de", lesItems.count, "autres items.")
+        }
+
+
     
    }
 
@@ -276,6 +330,14 @@ extension Groupe {
         }
 
     
+    var groupesAuxquelsJeParticipe: Set<Groupe> {
+        // Garantir que j'ai des maîtres sinon retourner un ensemble vide
+//        guard groupes?.count ?? 0 > 0 else { return Set<Groupe>() }
+        let mesChefs = principal!.groupes!
+        let set = mesChefs as! Set<Groupe>
+        print("☑️❌ mes" , set.count , "chefs :", set.map() {$0.leNom})
+        return set
+    }
     
     
     func estMonPrincipal(groupe:Groupe) -> Bool {
@@ -287,32 +349,20 @@ extension Groupe {
     // 2️⃣ De la liste de groupes de l'item principal de l'autre vers moi
     
     /// Recruter un autre `Groupe`,  c'est à dire recruter l'`Item Principal` de ce `Groupe`
+    /// - Ajouter la recrue a ma liste et  m'ajouter a la liste de la recrue
     func enroler(recrue:Groupe) {
 //        guard recrue.principal != nil else {return}
         guard let recruePrincipal = recrue.principal else {return}
 
-//        print(">>> LES ITEMS AVANT", lesItems)
-//        print(">>> LES GROUPES AVANT", recruePrincipal.lesGroupes)
-
         // Ajouter à ma liste d'Items, l'Item Principal de la recrue
         self.lesItems.insert(recruePrincipal)
         // M'ajouter aux groupes de l'Item Principal de la recrue
-//        recrue.principal?.lesGroupes.insert(self)
         recruePrincipal.lesGroupes.insert(self)
-
-        
-//        print(">>> LES ITEMS APRES", lesItems)
-//        print(">>> LES APRES", recruePrincipal.lesGroupes)
         }
     
-    func enroler_(recrue:Groupe) {
-        guard recrue.principal != nil else {return}
-        print(">>> PRINCIPAL", recrue.principal!.leTitre)
-        print(">>> LES ITEMS", lesItems)
-        print(">>> LES GROUPES", recrue.principal!.lesGroupes)
-        }
     
     /// Révoquer un `Groupe` recruté, c'est à dire révoquer l'`Item Principal` de ce `Groupe`
+    /// - Enlever la recrue de ma liste  et m'enlever de la liste de la recrue
     func révoquer(recrue:Groupe) {
         // Enlever l'Item Principal de la recrue, de ma liste d'Items.
         self.lesItems.remove(recrue.principal!)
@@ -321,6 +371,7 @@ extension Groupe {
         }
     
     /// Rejoindre et collaborer à un  `Groupe` leader, c'est à dire que mon  `Item Principal` participera  au Groupe leader
+    /// - M'ajouter a la liste des groupes du leader et  ajouter le leader à la liste de mes groupes
     func rallier(groupeLeader:Groupe) {
         guard principal != nil else {return}
         // Ajouter mon item principal à l'ensemble d'item du groupe leader
@@ -329,17 +380,7 @@ extension Groupe {
         self.principal!.lesGroupes.insert(groupeLeader)
         }
         
-        
-// Equivalent à :
-//        self.principal?.rallier(groupeLeader: groupeLeader)
-        
-//        if Groupe.tousCollaboratifs(self.lesGroupes) {print("OK")}
-//        groupeLeader.lesItems.insert(self)
-//        // et la réciproque ajouter le patron à ma liste de Groupe
-//        self.lesGroupes.insert(groupeLeader)
-       
- 
-          
+    /// - M'enlever de la liste  des participants du groupe leader et  enlever le groupe leader des groupes auxquels je participe
     func demissioner(groupeLeader:Groupe) {
         guard principal != nil else {return}
         // Elever mon item principal de l'ensemble d'item du groupe leader
@@ -451,12 +492,6 @@ extension Groupe {
     func estContenu(dans groupes : Set<Groupe>) -> Bool { groupes.contains(self)}
     
     
-//    override public func prepareForDeletion() {
-//        super.prepareForDeletion()
-//        print("🔘 Suppresion imminente du groupe ", nom ?? "...",
-//              ", maitre de l'item principal", principal?.titre,
-//              "et de", items?.count, "autres items.")
-//        }
 
     
     
@@ -506,18 +541,7 @@ extension Groupe {
         
         // Ajouter les incoherences des Items liés à ce Groupe
         lesErreurs.append(contentsOf: lesItems.flatMap{$0.verifierCohérence(depuis : (depuis + "les items") )})
-        
-//        lesItems.forEach() {$0.verifierCohérence()}
-//        if !lesItems.isEmpty {
-//
-//        }
-        
-//        if lesErreurs.isEmpty {print(" ✅")}
-//        else {
-//            print("")
-//            lesErreurs.forEach() {print("☑️❌" , $0.error.localizedDescription)}
-//            }
-        
+                
         return lesErreurs
         }
     

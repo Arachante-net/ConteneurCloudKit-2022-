@@ -17,6 +17,7 @@ extension VuePrincipale {
         }
     }
 
+//MARK: - Item -
 
 extension ListeItem {
     @MainActor class ViewModel: ObservableObject {
@@ -26,7 +27,12 @@ extension ListeItem {
       }
     }
     
-
+extension VueDetailItem {
+    @MainActor class ViewModel: ObservableObject {
+        @Published var appError: ErrorType? = nil
+        @Published var feuilleModificationItemPresentée   = false
+        }
+}
 
 extension VueModifItem {
     @MainActor class ViewModel: ObservableObject {
@@ -49,6 +55,34 @@ extension VueModifItem {
         }
     }
 
+
+
+
+
+
+//MARK: - Groupe -
+
+
+
+extension VueDetailGroupe {
+    @MainActor class ViewModel: ObservableObject {
+//        init () {
+////            self.groupe = groupe
+//          }
+        
+        @Published var appError: ErrorType? = nil
+//        @Published var feuilleModificationItemPresentée   = false
+        @Published var groupe:Groupe? = nil
+        
+        func definirGroupe(groupe:Groupe) {self.groupe = groupe}
+        func obtenirGroupe() -> Groupe {self.groupe!}
+        }
+}
+
+
+
+//MARK: - Autres -
+
 extension VueEditionLieu {
     @MainActor class ViewModel: ObservableObject {
         init (_ lieuAEditer: Lieu) {
@@ -62,26 +96,3 @@ extension VueEditionLieu {
         }
     
     }
-
-
-
-extension VueDetailItem {
-    @MainActor class ViewModel: ObservableObject {
-        @Published var appError: ErrorType? = nil
-        @Published var feuilleModificationItemPresentée   = false
-        }
-}
-
-extension VueDetailGroupe {
-    @MainActor class ViewModel: ObservableObject {
-//        init () {
-////            self.groupe = groupe
-//          }
-        @Published var appError: ErrorType? = nil
-//        @Published var feuilleModificationItemPresentée   = false
-        @Published var groupe:Groupe? = nil
-        
-        func definirGroupe(groupe:Groupe) {self.groupe = groupe}
-        func obtenirGroupe() -> Groupe {self.groupe!}
-        }
-}

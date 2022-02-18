@@ -77,6 +77,8 @@ struct VueDetailGroupe: View {
     
     var body: some View {
     //let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
+//    let _ = groupe.groupesAuxquelsJeParticipe
+        
     if let lePrincipal = groupe.principal {
     // Si ce n'est pas un groupe isolé de son principal on présente la fiche
         
@@ -212,8 +214,11 @@ struct VueDetailGroupe: View {
                     }
               }.buttonStyle(.borderedProminent)
 
-            Button(role: .destructive, action: { print ("NON IMPLEMENTÉ") }) {
-                //TODO: A implementer (cf. ListeItem)
+            Button(role: .destructive, action: {
+                //TODO: A mettre en // avec ListeItem
+                groupe.supprimerAdhérences(mode: .simulation)
+                persistance.supprimerObjets([groupe], mode: .simulation)
+                }) {
                 VStack {
                     Image(systemName: "trash")
                     Text("Supprimer").font(.caption)
