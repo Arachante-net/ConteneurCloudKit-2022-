@@ -140,7 +140,19 @@ struct Reglages: View {
                         }
                     }
 
-                }
+                 ForEach(Icones.allCases, id: \.self) { val in
+                     HStack {
+                         val.imageSystéme()
+//                             .resizable()
+                             .scaleEffect(2, anchor: .leading)
+                             .padding()
+                         Text(val.rawValue)
+                         }//.tag(val)
+                    }
+        
+            }
+            
+            
             }
         }
     }

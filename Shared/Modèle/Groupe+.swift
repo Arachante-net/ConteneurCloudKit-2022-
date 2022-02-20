@@ -344,13 +344,15 @@ extension Groupe {
         groupe.lePrincipal == self.lePrincipal
         }
     
-    //MARK: Manipulation du double lien entre Groupes collaborateurs
-    // 1️⃣ De ma liste d'items vers l'item principal de l'autre        et
-    // 2️⃣ De la liste de groupes de l'item principal de l'autre vers moi
+    //MARK: Service Ressources Humaines
+    // Manipulation du double lien entre Groupes collaborateurs
+    //  1️⃣ De ma liste d'items vers l'item principal de l'autre        et
+    //  2️⃣ De la liste de groupes de l'item principal de l'autre vers moi
     
     /// Recruter un autre `Groupe`,  c'est à dire recruter l'`Item Principal` de ce `Groupe`
     /// - Ajouter la recrue a ma liste et  m'ajouter a la liste de la recrue
-    func enroler(recrue:Groupe) {
+    func enrôler(recrue:Groupe) {
+        print("☑️❌", leNom, "enrôle", recrue.leNom)
 //        guard recrue.principal != nil else {return}
         guard let recruePrincipal = recrue.principal else {return}
 
@@ -364,6 +366,7 @@ extension Groupe {
     /// Révoquer un `Groupe` recruté, c'est à dire révoquer l'`Item Principal` de ce `Groupe`
     /// - Enlever la recrue de ma liste  et m'enlever de la liste de la recrue
     func révoquer(recrue:Groupe) {
+        print("☑️❌", leNom, "révoque", recrue.leNom)
         // Enlever l'Item Principal de la recrue, de ma liste d'Items.
         self.lesItems.remove(recrue.principal!)
         // M'enlever des groupes de l'Item Principal de la recrue
@@ -373,6 +376,7 @@ extension Groupe {
     /// Rejoindre et collaborer à un  `Groupe` leader, c'est à dire que mon  `Item Principal` participera  au Groupe leader
     /// - M'ajouter a la liste des groupes du leader et  ajouter le leader à la liste de mes groupes
     func rallier(groupeLeader:Groupe) {
+        print("☑️❌", leNom, "se rallie à", groupeLeader.leNom)
         guard principal != nil else {return}
         // Ajouter mon item principal à l'ensemble d'item du groupe leader
         groupeLeader.lesItems.insert(self.principal!) // ou lePrincipal)
@@ -381,7 +385,8 @@ extension Groupe {
         }
         
     /// - M'enlever de la liste  des participants du groupe leader et  enlever le groupe leader des groupes auxquels je participe
-    func demissioner(groupeLeader:Groupe) {
+    func démissionner(groupeLeader:Groupe) {
+        print("☑️❌", leNom, "démissione de", groupeLeader.leNom)
         guard principal != nil else {return}
         // Elever mon item principal de l'ensemble d'item du groupe leader
         groupeLeader.lesItems.remove(self.principal!)

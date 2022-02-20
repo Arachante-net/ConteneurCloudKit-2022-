@@ -38,7 +38,7 @@ struct VueModifGroupe: View {
     //MARK: La source de verité de groupe est VueDetailGroupe
     /// Le groupe en cour d'édition, ( il est la propriété de  la vue mère)
     @ObservedObject var groupe: Groupe
-    
+        
     /// Aller chercher d'autres groupes ou integrer un groupe (Enrôler ou rallier)
     @State private var modeAffectation :AffectationGroupes = .test
 
@@ -63,19 +63,27 @@ struct VueModifGroupe: View {
     @State private var mesCollaborateurs : Set<Groupe>
     @State private var mesChefs          : Set<Groupe>
 
-    @State var mesChefsInitiaux          : Set<Groupe>
-    @State var mesCollaborateursInitiaux : Set<Groupe>
+//    @State
+    var mesChefsInitiaux          =  Set<Groupe>() //: Set<Groupe>? = nil
+//    @State
+    var mesCollaborateursInitiaux =  Set<Groupe>() //: Set<Groupe>? = nil
 
 
     init(_ unGroupe: Groupe, achevée: @escaping  RetourInfoAchevée) {
+        
         _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe)
-        self.laModificationDuGroupeEstRéalisée = achevée
+        
+         self.laModificationDuGroupeEstRéalisée = achevée
         _mesCollaborateurs = State(wrappedValue : unGroupe.collaborateursSansLePrincipal)
         _mesChefs          = State(wrappedValue : unGroupe.groupesAuxquelsJeParticipe )
         //TODO: déclarer Constant ?
-        _mesChefsInitiaux          = State(wrappedValue : unGroupe.groupesAuxquelsJeParticipe )
-        _mesCollaborateursInitiaux = State(wrappedValue :unGroupe.collaborateursSansLePrincipal)
-
+//        _mesChefsInitiaux          = State(wrappedValue : unGroupe.groupesAuxquelsJeParticipe )
+//        _mesCollaborateursInitiaux = State(wrappedValue :unGroupe.collaborateursSansLePrincipal)
+        
+        mesChefsInitiaux          = unGroupe.groupesAuxquelsJeParticipe
+//        mesChefsInitiaux          = (mesChefsInitiaux == nil) ? Set<Groupe>() : mesChefsInitiaux
+        mesCollaborateursInitiaux = unGroupe.collaborateursSansLePrincipal
+//        mesCollaborateursInitiaux = (mesCollaborateursInitiaux == nil) ? Set<Groupe>() : mesCollaborateursInitiaux!
         }
 
     var body: some View {
@@ -120,8 +128,8 @@ struct VueModifGroupe: View {
                 lesChefsADesigner: $mesChefs,
                                   
                 modeAffectation: $modeAffectation) { (lesAffectationsOntChangées, mode) in
-                    reattribuer(mode: mode)
-                    reaffecter(lesAffectationsOntChangées, mode: mode )
+                    reattribuer() //lesAffectationsOntChangées, mode: mode)
+//                    reaffecter(lesAffectationsOntChangées, mode: mode )
                     }
 
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
@@ -262,12 +270,21 @@ struct VueModifGroupe: View {
             }
         }
     
-    func reattribuer (mode:AffectationGroupes) -> Void {
-        var partiesPrenantes = Set<Groupe>()
-        /*
+    func reattribuer () -> Void { //_ lesAffectationsOntChangées:Bool, mode:AffectationGroupes) -> Void {
+        /* RAPPELS :
          symmetricDifference(_:) éléments qui se trouvent dans l'un ou l'autre, mais pas dans les deux.
          subtracting(_:)         éléments qui ne sont dans aucun des deux ensembles.
+         
+         Les collaborateurs sont les groupe dont je suis le Chef/Leader/Referent et qui partage le même objectif que moi.
+         Je les ai enrolés ou ils m'ont rallier.
+         Cette collaboration peut etre rompue si je révoque un groupe ou s'il demissione.
+         
+         Les chefs sont les groupes Leaders/Referents auxquels je participe.
+         En les ayant rallier ou en ayant été enrolé par eux. demissioner révoquer
+         Cette collaboration peut etre rompue si je démissione ou si le chef me révoque.
          */
+        
+        
         /// les chefs en plus ou en moins
         let changementsChefs         = mesChefs.symmetricDifference(mesChefsInitiaux)
         /// les chefs qui arrivent
@@ -281,22 +298,34 @@ struct VueModifGroupe: View {
         /// les collaborateurs qui partent
         let departCollaborateurs     = changementCollaborateurs.intersection(mesCollaborateursInitiaux)
         
+        //TODO: Voir si cela represete un rique et s'il faut statuer sur une stratégie de résolution
+        /// les groupes qui sont simultanement chef et collaborateur
+        let chefsEtCollaborateurs = mesChefs.intersection(mesCollaborateurs)
+        /// vrai si je suis dans les deux camps
+        let doublejeu = chefsEtCollaborateurs.contains(groupe)
+        
         print("☑️❌ Je suis", groupe.leNom, "je participe aux groupes", mesChefsInitiaux.map(\.leNom) , "et je suis responsable des groupes", mesCollaborateursInitiaux.map(\.leNom) )
         print("☑️❌", changementsChefs.count        , "changements de chefs,"         , arrivéeChefs.count         , "arrivées (", arrivéeChefs.map(\.leNom)         , "),", departChefs.count,          "départs (" , departChefs.map(\.leNom)         , ").")
         print("☑️❌", changementCollaborateurs.count, "changements de collaborateurs,", arrivéeCollaborateurs.count, "arrivées (", arrivéeCollaborateurs.map(\.leNom), "),", departCollaborateurs.count, "départs (" , departCollaborateurs.map(\.leNom), ").")
-        print("☑️❌ Et maintenant, je participe aux groupes", mesChefs.map(\.leNom) , "et je suis responsable des groupes", mesCollaborateurs.map(\.leNom) )
-
-//        switch mode {
-//            case .ralliement: partiesPrenantes = mesChefs
-//            case .enrôlement: partiesPrenantes = mesCollaborateurs
-//            case .test: print("")
-//            }
-    
-        partiesPrenantes.forEach() {
-            print("☑️❌ ", mode.rawValue ,"le groupe :", $0.leNom)
-
-        }
+        print("☑️❌ Et desormais, je participerais aux groupes", mesChefs.map(\.leNom) , "et serais responsable des groupes", mesCollaborateurs.map(\.leNom) )
+        print("☑️❌ ", chefsEtCollaborateurs.map(\.leNom) , "sont à la fois mes chefs et mes collaborateurs")
+        print("☑️❌ ", "je suis chef et grouillot ? :" , doublejeu.voyant)
         
+        // Je démissione (résultat équivalent à ce qu'il me révoque)
+        departChefs.forEach { groupe.démissionner(groupeLeader: $0) }
+        
+        // je me rallie (ou il m'enrôle)
+        arrivéeChefs.forEach {groupe.rallier(groupeLeader: $0)}
+        
+        // je révoque cette ancienne recrue (ou elle démissione)
+        departCollaborateurs.forEach {groupe.révoquer(recrue: $0)}
+        
+        // Je l'enrôle (ou elle me rallie)
+        arrivéeCollaborateurs.forEach { groupe.enrôler(recrue: $0) }
+    
+
+        // C'est fini
+        feuilleAffectationPresentée = false
         }
     
     /// Enroler ou Rallier
@@ -314,7 +343,7 @@ struct VueModifGroupe: View {
                       case .ralliement:
                           groupe.rallier(groupeLeader: $0)
                       case .enrôlement:
-                          groupe.enroler(recrue: $0)
+                          groupe.enrôler(recrue: $0)
                       case .test:
                           print("☑️❌ Affectation test pour", $0.leNom)
                     }

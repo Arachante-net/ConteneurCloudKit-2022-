@@ -55,6 +55,10 @@
 		D04EDA9C273137F6009BB455 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D04EDA85273137F6009BB455 /* Assets.xcassets */; };
 		D055CA4327BD049C008628C9 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4227BD049C008628C9 /* Modes.swift */; };
 		D055CA4427BD049C008628C9 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4227BD049C008628C9 /* Modes.swift */; };
+		D055CA4627C161F4008628C9 /* Bool+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4527C161F4008628C9 /* Bool+.swift */; };
+		D055CA4727C161F4008628C9 /* Bool+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4527C161F4008628C9 /* Bool+.swift */; };
+		D055CA4927C24EDB008628C9 /* Icones.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4827C24EDB008628C9 /* Icones.swift */; };
+		D055CA4A27C24EDB008628C9 /* Icones.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4827C24EDB008628C9 /* Icones.swift */; };
 		D05AFAA427510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AFAA327510C83001CCA52 /* EtiquetteCoordonnees.swift */; };
 		D05AFAA527510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AFAA327510C83001CCA52 /* EtiquetteCoordonnees.swift */; };
 		D05AFAAB27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AFAA727561DF8001CCA52 /* Groupe+CoreDataClass.swift */; };
@@ -129,6 +133,8 @@
 		D04EDA90273137F6009BB455 /* ConteneurCloudKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConteneurCloudKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D04EDA92273137F6009BB455 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		D055CA4227BD049C008628C9 /* Modes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modes.swift; sourceTree = "<group>"; };
+		D055CA4527C161F4008628C9 /* Bool+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+.swift"; sourceTree = "<group>"; };
+		D055CA4827C24EDB008628C9 /* Icones.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icones.swift; sourceTree = "<group>"; };
 		D05AFAA327510C83001CCA52 /* EtiquetteCoordonnees.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EtiquetteCoordonnees.swift; sourceTree = "<group>"; };
 		D05AFAA727561DF8001CCA52 /* Groupe+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Groupe+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		D061AEE327805B8E00B19ED6 /* ConteneurCloudKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = ConteneurCloudKit.xcdatamodel; path = ConteneurCloudKit.xcdatamodeld/ConteneurCloudKit.xcdatamodel; sourceTree = "<group>"; };
@@ -200,7 +206,9 @@
 			isa = PBXGroup;
 			children = (
 				D085AA2E276DC6A500535552 /* NOTES.md */,
+				D055CA4827C24EDB008628C9 /* Icones.swift */,
 				D0E8974D278ACD0600A82214 /* Binding+.swift */,
+				D055CA4527C161F4008628C9 /* Bool+.swift */,
 				D0385A232771BEF10063E926 /* Vues+.swift */,
 				D04B2595277869BD00AD171D /* Coordonnees+.swift */,
 				D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */,
@@ -490,6 +498,7 @@
 				D04B25CD2779C44E00AD171D /* Lieu.swift in Sources */,
 				D0E893C727561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAB27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
+				D055CA4927C24EDB008628C9 /* Icones.swift in Sources */,
 				D0DFCA6A27943F4800914ECF /* VueCarteEditionItem.swift in Sources */,
 				D01830742743C068000889E2 /* VueCarteGroupe.swift in Sources */,
 				D023489427B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
@@ -498,6 +507,7 @@
 				D0DFCA5A2792ECC500914ECF /* VueModifItem.swift in Sources */,
 				D0C9D9B7274E452600388059 /* Horloge.swift in Sources */,
 				D0385A3027724D010063E926 /* Voyant.swift in Sources */,
+				D055CA4627C161F4008628C9 /* Bool+.swift in Sources */,
 				D055CA4327BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E95275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
@@ -539,6 +549,7 @@
 				D04B25CE2779C44E00AD171D /* Lieu.swift in Sources */,
 				D0E893C827561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAC27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
+				D055CA4A27C24EDB008628C9 /* Icones.swift in Sources */,
 				D0DFCA6B27943F4800914ECF /* VueCarteEditionItem.swift in Sources */,
 				D01830752743C068000889E2 /* VueCarteGroupe.swift in Sources */,
 				D023489527B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
@@ -547,6 +558,7 @@
 				D0DFCA5B2792ECC500914ECF /* VueModifItem.swift in Sources */,
 				D0C9D9B8274E452600388059 /* Horloge.swift in Sources */,
 				D0385A3127724D010063E926 /* Voyant.swift in Sources */,
+				D055CA4727C161F4008628C9 /* Bool+.swift in Sources */,
 				D055CA4427BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,
