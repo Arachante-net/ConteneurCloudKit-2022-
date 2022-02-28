@@ -22,7 +22,7 @@ extension Binding {
     
 }
 
-//ERROR: pour le plaisir de générer une fausse erreur
+//ERROR : pour le plaisir de générer une fausse erreur
 
 // Slider(value: $rating.onChange(sliderChanged))
 // func sliderChanged(_ value: Double) {...}

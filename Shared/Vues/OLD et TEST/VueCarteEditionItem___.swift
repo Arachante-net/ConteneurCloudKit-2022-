@@ -20,20 +20,12 @@ import MapKit
 ///     - Paramêtres :
 ///         - item en cours d'édition
 ///         - laRegion géographique rectangulaire centrée autour des coordonnées du lieu
-struct VueCarteEditionItem: View {
+struct VueCarteEditionItem___: View {
     
-    
-    /// L'Iten cour d'édition, ( il est la propriété de  la vue mère)
-    @ObservedObject var item: Item
-    
-    
-    /// Région géographique ou se situe l'Item
-    @State var laRégion: MKCoordinateRegion
-    
- //   Cannot convert value of type 'ObservedObject<Item>.Wrapper' to expected argument type 'Binding<Item>'
-    
-    
-    
+
+  @Binding var item:Item
+  @Binding var laRégion: MKCoordinateRegion
+
   @State private var suivi:MapUserTrackingMode = .follow
   @State private var monSuivi:Bool = false
     
@@ -48,18 +40,6 @@ struct VueCarteEditionItem: View {
     func yPlace() -> PositionIdentifiable {
         PositionIdentifiable(lat: item.latitude, long: item.longitude)
         }
-    
-    
-    init(_ unItem: Item) { //}, achevée: @escaping  RetourInfoItemAchevée) {
-        
-        _item = ObservedObject<Item>(wrappedValue : unItem)
-        
-//         self.laModificationDeItemEstRéalisée    = achevée
-        
-        _laRégion          = State(wrappedValue : unItem.région)
-
-        }
-    
     
   var body: some View {
 
@@ -108,9 +88,8 @@ struct VueCarteEditionItem: View {
               Spacer()
               HStack {
                   Spacer()
-                  Button {
-                      item.centrerSur(laRégion)
-                    } label: { Image(systemName: "plus") }
+                  Button {item.centrerSur(laRégion)
+} label: { Image(systemName: "plus") }
                   .buttonStyle(.borderless)
                   .padding()
                   .background(.black.opacity(0.75))

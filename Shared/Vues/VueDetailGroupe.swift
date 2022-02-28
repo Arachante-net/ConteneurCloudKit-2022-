@@ -38,8 +38,7 @@ struct VueDetailGroupe: View {
     @State private var coherenceGroupe: Coherence? = nil
     @State private var estCoherent:Bool? = nil
 
-////////////////   6 février
-    @State private var régionEnglobante: MKCoordinateRegion //= nil
+    @State private var régionEnglobante: MKCoordinateRegion
     @State private var lesAnnotations: [AnnotationGeographique]? = nil
 
 
@@ -116,11 +115,15 @@ struct VueDetailGroupe: View {
                          }
                      }
                  Etiquette( "Valeur globale", valeur: groupe.valeur)
+                 Section(header: Etiquette( "Chefs", valeur: Int(groupe.nombre)) ) {
+
+                     }
              }
             }
         }
         VStack {
             VueCarteGroupe(groupe)
+                .ignoresSafeArea()
                 .frame( alignment: .top)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(  RoundedRectangle(cornerRadius: 16)
@@ -162,12 +165,16 @@ struct VueDetailGroupe: View {
             // $groupe : ObservedObject<Groupe>.Wrapper
             // _groupe : StateObject<Groupe>
             // ObservedObject<Groupe>
-            VueModifGroupe(groupe) { quiterLaVue in
-                            print("Retour de VueModifGroupe avec", quiterLaVue )
-                            feuilleModificationPresentée = false
-//                            laCarteEstVisible=true
-//                self.  refresh()
-                            }
+            VueModifGroupe(groupe) {
+                // Lorsque VueModifGroupe quitera elle executera le code suivant sera executé
+                // avec en argument des informations provenant de VueModifGroupe
+                quiterLaVue in
+                print("Retour de VueModifGroupe avec", quiterLaVue.voyant )
+                    feuilleModificationPresentée = false
+                } // fin closure
+            
+                .border( .red, width: 0.3)
+                .ignoresSafeArea()
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
             }
 //            .transition(.opacity) //.move(edge: .top))
@@ -220,7 +227,8 @@ struct VueDetailGroupe: View {
                 persistance.supprimerObjets([groupe], mode: .simulation)
                 }) {
                 VStack {
-                    Image(systemName: "trash")
+//                    Image(systemName: Icones.supprimer.rawValue)
+                    Icones.supprimer.imageSystéme
                     Text("Supprimer").font(.caption)
                     }
             }.buttonStyle(.borderedProminent)

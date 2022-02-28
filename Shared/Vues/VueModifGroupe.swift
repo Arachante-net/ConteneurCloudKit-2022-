@@ -10,24 +10,6 @@ import SwiftUI
 import MapKit
 import CoreData
 
-//enum ModeAffectationGroupes {
-//    case ralliement //= "rallier"
-//    case enrôlement //= "enrôler"
-//    case test       //= "test"
-//    // Enrôler / Révoquer
-//    // Rallier / Abandonner
-//
-//    var description:String? {
-//        switch self {
-//            case .ralliement:
-//                return "Rejoindre ou abandonner l'objectif."
-//            case .enrôlement:
-//                return "Recruter ou congédier des contributeurs."
-//            case .test:
-//                return "Tester"
-//            }
-//        }
-//    }
 
 
 /// Edition et modification des caracteristique du groupe passé en parametre
@@ -42,9 +24,15 @@ struct VueModifGroupe: View {
     /// Aller chercher d'autres groupes ou integrer un groupe (Enrôler ou rallier)
     @State private var modeAffectation :AffectationGroupes = .test
 
-    /// Closure en parametre, a executer lorsque l'utilisateur quitte cette vue
-    var laModificationDuGroupeEstRéalisée: RetourInfoAchevée //(Bool) -> Void
-    typealias RetourInfoAchevée = (Bool) -> Void
+    /// Bout de code (Closure) en parametre, a executer lorsque l'utilisateur quitte cette vue
+    /// afin de signifier à la vue appelante la fin de cette vue et lui fournir des informations en retour
+    var reponseAmaMère:    ReponseAmaMère
+//    var laModificationDuPrincipalEstRéalisée: RetourInfoItemAchevé
+
+    typealias ReponseAmaMère    = (Bool) -> Void
+//    typealias RetourInfoItemAchevé = (Item) -> Void
+//    typealias ReponseAmaMère       = (Bool) -> Void
+
     
     // Rejet de la présentation actuelle
     @Environment(\.dismiss) var cloreLaVueActuelle
@@ -59,31 +47,43 @@ struct VueModifGroupe: View {
     private var groupesCollaboratifs: FetchedResults<Groupe>
     
     /// Etats locaux
-    @State private var feuilleAffectationPresentée = false
+    ///
+    @State  private var itemPrincipal : Item
+    @State  private var laRégion : MKCoordinateRegion
+
+
+    @State private var feuilleAffectationPrésentée      = false
+    @State private var feuilleEditionPrincipalPrésentée = false
+    @State private var feuilleAffichée: Feuilleaffichée? = nil
+
+    
     @State private var mesCollaborateurs : Set<Groupe>
     @State private var mesChefs          : Set<Groupe>
 
-//    @State
-    var mesChefsInitiaux          =  Set<Groupe>() //: Set<Groupe>? = nil
-//    @State
-    var mesCollaborateursInitiaux =  Set<Groupe>() //: Set<Groupe>? = nil
+    var mesChefsInitiaux          =  Set<Groupe>()
+    var mesCollaborateursInitiaux =  Set<Groupe>()
 
-
-    init(_ unGroupe: Groupe, achevée: @escaping  RetourInfoAchevée) {
+//    @Binding var laRegion: MKCoordinateRegion
+    /// Code à effectuer lorsque terminée afin de retourner des info
+//    let achevée: (Item) -> Void
+    
+    
+    init(_ unGroupe: Groupe, achevée: @escaping  ReponseAmaMère) {
         
         _groupe = ObservedObject<Groupe>(wrappedValue : unGroupe)
         
-         self.laModificationDuGroupeEstRéalisée = achevée
+         reponseAmaMère    = achevée
+//         self.laModificationDuPrincipalEstRéalisée = achevée
+        
         _mesCollaborateurs = State(wrappedValue : unGroupe.collaborateursSansLePrincipal)
         _mesChefs          = State(wrappedValue : unGroupe.groupesAuxquelsJeParticipe )
-        //TODO: déclarer Constant ?
-//        _mesChefsInitiaux          = State(wrappedValue : unGroupe.groupesAuxquelsJeParticipe )
-//        _mesCollaborateursInitiaux = State(wrappedValue :unGroupe.collaborateursSansLePrincipal)
         
+        _itemPrincipal     = State(wrappedValue : unGroupe.lePrincipal)
+        _laRégion          = State(wrappedValue : unGroupe.régionEnglobante)
+
+        //TODO: déclarer ici dans l'init ou lors de onAppear ? ?
         mesChefsInitiaux          = unGroupe.groupesAuxquelsJeParticipe
-//        mesChefsInitiaux          = (mesChefsInitiaux == nil) ? Set<Groupe>() : mesChefsInitiaux
         mesCollaborateursInitiaux = unGroupe.collaborateursSansLePrincipal
-//        mesCollaborateursInitiaux = (mesCollaborateursInitiaux == nil) ? Set<Groupe>() : mesCollaborateursInitiaux!
         }
 
     var body: some View {
@@ -99,10 +99,22 @@ struct VueModifGroupe: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
 //                    .padding()
                     .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
-            }
+                }
 
             VStack {
                 VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
+//                VueModifItemSimple(  item: $itemPrincipal, laRegion: $laRégion ) { infoEnRetour in
+//                NavigationView {
+//                VueModifItemSimple(  groupe.lePrincipal) { itemEnRetour in
+                VueModifItemSimple(groupe) { itemEnRetour in
+                    print("INFO EN RETOUR DE VUE MODIF ITEM",
+                          itemEnRetour.leTitre,
+                          itemEnRetour.longitude,
+                          itemEnRetour.latitude )
+                    
+                    feuilleEditionPrincipalPrésentée = false
+                    }
+//                } // nav
                 }
 
             VStack {
@@ -121,15 +133,24 @@ struct VueModifGroupe: View {
 
 
         }
-        .sheet(isPresented: $feuilleAffectationPresentée) {
+        .sheet(isPresented: $feuilleEditionPrincipalPrésentée) {
+            Text("Bientôt ici : EDITION DU PRINCIPAL")
+            Button("OK") { feuilleEditionPrincipalPrésentée = false}
+            }
+        
+        .sheet(isPresented: $feuilleAffectationPrésentée) {
             VueAffectationGroupe( groupe,
 
                 lesCollaborateursAAffecter: $mesCollaborateurs,
                 lesChefsADesigner: $mesChefs,
                                   
                 modeAffectation: $modeAffectation) { (lesAffectationsOntChangées, mode) in
-                    reattribuer() //lesAffectationsOntChangées, mode: mode)
-//                    reaffecter(lesAffectationsOntChangées, mode: mode )
+                    print("☑️ retour de feuille")
+                        if lesAffectationsOntChangées {
+                            reattribuer()
+                           }
+                    // C'est fini masquer la feuille
+                    feuilleAffectationPrésentée = false
                     }
 
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
@@ -143,7 +164,7 @@ struct VueModifGroupe: View {
             ToolbarItem(placement: .cancellationAction) {
                 Button(role: .cancel, action: abandonerFormulaire) {
                     VStack {
-                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                        Icones.abandoner.imageSystéme
                         Text("Abandon").font(.caption)
                         }
                   }
@@ -152,7 +173,7 @@ struct VueModifGroupe: View {
             ToolbarItem(placement: .confirmationAction ) {
                 Button( action: validerFormulaire) {
                     VStack {
-                        Image(systemName: "checkmark.circle.fill")
+                        Icones.valider.imageSystéme
                         Text("Valider").font(.caption)
                         }
                   }
@@ -196,29 +217,46 @@ struct VueModifGroupe: View {
             // rallier menubar.arrow.up.rectangle square.and.arrow.up
             // TODO: Utiliser PreferenceKey ?
             Group {
-            Button(action: enrôlerUnNouvelItem__)
-                { Label("Enrôler", systemImage: "plus.square.on.square") .frame(maxWidth: geo.size.width / 16, alignment: .bottom)   }//.frame(maxWeight: .infinity, alignment: .bottom) }
-            
-            Button(action: enrôlerUnGroupe) {
-                VStack {
-                    Image(systemName: "square.and.arrow.down.on.square.fill")  .frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
-                    Text("Enrôler").font(.caption)
-                    }
-              }
-            
-            Button(action: rallierUnGroupe) {
-                VStack {
-                    Image(systemName: "square.and.arrow.up").frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
-                    Text("Rallier").font(.caption)
-                    }
-              }
-                        
-            Button(action: editerPrincipal) {
-                VStack {
-                    Image(systemName: "rectangle.and.pencil.and.ellipsis").frame(maxWidth: geo.size.width / 16, alignment: .bottom)//.frame(height:20)
-                    Text("\(groupe.lePrincipal.leTitre)").font(.caption)
-                    }
-              }
+//                Button(action: enrôlerUnNouvelItem__)
+//                    { Label("Enrôler", systemImage: "plus.square.on.square")
+//                        .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
+//                        .foregroundColor(.secondary)
+//                    }
+                
+                Button(action: affecterUnGroupe) {
+                    VStack {
+                        Icones.affecter.imageSystéme
+                            .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
+                        Text("Affecter").font(.caption)
+                        }
+                  }
+                
+                
+//                Button(action: enrôlerUnGroupe) {
+//                    VStack {
+//                        Icones.enroler.imageSystéme
+//                            .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
+//                        Text("Enrôler").font(.caption)
+//                        }.foregroundColor(.secondary)
+//                    }
+//
+//                Button(action: rallierUnGroupe) {
+//                    VStack {
+//                        Icones.rallier.imageSystéme
+//                            .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
+//                        Text("Rallier").font(.caption)
+//                        }.foregroundColor(.secondary)
+//
+//                  }
+                            
+                Button(action: editerPrincipal) {
+                    VStack {
+                        Icones.éditerP.imageSystéme
+                            .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
+                        Text("\(groupe.lePrincipal.leTitre)")
+                            .font(.caption)
+                        }
+                  }
                 }
             
 //MARK: - THE BUG  ! (sans le point) frame(maxHeight: .infinity, alignment: .bottom).border(.yellow) -
@@ -233,25 +271,35 @@ struct VueModifGroupe: View {
     //MARK: -
     
     private func validerFormulaire() {
+//        itemPrincipal.centrerSur(laRégion)
+             
+        // Executer le code (closure) fourni à cette Vue (VueModifItem) en parametre d'entrée
+        // par la vue appelante. (permet une remontée d'information)
         persistance.sauverContexte("Groupe Item")
         let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
-        laModificationDuGroupeEstRéalisée(true)
+        // Informer la vue appelante qu'il y a eu des modifications du Groupe
+        reponseAmaMère(true)
         }
     
     private func abandonerFormulaire() {
-        laModificationDuGroupeEstRéalisée(false)
+        // Informer la vue appelante qu'il n'y a pas eu de modification
+        // et effectuer un rollback (un reset ?)
+        persistance.retourArriereContexte()
+        reponseAmaMère(false)
         }
     
-    private func editerPrincipal() {}
+    private func editerPrincipal() {
+        feuilleEditionPrincipalPrésentée=true
+        }
     
-    private func enrôlerUnGroupe() {
+    private func affecterUnGroupe() {
         modeAffectation = .enrôlement
-        feuilleAffectationPresentée=true
+        feuilleAffectationPrésentée=true
         }
     
     private func rallierUnGroupe() {
         modeAffectation = .ralliement
-        feuilleAffectationPresentée=true
+        feuilleAffectationPrésentée=true
         }
 
     
@@ -325,7 +373,7 @@ struct VueModifGroupe: View {
     
 
         // C'est fini
-        feuilleAffectationPresentée = false
+//        feuilleAffectationPrésentée = false
         }
     
     /// Enroler ou Rallier
@@ -349,11 +397,25 @@ struct VueModifGroupe: View {
                     }
                 }
             }
-        feuilleAffectationPresentée = false
+        feuilleAffectationPrésentée = false
         }
         
 }
 
 
+
+enum Feuilleaffichée: Identifiable {
+    var id:UUID {UUID()}
+    /// Gestion des collaborations entres groupes (enrôler, rallier ...)
+    /// correspond à VueAffectationGroupe
+    case affectation
+    /// Modification des 'détails' du groupe stocké dans son Item Principal
+    case principal
+    /// un exemple avec paramètre
+    case feuilleA(_ arg: Any)
+    /// un exemple avec paramètre
+    case feuilleB(_ arg: Any)
+    
+    }
 
 

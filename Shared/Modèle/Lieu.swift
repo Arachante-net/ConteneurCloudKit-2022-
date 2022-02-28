@@ -83,6 +83,8 @@ struct AnnotationGeographique: Identifiable, Hashable {
   let coordonnées: CLLocationCoordinate2D
   let couleur: UIColor
   let valeur : Int
+//  let item : Item?
+  let itemID : UUID
   }
 
 

@@ -113,9 +113,8 @@ struct VueCarteItem: View {
               HStack {
                   VStack {
                       HStack {
-                          Button(action: zoomPlus ) { Image(systemName: "plus.circle")  }
-                          Button(action: zoomMoins) { Image(systemName: "minus.circle") }
-
+                          Button(action: zoomPlus ) { Icones.augmenter.imageSystéme }
+                          Button(action: zoomMoins) { Icones.diminuer.imageSystéme  }
                           }
                           .background(.black.opacity(0.5))
                           .foregroundColor(.yellow) //white)
@@ -131,8 +130,8 @@ struct VueCarteItem: View {
                       Button {
                       // Retourner survoler la positition de l'Item
                          laRegion.centrerSur(item) }
-                      
-                        label: { Image(systemName: "arrow.counterclockwise.circle") }
+                       
+                        label: { Icones.arrière.imageSystéme }
                           .buttonStyle(.borderless)
                           .padding()
                           .background(.black.opacity(0.75))

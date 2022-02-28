@@ -14,13 +14,16 @@ enum Icones:String, CaseIterable {
     case pointé  = "circle.inset.filled"
     case coché   = "checkmark"
     case valider = "checkmark.circle.fill"
+    case ok      = "checkmark.circle" //chevron.right.square.fill
     case favoris = "heart.fill"
 
-    case voirPlus = "ellipsis.circle"
+    case voirPlus  = "ellipsis.circle"
+    case barreMenu = "ellipsis.rectangle"
     
-    case création = "plus" // ajouter
-    case ajouter  = "plus.circle.fill"
-    case moins    = "minus.circle"
+    case création  = "plus" // ajouter
+    case ajouter   = "plus.circle.fill"
+    case augmenter = "plus.circle"
+    case diminuer  = "minus.circle"
     
     case extraction = "arrow.2.circlepath"
     
@@ -32,21 +35,26 @@ enum Icones:String, CaseIterable {
     
     case editer,
          modifier = "square.and.pencil"
-    case editerP  = "rectangle.and.pencil.and.ellipsis"
+    case éditerP  = "rectangle.and.pencil.and.ellipsis"
     
     case supprimer = "trash"
     
+    case affecter = "arrow.up.right.and.arrow.down.left.rectangle.fill"
     case enrolerI = "plus.square.on.square"
     case enroler  = "square.and.arrow.down.on.square.fill"
-    case ralier   = "square.and.arrow.up"
-    case ralier2  = "tray.and.arrow.down.fill"
+    case rallier  = "square.and.arrow.up"
+    case rallier2 = "tray.and.arrow.down.fill"
     
     case groupes = "sparkles"
     case groupe  = "sparkle"
     
     case reglages = "sparkles.square.filled.on.square"
+    // sparkles.square.filled.on.square
+    // Icones.xxx.imageSystéme
+    var imageSystéme:Image {Image(systemName: self.rawValue)}
     
-    func imageSystéme() -> Image {
-        Image(systemName: self.rawValue)
-                }
+    // Icones.xxx.imageSystéme()
+//    func imageSystéme() -> Image {
+//        Image(systemName: self.rawValue)
+//                }
 }

@@ -41,7 +41,7 @@ struct VueAffectationGroupe: View {
     typealias RetourDinfos = (Bool, AffectationGroupes) -> Void
     
     // Retour d'information vers la vue appelante du resultat de la feuille (sheet) d'affectation
-    let lesRéaffectationsSontRéalisées: RetourDinfos //(Bool, AffectationGroupes) -> Void
+    let reponseAmaMère: RetourDinfos //(Bool, AffectationGroupes) -> Void
     
     
     
@@ -51,7 +51,7 @@ struct VueAffectationGroupe: View {
     //   List(groupesCollaboratifs.filter() { $0 != groupe} ...
     //TODO: C'est quoi le mieux ? Valider le NSPredicate
     init(_ unGroupe           : Groupe,
-         /// Les groupes qui collabore à mon objectif
+         /// Les groupes qui collaborent à mon objectif
          lesCollaborateursAAffecter : Binding<Set<Groupe>>,
          /// Les groupes auxquels je collabore
          lesChefsADesigner          : Binding<Set<Groupe>>, //TODO: pour un chef c'est pas affecter
@@ -79,7 +79,7 @@ struct VueAffectationGroupe: View {
                 case .test : _groupesAReaffecter =  bindingVide
                 }
                             
-            lesRéaffectationsSontRéalisées = affectationsRéalisées
+            reponseAmaMère = affectationsRéalisées
             
             _groupesCollaboratifsSaufMoi = FetchRequest<Groupe>(
                 sortDescriptors: [],
@@ -120,8 +120,9 @@ struct VueAffectationGroupe: View {
                 ToolbarItem(placement: .confirmationAction ) {
                     Button( action: validerAffectations ) {
                         VStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Valider").font(.caption)
+//                            Image(systemName: "checkmark.circle.fill")
+                            Icones.ok.imageSystéme
+                            Text("OK").font(.caption)
                             }
                       }
                     .buttonStyle(.borderedProminent) }
@@ -130,8 +131,8 @@ struct VueAffectationGroupe: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel, action: abandonerAffectations) {
                         VStack {
-                            Image(systemName: "arrowshape.turn.up.left.circle.fill")
-                            Text("Abandon").font(.caption)
+                            Icones.abandoner.imageSystéme
+                            Text("Abandon...").font(.caption)
                             }
                       }
                     }
@@ -153,11 +154,13 @@ struct VueAffectationGroupe: View {
     
 
     private func validerAffectations() {
-        lesRéaffectationsSontRéalisées(true, modeAffectation)
+        print("☑️ validerAffectations")
+        reponseAmaMère(true, modeAffectation)
         }
  
     private func abandonerAffectations() {
-        lesRéaffectationsSontRéalisées(false, modeAffectation)
+        print("☑️ abandonerAffectations")
+        reponseAmaMère(false, modeAffectation)
         }
     
 }

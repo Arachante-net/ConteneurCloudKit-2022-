@@ -34,7 +34,7 @@ extension VueDetailItem {
         }
 }
 
-extension VueModifItem {
+extension VueModifItemSimple {
     @MainActor class ViewModel: ObservableObject {
         
         init (_ unItem: Item) { item = unItem }

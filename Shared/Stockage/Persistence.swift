@@ -284,7 +284,10 @@ class ControleurPersistance : ObservableObject {
             object: conteneur.persistentStoreCoordinator)
         }
 
-    
+    func retourArriereContexte() {
+        conteneur.viewContext.rollback()
+        // This method does not refetch data from the persistent store or stores.
+        }
         
     func sauverContexte( _ nom:String="ContexteParDefaut"  , auteur:String = UserDefaults.standard.string(forKey: "UID")  ?? "AuteurParDefaut") {
       // Y-a bien eu des changements

@@ -68,20 +68,37 @@ struct VueDetailItem: View {
             
                 .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
 //                    Text("VueDetailItem $laRegion \(laRegion.center.longitude), \(laRegion.center.latitude)")
-                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
-                        print("INFO EN RETOUR DE VUE MODIF ITEM",
-                              infoEnRetour.leTitre,
-                              infoEnRetour.longitude,
-                              infoEnRetour.latitude )
+//                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
+                    NavigationView {
+                    VueModifItemSimple(item) { itemEnRetour in
+                        print("INFO EN RETOUR DE VUE MODIF ITEM SIMPLE DEPUIS VUE DETAIL ITEM",
+                              itemEnRetour.leTitre,
+                              itemEnRetour.longitude,
+                              itemEnRetour.latitude )
                         
                         Ξ.feuilleModificationItemPresentée = false
                         }
-                    .border( .red, width: 0.3)
-
+                    .toolbar {
+                        // Barre d'outils pour VueModifItemSimple ??
+                        ToolbarItemGroup(placement: .navigationBarTrailing)
+                        {  Button(action: { print("A ECRIRE")  }) {
+                            VStack {
+                                Icones.valider.imageSystéme
+                                Text("Valider").font(.caption)
+                                }
+                          }.buttonStyle(.borderedProminent)  }
+                        }
                     }
+                
+                    
+                    .border( .red, width: 0.3)
+                    .ignoresSafeArea()
+
+                    } //Sheet
 
 
         .toolbar {
+            // Barre d'outils pour VuDetailItem
             ToolbarItemGroup(placement: .navigationBarTrailing)
             { barreMenu }
             }
@@ -92,9 +109,12 @@ struct VueDetailItem: View {
             print("onAppear VueDetailItem")
             let _ = item.verifierCohérence(depuis: #file) })
         
-        }.onAppear() {print("onAppear VueDetailItem")
-                   apparaitre() }
-        }
+        } // VStack
+        .onAppear() {
+            print("onAppear VueDetailItem")
+            apparaitre()
+            }
+    } // Body
     
     
     

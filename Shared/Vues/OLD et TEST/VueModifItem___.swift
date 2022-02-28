@@ -9,10 +9,11 @@
 import SwiftUI
 import MapKit
 
+//TODO:     Fusionable avec VueModifItemSimple ?
 
 /// Vue permettant d'éditer les propriétées d'un Item
 ///     VueModifItem(item) { valeur in ... code à éxecuter afin de retourner des infos à la vue appelante }
-struct VueModifItem: View {
+struct VueModifItem___: View {
     
 
     // La Source de vérité est la Vue DetailItem
@@ -78,7 +79,7 @@ struct VueModifItem: View {
                 .padding(.horizontal)
             
             // Définir le lieu de l'item sur la carte
-            VueCarteEditionItem(item: $item, laRegion: $laRegion)
+            VueCarteEditionItem(item: $item, laRégion: $laRegion).border(.green, width:10)
             
         }
         .isHidden(item.isDeleted || item.isFault ? true : false)
@@ -145,7 +146,7 @@ struct VueModifItem: View {
             let _ = item.verifierCohérence(depuis: #function)
             })
         
-        }
+        } // navigation
 
     }
 
@@ -163,3 +164,4 @@ struct VueModifItem: View {
     
 }
 
+VueModifItem___

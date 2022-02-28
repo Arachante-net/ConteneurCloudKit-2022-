@@ -17,7 +17,7 @@ struct VueAjouterGroupe: View {
   @FocusState private var focusSurLeChampNom: Bool //= false
     
   // Informer la Vue appelante
-  let traitementTerminéDuGroupeSupplementaire: (String, Bool) -> Void
+  let reponseAmaMère: (String, Bool) -> Void
     
   var body: some View {
     NavigationView {
@@ -47,7 +47,7 @@ struct VueAjouterGroupe: View {
 
 //MARK: -
   private func traitementTerminé() {
-    traitementTerminéDuGroupeSupplementaire(nom.isEmpty ? "Sans titre" : nom, collaboratif)
+    reponseAmaMère(nom.isEmpty ? "Sans titre" : nom, collaboratif)
     }
     
 }

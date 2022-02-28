@@ -31,13 +31,13 @@ struct VueValeurItemPrincipal: View {
             onDecrement: { decrementer() }
             .padding(.leading)
             .onChange(of: item.valeur) { val in
-                print("☑️ Nouvele valeur \(val)")
+                print("☑️ Nouvele valeur de l'Item \(val)")
                 //FIXME: !! Y-a vraiment besoin de cette bidouille ??
                 // Comment avoir la valeur du Stepper affichée en direct (et sauvegardée)
                 // Honte sur moi, je ne trouve pas le mecanisme élegant pour réamiser cela
                 groupe.integration.toggle() 
                 
-                persistance.sauverContexte("Item")
+//              ////////  persistance.sauverContexte("Item")
                 }
     }
 

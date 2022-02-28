@@ -142,7 +142,7 @@ struct Reglages: View {
 
                  ForEach(Icones.allCases, id: \.self) { val in
                      HStack {
-                         val.imageSystéme()
+                         val.imageSystéme
 //                             .resizable()
                              .scaleEffect(2, anchor: .leading)
                              .padding()

@@ -25,33 +25,43 @@ struct VueCarteGroupe: View {
   
       Map(coordinateRegion: $groupe.régionEnglobante, annotationItems: groupe.lesAnnotations ) { annotation in
           MapAnnotation(coordinate: annotation.coordonnées, anchorPoint: CGPoint(x: 0.5, y: 1)) {
-//            Text(annotation.libellé)
-//                .foregroundColor(.black)
-//                .background(Color(red: 1, green: 1, blue: 0) )
-//            RoundedRectangle(cornerRadius: 7.0)
-//                .stroke(.red, lineWidth: 4.0)
-//                .background(Color(annotation.couleur)) //      Color(red: 1, green: 1, blue: 0).opacity(0.5) )
-//                .frame(width: 30, height: 30)
-//                .shadow(color: .black, radius: 0.5, x: 0.5, y: 0.5)
+              // Ceci est l'annotation de mon item principal
+              let moi  = annotation.itemID == groupe.principal?.id
               VStack {
-                  Text(annotation.libellé)
+                  HStack {
+                      Text(annotation.libellé)
+                          .fixedSize(horizontal: false, vertical: true)
+//                          .multilineTextAlignment(.center)
+                          .font(.caption2)
+                          .foregroundColor( Color(annotation.couleur.inverser) )
+                      }
+                  Text(annotation.message)
+                      .font(.system(size: 8, weight: .light, design: .rounded))
+//                      .frame(maxWidth: 100)
                       .fixedSize(horizontal: false, vertical: true)
-                      .multilineTextAlignment(.center)
-                      .background(Color.black)
-                  Text(annotation.message).font(.caption2)
-                  Text("\(annotation.valeur)").bold().font(.body).foregroundColor(.accentColor)
+                      .lineLimit(2)
+                      .truncationMode(.tail)
+//                      .multilineTextAlignment(.center)
+                      .background(RoundedRectangle(cornerRadius: 4).fill(Color(UIColor.systemBackground).opacity(0.75)))
+//                      .background(Color(UIColor.systemBackground).opacity(0.75)) //    Color.gray.opacity(0.75))
+                      .foregroundColor( Color(UIColor.systemBackground.inverser) )
+                  HStack {
+                      Text("\(annotation.valeur)").fontWeight(.heavy)
+                      + Text(" /\(groupe.valeur)").fontWeight(.thin)
+                      } .font(.body).foregroundColor(.accentColor).padding(.bottom)
                   }
-              .padding(5) //.vertical)
-//                .frame(width: 300, height: 200)
-                .background(Blason()//.stroke(lineWidth:0.5)
-                                .fill(Color(annotation.couleur))
-                                .opacity(0.75)
-                                .clipShape(Blason())
-                                .shadow(radius: 3))
-
-
-            
-            }
+                  .padding(5)
+                  .foregroundColor(.primary)
+                  .background(
+                        Blason()
+                            .stroke(moi ? .primary : .secondary, lineWidth: moi ? 1.7 : 1).opacity(0.75)
+                            .background(
+                                Blason()
+                                    .fill(Color(annotation.couleur).opacity(0.85))
+                                    .shadow(color: .black, radius: moi ? 5 : 0.5, x: moi ? 4 : 0,y: moi ? 2 :0)
+                                )
+                        )
+          }
       }//.isHidden(!visible, remove: false)
       .onAppear() { print("onAppear ###### Map")}
       
@@ -59,7 +69,7 @@ struct VueCarteGroupe: View {
 }
 
 
-struct Blason: Shape {
+struct Blason_: Shape {
     func path(in rect: CGRect) -> Path {
         let d = rect.height / 3
         var path = Path()
@@ -69,6 +79,7 @@ struct Blason: Shape {
             path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
             path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY-d))
             path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+
      return path
     }
 }
