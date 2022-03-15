@@ -9,6 +9,7 @@
 
 import SwiftUI
 import CoreData
+import os.log
 
 
 extension IndexSet: Identifiable {
@@ -55,26 +56,36 @@ struct ListeItem: View {
     
   var body: some View {
       
-//      let itemDeTest = items.first!
-//Item.bidon() //items.first!
+//    let _ = Causeur.causer(items: items.map { $0 } )
+//      Button(action: { let _ = Causeur.causer(items: items.map { $0 } ) })
+//        { Text("Causons")}
+      //  { Image(systemName: "arrow.2.circlepath")}
+
+             
 
     NavigationView {
-        
+//        Button(action: { let _ = Causeur.causer(items: items.map { $0 } ) })
+//          { Text("Causons")}
         List {
         ForEach(items) { item in
             NavigationLink( destination: VueDetailItem (
                 item: item ,
                 laRégion: item.région
                 ))
-            { Text(item.leTitre) }
-            
+            { HStack {
+                Text(item.leTitre)//.frame(alignment: .leading)
+                Text(item.leMessage)//.frame(alignment: .leading)
+                Spacer()
+            }}.padding()
+//            .listRowSeparatorTint(.red)
             .badge(String(item.valeur))
         }
         .onDelete(perform: proposerSuppressionItems) //supprimerItems)
             
       }
       .toolbar { ToolbarItem(placement: .navigationBarTrailing) {EditButton().help("SOS") }}
-      .navigationTitle(Text("Items"))
+        // 15 mars
+//      .navigationTitle(Text("Items"))
       .navigationBarItems(
         leading:
             barreMenuNavigation,
@@ -177,16 +188,16 @@ struct ListeItem: View {
 
     
     private func proposerSuppressionItems(positions: IndexSet) {
-        print("🔘 Proposition de suppression de :", positions.map { items[$0].titre ?? ""} )
+        Logger.interfaceUtilisateur.info("🔘 Proposition de suppression de : \(positions.map { items[$0].titre ?? ""} ) ")
         Ξ.itemsEnCourDeSuppression = positions
         }
     
 
     private func supprimerVraimentItems(positions: IndexSet) {
-        print("🔘 Suppression réeel de :", positions.map { items[$0].titre ?? ""} )
+        Logger.interfaceUtilisateur.info("🔘 Suppression réeel de : \(positions.map { items[$0].leTitre}) ")
         positions.forEach {
 //            let item = items[$0]
-            print("\t🔘 Suppression de :", items[$0].titre ?? "" )
+            Logger.interfaceUtilisateur.info("\t🔘 Suppression de : \(items[$0].leTitre) ")
             items[$0].removeFromGroupes(items[$0].groupes ?? [])
             persistance.sauverContexte()
             }

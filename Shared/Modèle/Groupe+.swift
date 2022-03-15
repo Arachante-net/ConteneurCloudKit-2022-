@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import MapKit
+import os.log
 
 
 
@@ -73,6 +74,9 @@ extension Groupe {
 
         // sauver le contexte
         // persistance
+//        persistance.sauverContexte(nom:"Groupe")
+//        print("♻️")
+        Logger.modélisationDonnées.info("♻️")
         do {
             contexte.name = "Groupe"
             try contexte.save()
@@ -96,7 +100,7 @@ extension Groupe {
     func enrôler(contexte:NSManagedObjectContext , titre:String) {
         guard self.collaboratif else {
 //            appError = ErrorType(error: .trucQuiVaPas(num: 666))
-            print("ERREUR le groupe", self.nom ?? "?" , "n'est pas collaboratif")
+            Logger.modélisationDonnées.error("ERREUR le groupe \(self.leNom) n'est pas collaboratif")
             return
             }
         let nouvelItem = Item.fournirNouveau(
@@ -107,6 +111,8 @@ extension Groupe {
         self.addToItems(nouvelItem)
 
         // sauver le contexte
+//        persistance.sauverContexte(nom:"Groupe")
+        Logger.modélisationDonnées.info("♻️")
         do {
             contexte.name = "Groupe"
             try contexte.save()
@@ -125,19 +131,16 @@ extension Groupe {
     ///   - contexte:
     func enrôler(contexte:NSManagedObjectContext , recrues: Set<Item>) {
         guard self.collaboratif else {
-            print("Le groupe", self.nom ?? "" , "n'est pas collaboratif")
+            Logger.modélisationDonnées.info("Le groupe \(self.leNom) n'est pas collaboratif.")
             return
             }
 
         self.items = (self.items as! Set<Item>).union(recrues) as NSSet
         recrues.forEach {nouvelleRecrue in
-            print ("⚾︎ Traitement item", nouvelleRecrue.titre ?? "...")
+            Logger.modélisationDonnées.info ("⚾︎ Enrôler \(nouvelleRecrue.leTitre) ...")
             var lesGroupesDeLaNouvelleRecrue = nouvelleRecrue.groupes as! Set<Groupe>
             let (inséré,  aprèsInsertion) = lesGroupesDeLaNouvelleRecrue.insert(self)
-            print("⚾︎ Inséré :" , inséré,
-                  "après :"  , aprèsInsertion,
-                  "les"      , lesGroupesDeLaNouvelleRecrue.count,
-                  "groupes :", lesGroupesDeLaNouvelleRecrue)
+            Logger.modélisationDonnées.info("⚾︎ Inséré : \(inséré) après : \(aprèsInsertion) les \(lesGroupesDeLaNouvelleRecrue.count) groupes : \(lesGroupesDeLaNouvelleRecrue) ")
             }
         }
 //    
@@ -157,15 +160,15 @@ extension Groupe {
 //        }
     
     func demanderAccordSuppression() {
-        print("\t🔘accord de suppression pour :", leNom)
+        Logger.modélisationDonnées.info("\t🔘accord de suppression pour : \(self.leNom)")
         }
     
     func notifierDemission(_ groupe:Groupe, mode: Suppression) {
-        print("\t🔘 Le groupe", leNom, "recoit une notification (", mode, ") de la démission de :", groupe.leNom)
+        Logger.modélisationDonnées.info("\t🔘 Le groupe \(self.leNom) recoit une notification ( \(mode.hashValue) de la démission de : \(groupe.leNom)")
         }
     
     func notifierAbdication(_ groupe:Groupe, mode: Suppression) {
-        print("\t🔘 Le groupe", leNom, "recoit une notification (", mode, ") de l'abdication de :", groupe.leNom)
+        Logger.modélisationDonnées.info("\t🔘 Le groupe \(self.leNom) recoit une notification ( \(mode.hashValue) de l'abdication de : \(groupe.leNom)")
         }
     
     func supprimerAdhérences(mode: Suppression = .simulation) {
@@ -178,13 +181,13 @@ extension Groupe {
                 if items != nil {removeFromItems(items!)}
 //                persistance.supprimerObjets(self)  // NON CAR UNIQUEMENT LES ADHERENCES
             case .avecPrincipal, .défaut:
-                print("P:", lePrincipal)
+                Logger.modélisationDonnées.info("P: \(self.lePrincipal)")
                 lePrincipal.notifierDemission(self, mode: mode)
             case .informer:
-                print("? ", collaborateurs)
+                Logger.modélisationDonnées.info("? \(self.collaborateurs)")
                 collaborateurs.forEach() {$0.demanderAccordSuppression()}
             case .forcer:
-                print("! ", collaborateurs)
+                Logger.modélisationDonnées.info("! \(self.collaborateurs)")
                 collaborateurs.forEach() {$0.demanderAccordSuppression()}
             case .simulation:
 //                print("🔘Les colaborateurs de", leNom, "sont :", collaborateurs.map {$0.leNom}.joined(separator: ", ") )
@@ -199,10 +202,10 @@ extension Groupe {
 
     
     static func supprimerAdhérences(groupes: [Groupe], mode: Suppression = .simulation) {
-        print("🔘 Suppression adhérences (", mode, ") de :", groupes.map {$0.leNom}) //positions.map { groupes[$0].leNom} )
+        Logger.modélisationDonnées.info("🔘 Suppression adhérences (\(mode.hashValue)) de : \(groupes.map {$0.leNom}) ") //positions.map { groupes[$0].leNom} )
         
         groupes.forEach { leGroupe in
-            print("\t🔘 Suppression (", mode, ") des adhérences du groupe :", leGroupe.leNom) //groupes[$0].leNom )
+            Logger.modélisationDonnées.info("\t🔘 Suppression (\(mode.hashValue)) des adhérences du groupe : \(leGroupe.leNom)") //groupes[$0].leNom )
             leGroupe.supprimerAdhérences(mode: mode) //mode: .brut)
     //        persistance.sauverContexte()
             }
@@ -211,9 +214,7 @@ extension Groupe {
     
     override public func prepareForDeletion() {
         super.prepareForDeletion()
-        print("🔘 Suppresion imminente du groupe ", leNom ,
-              ", maitre de l'item principal", lePrincipal.leTitre,
-              "et de", lesItems.count, "autres items.")
+        Logger.modélisationDonnées.info("🔘 Suppresion imminente du groupe \(self.leNom), maitre de l'item principal \(self.lePrincipal.leTitre) et de \(self.lesItems.count) autres items.")
         }
 
 
@@ -239,9 +240,10 @@ extension Groupe {
                 // appError = ErrorType(error: .groupeSansPrincipal)
                 // throw Nimbus.groupeSansPrincipal
                 // donc la suite n'est pas executée
-                fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!")
+
+//                fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!") ////
 //              print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
-//              return Item.bidon() }
+              return Item.bidon()
                 }
             }
         }
@@ -306,7 +308,7 @@ extension Groupe {
                 return pr}
             else {
                 // Sinon on retourne un groupe vide
-                print("☑️❌ ERREUR sur Item", $0.leTitre)
+                Logger.modélisationDonnées.error("ERREUR sur Item \($0.leTitre)")
                 return Groupe()}
                 })! )
         }
@@ -335,7 +337,7 @@ extension Groupe {
 //        guard groupes?.count ?? 0 > 0 else { return Set<Groupe>() }
         let mesChefs = principal!.groupes!
         let set = mesChefs as! Set<Groupe>
-        print("☑️❌ mes" , set.count , "chefs :", set.map() {$0.leNom})
+        Logger.modélisationDonnées.info("Mes \(set.count) chefs : \(set.map() {$0.leNom})")
         return set
     }
     
@@ -352,7 +354,7 @@ extension Groupe {
     /// Recruter un autre `Groupe`,  c'est à dire recruter l'`Item Principal` de ce `Groupe`
     /// - Ajouter la recrue a ma liste et  m'ajouter a la liste de la recrue
     func enrôler(recrue:Groupe) {
-        print("☑️❌", leNom, "enrôle", recrue.leNom)
+        Logger.modélisationDonnées.info("\(self.leNom) enrôle la recrue \(recrue.leNom)")
 //        guard recrue.principal != nil else {return}
         guard let recruePrincipal = recrue.principal else {return}
 
@@ -366,7 +368,7 @@ extension Groupe {
     /// Révoquer un `Groupe` recruté, c'est à dire révoquer l'`Item Principal` de ce `Groupe`
     /// - Enlever la recrue de ma liste  et m'enlever de la liste de la recrue
     func révoquer(recrue:Groupe) {
-        print("☑️❌", leNom, "révoque", recrue.leNom)
+        Logger.modélisationDonnées.info("\(self.leNom) révoque la recrue \(recrue.leNom)")
         // Enlever l'Item Principal de la recrue, de ma liste d'Items.
         self.lesItems.remove(recrue.principal!)
         // M'enlever des groupes de l'Item Principal de la recrue
@@ -376,7 +378,8 @@ extension Groupe {
     /// Rejoindre et collaborer à un  `Groupe` leader, c'est à dire que mon  `Item Principal` participera  au Groupe leader
     /// - M'ajouter a la liste des groupes du leader et  ajouter le leader à la liste de mes groupes
     func rallier(groupeLeader:Groupe) {
-        print("☑️❌", leNom, "se rallie à", groupeLeader.leNom)
+        Logger.modélisationDonnées.info("\(self.leNom) se rallie à \(groupeLeader.leNom)")
+
         guard principal != nil else {return}
         // Ajouter mon item principal à l'ensemble d'item du groupe leader
         groupeLeader.lesItems.insert(self.principal!) // ou lePrincipal)
@@ -386,7 +389,8 @@ extension Groupe {
         
     /// - M'enlever de la liste  des participants du groupe leader et  enlever le groupe leader des groupes auxquels je participe
     func démissionner(groupeLeader:Groupe) {
-        print("☑️❌", leNom, "démissione de", groupeLeader.leNom)
+        Logger.modélisationDonnées.info("\(self.leNom) démissione de \(groupeLeader.leNom)")
+
         guard principal != nil else {return}
         // Elever mon item principal de l'ensemble d'item du groupe leader
         groupeLeader.lesItems.remove(self.principal!)
@@ -428,7 +432,7 @@ extension Groupe {
     var régionEnglobante: MKCoordinateRegion  {
 
         get {
-            print("régionEnglobante ###### GET")
+            Logger.modélisationDonnées.info("régionEnglobante ###### GET")
             var toutesLesCoordonnées = lesCoordonnées
             if let lePrincipal = principal?.coordonnées {
                 toutesLesCoordonnées.append(lePrincipal)
@@ -458,7 +462,7 @@ extension Groupe {
             return MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
             }
         set {
-            print("régionEnglobante ###### SET")
+            Logger.modélisationDonnées.info("régionEnglobante ###### SET")
             régionEnglobante_ = newValue}
         
         }
@@ -489,7 +493,7 @@ extension Groupe {
             
             toutesLesAnnotations = lesAnnotations_
             }
-        print ("Nous avons", toutesLesAnnotations.count, "annotations")
+        Logger.modélisationDonnées.info ("Nous avons \(toutesLesAnnotations.count) annotations")
         return toutesLesAnnotations
         }
 
@@ -515,7 +519,7 @@ extension Groupe {
     
     func verifierCohérence(depuis:String="␀" ) -> [ErrorType]   {
         var lesErreurs = [ErrorType]()
-        print("☑️ Cohérence du groupe", nom ?? "␀" , ", depuis" , depuis, terminator: " :")
+        Logger.modélisationDonnées.info("☑️ Cohérence du groupe \(self.leNom), depuis \(depuis) ")  //, terminator: " :")
         
         if !valide
             {lesErreurs.append(ErrorType(.groupeInvalide ))}

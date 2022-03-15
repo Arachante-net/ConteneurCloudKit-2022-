@@ -17,7 +17,8 @@ struct VuePrincipale: View {
 //  @EnvironmentObject private var persistance: ControleurPersistance
     
   @EnvironmentObject private var utilisateur: Utilisateur
-    
+//  @EnvironmentObject private var causeur: Causeur
+
     
   @EnvironmentObject private var persistance: ControleurPersistance
 //    let controleurDePersistance = ControleurPersistance.shared
@@ -32,8 +33,30 @@ struct VuePrincipale: View {
 //  @State var appError: ErrorType? = nil
 
   @StateObject private var viewModel = ViewModel()
+    
+    @FetchRequest(
+      fetchRequest: Item.extractionItems, //ListeItem.demandeDeRecuperation,
+      animation: .default)
+    var items_: FetchedResults<Item>
+    
+    var tab_: [Item] = []
 
-    init () {print("VuePrincipale ######")}
+    let  l = Logger.interfaceUtilisateur
+
+    init () {
+        l.info("init VuePrincipale")
+        
+        
+//        let fetchRequest = FetchRequest<Item>(
+//               entity: Item.entity(),
+//               sortDescriptors: [])
+//
+//        tab = fetchRequest.wrappedValue.map { $0 }
+//
+//        print("TIC-TOC:", tab.count)
+//
+//        Causeur.causer(items: tab)
+    }
     
   var body: some View {
       

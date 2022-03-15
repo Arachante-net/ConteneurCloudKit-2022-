@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MapKit
+import os.log
 
 
 /// Vue permettant d'éditer les propriétées d'un Item
@@ -91,12 +92,13 @@ struct VueModifItemSimple: View {
                         .border(.secondary)
                         .focused($champTexteActif)
                         .submitLabel(.done)
-                        .onSubmit {print("Submit")}
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Button("Clic") { champTexteActif = false }
-                                }
-                            }
+                        .onSubmit {Logger.interfaceUtilisateur.info("Submit")}
+                    // 15 mars
+//                        .toolbar {
+//                            ToolbarItemGroup(placement: .keyboard) {
+//                                Button("Clic") { champTexteActif = false }
+//                                }
+//                            }
 
                     Stepper("\(item.valeur) points", value: $item.valeur, in: 0...10, step: 1)
                         .padding(.horizontal)
@@ -115,6 +117,8 @@ struct VueModifItemSimple: View {
                                 groupeParent.integration.toggle()
                                 
                                 }
+                      
+
                         }
                         .frame(maxWidth: .infinity , maxHeight: 30)
                         .background(item.coloris)
@@ -129,6 +133,28 @@ struct VueModifItemSimple: View {
 //                    print("☑️ Nouvel Item coordonnées \(nouvelItem) ")
 //                    groupeParent.integration.toggle()
 //                    }
+            HStack {
+                Text("Message : ") //\(item.leMessage)")
+                TextField("Message", text: $item.leMessage)
+//                    .onChange(of: item.leMessage) { message in // item.leMessage
+//                        print("FLASH", message)
+////                        groupeParent.integration.toggle()
+////                        item.principal?.objectWillChange.send()
+////                        groupeParent.objectWillChange.send()
+////
+////                        Array(item.lesGroupes).forEach {
+//////                            $0.objectWillChange.send()
+////                            $0.integration.toggle()
+////                            }
+//                        // Signaler aux groupes qui m'utilisent que quelque chose à changé
+//                        item.lesGroupes.forEach { $0.integration.toggle() }
+//                        persistance.sauverContexte()
+//                        }
+                }
+            
+            Text("Signature : \(item.signature)")
+            
+            
             
             // Définir le lieu de l'item sur la carte
             VueCarteEditionItem(item) //, laRégion: laRégion)
@@ -137,6 +163,8 @@ struct VueModifItemSimple: View {
                     print("☑️ Nouvelles coordonnées \(nouvelItem) ")
                     groupeParent.integration.toggle()
                     }
+                .aspectRatio(16/9, contentMode: .fit)
+
         }
         .isHidden(item.isDeleted || item.isFault ? true : false)
         .opacity(item.valide ? 1.0 : 0.1)
@@ -192,13 +220,19 @@ struct VueModifItemSimple: View {
                 }
             }
 
-        
-     
+        // Signaler aux groupes qui m'utilisent que quelque chose à changé
+        // et qu'il faut rafraichier l'écran en direct
+        .onChange(of: item.valeur)    { _ in rafraichirLesGroupes() }
+        .onChange(of: item.leMessage) { _ in rafraichirLesGroupes() }
+
+        .onChange(of: item.titre)     { _ in rafraichirLesGroupes() }
+        .onChange(of: item.coloris)   { _ in rafraichirLesGroupes() }
+
         
         .onDisappear() {let _ = item.verifierCohérence(depuis: #function)}
         
         .onAppear(perform: {
-            print("onAppear VueModifItem")
+            Logger.interfaceUtilisateur.info("onAppear VueModifItem")
             let _ = item.verifierCohérence(depuis: #function)
             })
         
@@ -211,6 +245,12 @@ struct VueModifItemSimple: View {
     
 //MARK: -
 
+    private func rafraichirLesGroupes() {
+        Logger.interfaceUtilisateur.info("SPLOSH")
+        item.lesGroupes.forEach { $0.integration.toggle() }
+        persistance.sauverContexte()
+        }
+    
     private func rallierGroupes(_ groupes: Set<Groupe>) {
         withAnimation {
             item.rallier(contexte:contexte, communauté: groupes )

@@ -13,6 +13,7 @@ struct ConteneurCloudKitApp: App {
     @Environment(\.scenePhase) private var scenePhase
     let controleurDePersistance = ControleurPersistance.shared
     let utilisateur = Utilisateur()
+//    let causeur = Causeur()
     var appError: ErrorType? = nil
 
 
@@ -23,6 +24,8 @@ struct ConteneurCloudKitApp: App {
                 // 'ControleurPersistance' doit être conforme à 'ObservableObject'
                 .environmentObject(controleurDePersistance)
                 .environmentObject(utilisateur)
+//                .environmentObject(causeur)
+
 //                .environmentObject(appError)
 
 
@@ -33,8 +36,8 @@ struct ConteneurCloudKitApp: App {
         .onChange(of: scenePhase) { phase in
           switch phase {
               case .background:
-//            persistenceController.sauverContext() // à écrire
-              controleurDePersistance.sauverContexte()
+                  print("Rafraichir background")
+//                  controleurDePersistance.sauverContexte()
               break
           default:
             break

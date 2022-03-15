@@ -8,9 +8,12 @@
 
 import SwiftUI
 import CoreData
+import os.log
 
 struct ListeGroupe: View {
     
+  let  l = Logger.interfaceUtilisateur
+
   @EnvironmentObject private var persistance : ControleurPersistance
 
   @Environment(\.managedObjectContext) private var viewContext
@@ -19,43 +22,48 @@ struct ListeGroupe: View {
     fetchRequest: Groupe.extractionGroupes,
     animation: .default)
   private var groupes: FetchedResults<Groupe>
-    { didSet { print("SET ###### groupes", groupes) } }
+    { didSet { l.debug("SET ###### groupes \(groupes.count)") } }
 
   @State private var groupesEnCourDeSuppression: IndexSet? //SetIndex<Item>?
-    { didSet { print("SET ###### groupesEnCourDeSuppression", groupesEnCourDeSuppression ?? "") } }
-  @State private var presenterCréationGroupe = false { didSet { print("SET ###### presenterCréationGroupe", presenterCréationGroupe) } }
-  @State private var nouveauNom              = ""    { didSet { print("SET ###### nouveauNom", nouveauNom) } }
-  @State private var courant:String?         = nil   { didSet { print("SET ###### courant", courant ?? "") } }
-  @State private var recherche               = ""    { didSet { print("SET ###### recherche", recherche) } }
-  @State private var groupesFiltrés          = [Groupe]() { didSet { print("SET ###### groupesFiltrés", groupesFiltrés) } }
+    { didSet { l.debug("SET ###### groupesEnCourDeSuppression \(groupesEnCourDeSuppression.debugDescription)              ") } }
+  @State private var presenterCréationGroupe = false { didSet { l.debug("SET ###### presenterCréationGroupe \(presenterCréationGroupe) ") } }
+  @State private var nouveauNom              = ""    { didSet { l.debug("SET ###### nouveauNom \(nouveauNom)              ") } }
+  @State private var courant:String?         = nil   { didSet { l.debug("SET ###### courant \(courant ?? "")              ") } }
+  @State private var recherche               = ""    { didSet { l.debug("SET ###### recherche \(recherche)                ") } }
+  @State private var groupesFiltrés          = [Groupe]() { didSet { l.debug("SET ###### groupesFiltrés \(groupesFiltrés) ") } }
     
 //  @State  static var rafraichir              = false
 
 
 
     
-    init () {print("ListeGroupe ######")}
+    init () {l.info("init ListeGroupe")}
 
     var maCouleur = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)   //  #colorLiteral()
 
   var body: some View {
-    let _ = print("ListeGroupe BODY ###### !!!!!!!!!!!!!!!!!!!!!!")
+    let _ = l.info("ListeGroupe BODY")
       
     NavigationView {
       List() {
-          let _ = print("ListeGroupe LIST ######")
+          let _ = l.info("ListeGroupe LIST ######")
 //          ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
           ForEach(groupes) { groupe in
-              let _ = print("ListeGroupe ForEach ######", groupe.leNom)
+              let _ = l.info("ListeGroupe ForEach ###### \(groupe.leNom)")
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
               NavigationLink(destination: VueDetailGroupe(groupe), //.equatable(),
                              tag: groupe.leNom,
                              selection: $courant) {
               HStack {
                   Text("\(groupe.leNom)").fontWeight(groupe.collaboratif ? .heavy : .thin )
+                  Text("\(groupe.lePrincipal.leMessage)")
                 Spacer()
-              }.badge( Text("\(groupe.valeur)")    )
+              }//.aspectRatio(16/9, contentMode: .fit)
+//              .background(RoundedRectangle(cornerRadius: 3).fill(.red))
+//              .aspectRatio(16/9, contentMode: .fit)
+                      .badge( Text("\(groupe.valeur)")    )
             }
+
         }
         .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
        
@@ -84,17 +92,16 @@ struct ListeGroupe: View {
             }
           ToolbarItem(placement: .navigationBarLeading)
             { HStack {
-                Button(action: { let _ = Item.extractionItems })
-                    { Image(systemName: "arrow.2.circlepath")}
+//              Button(action: { let _ = Item.extractionItems })
+                Button(action: { rafraichir() })
+                    { Image(systemName: "arrow.2.circlepath") }
                 }
             }
       }
-
-      .navigationTitle(
-        Text("Événements")
-//        + Text(Image(systemName: "sparkles"))
-//        + Text(".")
-        )
+// 15 mars
+//      .navigationTitle(
+//        Text("Événements")
+//        )
 
         Bienvenue()
 
@@ -104,6 +111,8 @@ struct ListeGroupe: View {
           .onChange(of: recherche) {valeurCherchée in
               groupesFiltrés = Array(groupes).filter {($0.nom?.contains(valeurCherchée))! as Bool } // Forced cast of 'Bool' to same type has no effect, N'EST PAS UNE ERREUR
             }
+      
+          .onAppear(perform: rafraichir)
       
           .alert(item: $groupesEnCourDeSuppression) { jeuIndices in
               let (nom, description) = preparerSuppression(jeuIndices: jeuIndices)
@@ -181,13 +190,13 @@ struct ListeGroupe: View {
             //TODO: verifier si collaboration à d'autre groupes et du coup si la suppression est possible
             // ??? groupe.collaborateursSansLePrincipal ???
             groupe.collaborateurs.forEach
-              { print("Prévenir", $0.leNom, "de la suppression de", groupe.leNom) }
+              { l.info("Prévenir \($0.leNom) de la suppression de \(groupe.leNom)") }
             }
         return (nom: nom, description: description)
     }
     
     private func proposerSuppressionGroupes(positions: IndexSet) {
-        print("🔘 Proposition de suppression de :", positions.map { groupes[$0].leNom } )
+        l.info("🔘 Proposition de suppression de : \( positions.map { groupes[$0].leNom } )" )
         groupesEnCourDeSuppression = positions
         }
     
@@ -195,10 +204,10 @@ struct ListeGroupe: View {
     private func supprimerVraimentGroupes(positions: IndexSet, mode: Suppression = .simulation) {
         let lesGroupes = positions.map { groupes[$0] }
         let lesNoms    = lesGroupes.map {$0.leNom}
-        print("🔘 Suppression confirmée (", mode, ") de :", lesNoms)
+        l.info("🔘 Suppression confirmée (  \(mode.hashValue) de : \(lesNoms) ")
         Groupe.supprimerAdhérences(groupes: lesGroupes, mode:mode)
         withAnimation {
-            print("\t🔘 Suppression (", mode, ") du(des) groupe(s) :", lesNoms) //groupes[$0].leNom )
+            l.info("\t🔘 Suppression (\(mode.hashValue) ) du(des) groupe(s) : \(lesNoms)") //groupes[$0].leNom )
             persistance.supprimerObjets(lesGroupes, mode: mode) //positions.map { groupes[$0] })
             }
         }
@@ -230,6 +239,19 @@ struct ListeGroupe: View {
         Groupe.creer(contexte:viewContext, titre:nom, collaboratif:collaboratif)
     }
   }
+    
+    func rafraichir() {
+        l.info("Rafraichir la vue liste groupe")
+        groupes.forEach {
+            l.info("\tRafraichir le groupe \($0.leNom)")
+            $0.lesItems.forEach {
+                l.info("\t\tRafraichir l'item \($0.leTitre)")
+                $0.integration.toggle()
+            }
+            $0.integration.toggle()
+        }
+//        persistance.sauverContexte()
+    }
     
     
 }

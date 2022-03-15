@@ -8,6 +8,7 @@
 
 import Foundation
 import MapKit
+import os.log
 
 struct Lieu: Identifiable, Codable, Equatable {
     var id: UUID // ?? UUID() on peut avoir à le modifier
@@ -84,6 +85,7 @@ struct AnnotationGeographique: Identifiable, Hashable {
   let couleur: UIColor
   let valeur : Int
 //  let item : Item?
+  let visible : Bool = true
   let itemID : UUID
   }
 
@@ -126,8 +128,8 @@ extension MKCoordinateRegion {
         let P1 = CLLocationCoordinate2D(latitude: lesLatitudes.min()!, longitude: lesLongitudes.min()!)
         let P2 = CLLocationCoordinate2D(latitude: lesLatitudes.max()!, longitude: lesLongitudes.max()!)
         
-        print("🏁 Min Min", P1.longitude, P1.latitude)
-        print("🏁 Max Max", P2.longitude, P2.latitude)
+        Logger.modélisationDonnées.info("🏁 Min Min \(P1.longitude) \(P1.latitude)")
+        Logger.modélisationDonnées.info("🏁 Max Max \(P2.longitude) \(P2.latitude)")
 
         let   π = Double.pi
         let _2π = 2 * π
@@ -145,7 +147,7 @@ extension MKCoordinateRegion {
         let Δλ = λ2 - λ1 // long
         let Δφ = φ2 - φ1  // lat
         
-        print("🏁 Delta long", Δλ ,  "lat", Δφ)
+        Logger.modélisationDonnées.info("🏁 Delta long \(Δλ)  lat \(Δφ)")
 
 
 // https://www.movable-type.co.uk/scripts/latlong.html
@@ -178,17 +180,17 @@ extension MKCoordinateRegion {
         let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
 //        let φm_ = (φm +   (π / 2 ) ).truncatingRemainder(dividingBy: π) -  (π / 2)
 
-        print("🏁 φm brut", φm * Deg, "normalisé", φm_ * Deg)
+        Logger.modélisationDonnées.info("🏁 φm brut \(φm * Deg) , normalisé \(φm_ * Deg)")
 
         // ???? l'ecart de latitude
         let Δφ_ = (Δφ + (3 * π / 2).truncatingRemainder(dividingBy: π) -  (π / 2))
 
 
         let P_milieu = CLLocationCoordinate2D(latitude:φm_ * Deg, longitude: λm_ * Deg)
-        print ("🏁 Le centre de ", P1.longitude, P1.latitude , "  et  ", P2.longitude, P2.latitude)
-        print ("🏁 est", P_milieu.longitude, P_milieu.latitude)
-        print ("🏁 l'écart en longitude est de", Δλ * Deg, Δλ_ * Deg ,"°" )
-        print ("🏁 l'écart en  latitude est de", Δφ * Deg, Δφ_ * Deg ,"°" )
+        Logger.modélisationDonnées.info ("🏁 Le centre de \(P1.longitude) \(P1.latitude)  et  \(P2.longitude) \(P2.latitude)")
+        Logger.modélisationDonnées.info ("🏁 est \(P_milieu.longitude) \(P_milieu.latitude)")
+        Logger.modélisationDonnées.info ("🏁 l'écart en longitude est de \(Δλ * Deg) \(Δλ_ * Deg) °" )
+        Logger.modélisationDonnées.info ("🏁 l'écart en  latitude est de \(Δφ * Deg) \(Δφ_ * Deg) °" )
 
         // normaliser la longitude entre  −180…+180 : (lon+540)%360-180
         // truncatingRemainder
@@ -216,8 +218,8 @@ extension MKCoordinateRegion {
 //                longitudeDelta: 360
 //                )
 
-            print ("🏁 Carte Milieu", P_milieu.longitude, P_milieu.latitude )
-            print ("🏁 Carte Envergure long", envergure.longitudeDelta , "lat", envergure.latitudeDelta)
+            Logger.modélisationDonnées.info ("🏁 Carte Milieu \(P_milieu.longitude) \(P_milieu.latitude) ")
+            Logger.modélisationDonnées.info ("🏁 Carte Envergure long \(envergure.longitudeDelta) lat \(envergure.latitudeDelta)")
 
             let région = MKCoordinateRegion(center: P_milieu, span: envergure) //envergureMondiale)
 //            let régionAdaptée = regionThatFits(région)

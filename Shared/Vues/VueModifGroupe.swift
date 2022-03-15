@@ -9,6 +9,7 @@
 import SwiftUI
 import MapKit
 import CoreData
+import os.log
 
 
 
@@ -30,8 +31,6 @@ struct VueModifGroupe: View {
 //    var laModificationDuPrincipalEstRéalisée: RetourInfoItemAchevé
 
     typealias ReponseAmaMère    = (Bool) -> Void
-//    typealias RetourInfoItemAchevé = (Item) -> Void
-//    typealias ReponseAmaMère       = (Bool) -> Void
 
     
     // Rejet de la présentation actuelle
@@ -87,107 +86,101 @@ struct VueModifGroupe: View {
         }
 
     var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack { //}(alignment: .leading, spacing: 2){
+                Group {
+                    VStack { //(alignment: .leading, spacing: 1) {
+                        Text(" Nom du groupe :")
+                        TextField("Nouveau nom du groupe", text: $groupe.leNom)
+                            .foregroundColor(Color.accentColor)
+                            .submitLabel(.done)
+                            .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+        //                    .padding()
+                            .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER LE CONTEXT") }
+                        }
 
-    NavigationView {
-        VStack { //}(alignment: .leading, spacing: 2){
-        Group {
-            VStack { //(alignment: .leading, spacing: 1) {
-                Text(" Nom du groupe :")
-                TextField("Nouveau nom du groupe", text: $groupe.leNom)
-                    .foregroundColor(Color.accentColor)
-                    .submitLabel(.done)
-                    .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
-//                    .padding()
-                    .onSubmit { print("ENREGISTRER ET SAUVER LE CONTEXT") }
-                }
+                    VStack {
+                        VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
+                        VueModifItemSimple(groupe) { itemEnRetour in
+                            Logger.interfaceUtilisateur.debug("INFO EN RETOUR DE VUE MODIF ITEM \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude) ")
+                            
+                            feuilleEditionPrincipalPrésentée = false
+                            }
+                        }
 
-            VStack {
-                VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
-//                VueModifItemSimple(  item: $itemPrincipal, laRegion: $laRégion ) { infoEnRetour in
-//                NavigationView {
-//                VueModifItemSimple(  groupe.lePrincipal) { itemEnRetour in
-                VueModifItemSimple(groupe) { itemEnRetour in
-                    print("INFO EN RETOUR DE VUE MODIF ITEM",
-                          itemEnRetour.leTitre,
-                          itemEnRetour.longitude,
-                          itemEnRetour.latitude )
-                    
-                    feuilleEditionPrincipalPrésentée = false
+                    VStack {// Indicateurs binaires
+                        Toggle("Collaboratif", isOn: $groupe.collaboratif)
+                            .toggleStyle(.switch)  //.toggleStyle(.button)
+
+                        Toggle("Valide",       isOn: $groupe.valide)
+                            .toggleStyle(.switch) //.checkbox)
+                        }
                     }
-//                } // nav
-                }
+                    .padding()
+                    .overlay( RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.secondary, lineWidth: 0.5)
+                        )
+                    .padding()
 
-            VStack {
-                Toggle("Collaboratif", isOn: $groupe.collaboratif)
-                    .toggleStyle(.switch)  //.toggleStyle(.button)
 
-                Toggle("Valide",       isOn: $groupe.valide)
-                    .toggleStyle(.switch) //.checkbox)
                 }
+                .sheet(isPresented: $feuilleEditionPrincipalPrésentée) {
+                    Text("Bientôt ici : EDITION DU PRINCIPAL")
+                    Button("OK") { feuilleEditionPrincipalPrésentée = false}
+                    }
+                
+                .sheet(isPresented: $feuilleAffectationPrésentée) {
+                    VueAffectationGroupe( groupe,
+
+                        lesCollaborateursAAffecter: $mesCollaborateurs,
+                        lesChefsADesigner: $mesChefs,
+                                          
+                        modeAffectation: $modeAffectation) { (lesAffectationsOntChangées, mode) in
+                        Logger.interfaceUtilisateur.info("☑️ retour de feuille")
+                                if lesAffectationsOntChangées {
+                                    reattribuer()
+                                   }
+                            // C'est fini masquer la feuille
+                            feuilleAffectationPrésentée = false
+                            }
+
+                        .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+                    }
+                // 15 mars
+                //.navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+
+                    ToolbarItemGroup(placement: .principal) //.automatic .bottomBar .principal
+                        { barreMenu }
+        //
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(role: .cancel, action: abandonerFormulaire) {
+                            VStack {
+                                Icones.abandoner.imageSystéme
+                                Text("Abandon").font(.caption)
+                                }
+                          }
+                        }
+        //
+                    ToolbarItem(placement: .confirmationAction ) {
+                        Button( action: validerFormulaire) {
+                            VStack {
+                                Icones.valider.imageSystéme
+                                Text("Valider").font(.caption)
+                                }
+                          }
+                        .buttonStyle(.borderedProminent) }
+         //
+                }//.background(Color(.gray))//.border(.gray.opacity(0.5))
+                // 15 mars
+                //.navigationTitle(Text("Edition groupe \(groupe.leNom)"))
             }
-            .padding()
-            .overlay( RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.secondary, lineWidth: 0.5)
-                )
-            .padding()
-
-
         }
-        .sheet(isPresented: $feuilleEditionPrincipalPrésentée) {
-            Text("Bientôt ici : EDITION DU PRINCIPAL")
-            Button("OK") { feuilleEditionPrincipalPrésentée = false}
-            }
-        
-        .sheet(isPresented: $feuilleAffectationPrésentée) {
-            VueAffectationGroupe( groupe,
-
-                lesCollaborateursAAffecter: $mesCollaborateurs,
-                lesChefsADesigner: $mesChefs,
-                                  
-                modeAffectation: $modeAffectation) { (lesAffectationsOntChangées, mode) in
-                    print("☑️ retour de feuille")
-                        if lesAffectationsOntChangées {
-                            reattribuer()
-                           }
-                    // C'est fini masquer la feuille
-                    feuilleAffectationPrésentée = false
-                    }
-
-                .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-            }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-
-            ToolbarItemGroup(placement: .principal) //.automatic .bottomBar .principal
-                { barreMenu }
-//
-            ToolbarItem(placement: .cancellationAction) {
-                Button(role: .cancel, action: abandonerFormulaire) {
-                    VStack {
-                        Icones.abandoner.imageSystéme
-                        Text("Abandon").font(.caption)
-                        }
-                  }
-                }
-//
-            ToolbarItem(placement: .confirmationAction ) {
-                Button( action: validerFormulaire) {
-                    VStack {
-                        Icones.valider.imageSystéme
-                        Text("Valider").font(.caption)
-                        }
-                  }
-                .buttonStyle(.borderedProminent) }
- //
-        }//.background(Color(.gray))//.border(.gray.opacity(0.5))
-        
-        .navigationTitle(Text("Edition groupe \(groupe.leNom)"))
-    }
-
         
         .onDisappear() {}// let _ = groupe.verifierCohérence(depuis: #function) }
         .onAppear()    {
-            print("onAppear vueModifGroupe")
+            Logger.interfaceUtilisateur.info("onAppear vueModifGroupe")
 //            mesChefsInitiaux = mesChefs
 //            mesCollaborateursInitiaux = mesCollaborateurs
 
@@ -352,12 +345,12 @@ struct VueModifGroupe: View {
         /// vrai si je suis dans les deux camps
         let doublejeu = chefsEtCollaborateurs.contains(groupe)
         
-        print("☑️❌ Je suis", groupe.leNom, "je participe aux groupes", mesChefsInitiaux.map(\.leNom) , "et je suis responsable des groupes", mesCollaborateursInitiaux.map(\.leNom) )
-        print("☑️❌", changementsChefs.count        , "changements de chefs,"         , arrivéeChefs.count         , "arrivées (", arrivéeChefs.map(\.leNom)         , "),", departChefs.count,          "départs (" , departChefs.map(\.leNom)         , ").")
-        print("☑️❌", changementCollaborateurs.count, "changements de collaborateurs,", arrivéeCollaborateurs.count, "arrivées (", arrivéeCollaborateurs.map(\.leNom), "),", departCollaborateurs.count, "départs (" , departCollaborateurs.map(\.leNom), ").")
-        print("☑️❌ Et desormais, je participerais aux groupes", mesChefs.map(\.leNom) , "et serais responsable des groupes", mesCollaborateurs.map(\.leNom) )
-        print("☑️❌ ", chefsEtCollaborateurs.map(\.leNom) , "sont à la fois mes chefs et mes collaborateurs")
-        print("☑️❌ ", "je suis chef et grouillot ? :" , doublejeu.voyant)
+        Logger.interfaceUtilisateur.info("☑️❌ Je suis \(groupe.leNom) je participe aux groupes \(mesChefsInitiaux.map(\.leNom)) et je suis responsable des groupes \(mesCollaborateursInitiaux.map(\.leNom)) ")
+        Logger.interfaceUtilisateur.info("☑️❌ \(changementsChefs.count        ) changements de chefs, \(arrivéeChefs.count) arrivées ( \(arrivéeChefs.map(\.leNom))), \(departChefs.count) départs ( \(departChefs.map(\.leNom))) ")
+        Logger.interfaceUtilisateur.info("☑️❌ \(changementCollaborateurs.count) changements de collaborateurs, \(arrivéeCollaborateurs.count) arrivées ( \(arrivéeCollaborateurs.map(\.leNom))), \(departCollaborateurs.count) départs ( \(departCollaborateurs.map(\.leNom))).")
+        Logger.interfaceUtilisateur.info("☑️❌ Et desormais, je participerais aux groupes \(mesChefs.map(\.leNom)) et serais responsable des groupes \(mesCollaborateurs.map(\.leNom) ) ")
+        Logger.interfaceUtilisateur.info("☑️❌ \(chefsEtCollaborateurs.map(\.leNom)) sont à la fois mes chefs et mes collaborateurs")
+        Logger.interfaceUtilisateur.info("☑️❌ Je suis chef et grouillot ? : \(doublejeu.voyant)")
         
         // Je démissione (résultat équivalent à ce qu'il me révoque)
         departChefs.forEach { groupe.démissionner(groupeLeader: $0) }
@@ -385,7 +378,7 @@ struct VueModifGroupe: View {
             groupe.items = NSSet()
             // Et la recréer avec les nouveaux groupes
               mesCollaborateurs.forEach() {
-                  print("☑️❌ ", mode.rawValue ,"le groupe :", $0.leNom)
+                  Logger.interfaceUtilisateur.info("☑️❌ \(mode.rawValue) le groupe : \($0.leNom) ")
                   
                   switch mode {
                       case .ralliement:
@@ -393,7 +386,7 @@ struct VueModifGroupe: View {
                       case .enrôlement:
                           groupe.enrôler(recrue: $0)
                       case .test:
-                          print("☑️❌ Affectation test pour", $0.leNom)
+                          Logger.interfaceUtilisateur.info("☑️❌ Affectation test pour \($0.leNom)")
                     }
                 }
             }

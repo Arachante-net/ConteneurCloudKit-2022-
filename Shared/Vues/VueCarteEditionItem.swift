@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MapKit
+import os.log
 
 
 
@@ -127,7 +128,7 @@ struct VueCarteEditionItem: View {
           
           
           }
-          .onAppear()    {print("onAppear VueCarteEditionItem")}
+          .onAppear()    {Logger.interfaceUtilisateur.info("onAppear VueCarteEditionItem")}
           .onDisappear() { monSuivi = false }
         }
       }

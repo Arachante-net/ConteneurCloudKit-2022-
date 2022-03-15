@@ -3,7 +3,7 @@
 // pour le projet  ConteneurCloudKit
 // Swift  5.0  sur macOS  12.0
 //
-//  2021
+//  2022 pour Item Seul
 //
 
 import CoreData
@@ -51,10 +51,11 @@ class ControleurPersistance : ObservableObject {
     static let auteurTransactions = UserDefaults.standard.string(forKey: "UID") //"JTK"
     static let nomContexte        = "Enterprise"
 
+    let  l = Logger.persistance //subsystem: Identificateur du bundle, category: "persistance"
 
     init(inMemory: Bool = false) {
-        print("\nInitialisation (ControleurPersistance) d'un conteneur.\n")
-
+//        print("\nInitialisation (ControleurPersistance) d'un conteneur.\n")
+        l.error("\nInitialisation (ControleurPersistance) d'un conteneur.\n")
         conteneur = NSPersistentCloudKitContainer(name: nomConteneur)
         //            managedObjectModel:model)
         
@@ -117,9 +118,9 @@ class ControleurPersistance : ObservableObject {
             }
             
             let identifiantConteneur = storeDescription.cloudKitContainerOptions!.containerIdentifier
-            print("Identifiant du conteneur", identifiantConteneur)
+            self.l.info("Identifiant du conteneur \(identifiantConteneur)")
             let lesOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: identifiantConteneur)
-            print (lesOptions)
+            self.l.info("Options \(lesOptions.debugDescription)")
 //            storeDescription.cloudKitContainerOptions?.databaseScope = .public
 
 //            let scope:CKDatabase.Scope = .shared
@@ -160,11 +161,7 @@ class ControleurPersistance : ObservableObject {
             try conteneur.viewContext.setQueryGenerationFrom(.current)
           } catch {
             let nsError = error as NSError
-            os_log(
-              .error,
-              log: .default,
-              "IMPOSSIBLE D'EPINGLER LE viewContext A LA GENERATION current : %@",
-              nsError)
+              l.error("IMPOSSIBLE D'EPINGLER LE viewContext A LA GENERATION current : \(nsError)")
           }
         }
         
@@ -189,8 +186,8 @@ class ControleurPersistance : ObservableObject {
         conteneur.viewContext.transactionAuthor = ControleurPersistance.auteurTransactions
         conteneur.viewContext.name = ControleurPersistance.nomContexte
 
-
-
+        //MARK: - Une fois seulement
+//        publierSchema()
         
         
         //MARK: -
@@ -214,16 +211,26 @@ class ControleurPersistance : ObservableObject {
             // Crée le schéma CloudKit pour les magasins du conteneur qui gèrent une base de données CloudKit.
             try conteneur.initializeCloudKitSchema(options: [NSPersistentCloudKitContainerSchemaInitializationOptions.printSchema])
             // existe aussi .dryRun :  Valider le modèle et génèrer les enregistrements, SANS les télécharger vers CloudKit.
-            print("\nPUBLICATION DU SCHEMA\n\n")
+            l.log("\nPUBLICATION DU SCHEMA\n\n")
             }
 //        appError = ErrorType(error: .trucQuiVaPas(num: 666))
-        catch {print("\nERREUR À LA PUBLICATION DU SCHEMA\n")}
+        catch {l.error("\nERREUR À LA PUBLICATION DU SCHEMA\n")}
         }
     
     /// recevoir (GET) des notifications
     //FIXME: à mettre dans historien
     func demanderNotifications_NSPersistentStoreRemoteChange() {
-        print("\nS'abonner aux notifications.\n")
+        l.info("\n🟣🟣🟣 S'abonner aux notifications.\n")
+        
+            let rép = 42
+            l.debug("Foncé Debug")
+            l.info("Clair Info")
+            l.notice("?? Notice")
+            l.error("Jaune Erreur")
+            l.fault("Rouge La réponse est \(rép)")
+        
+        l.info("Auteur \(ControleurPersistance.auteurTransactions ?? "")")   // Redacted!
+        l.info("Conteneur \(self.nomConteneur, privacy: .private)")  // masqué
         
         // n'utiliser qu'une seule des deux méthodes
         
@@ -294,6 +301,7 @@ class ControleurPersistance : ObservableObject {
       guard conteneur.viewContext.hasChanges else { return }
 
       do {
+            l.info("♻️ Sauvegarde du contexte.")
             conteneur.viewContext.transactionAuthor = auteur // + "Persistance"
             conteneur.viewContext.name = nom
         try conteneur.viewContext.save()
@@ -308,16 +316,16 @@ class ControleurPersistance : ObservableObject {
        
         let nsError = error as NSError
         appError = ErrorType(.trucQuiVaPas(num: 666))
-        os_log(.error, log: .default, "Erreur lors de l'enregistrement de %@", nsError)
+          l.error("Erreur lors de l'enregistrement de \(nsError)")
         }
       }
     
     func supprimerObjets(_ objects: [NSManagedObject], mode:Suppression = .défaut) {
-        if mode == .simulation {print ("🔘 simulation de suppression de" , objects)}
+        if mode == .simulation {l.info ("🔘 simulation de suppression de \(objects)")}
         else {
             conteneur.viewContext.perform { [context = conteneur.viewContext] in
                 objects.forEach {objet in
-                    print("🔘 supprimer objet ", objet.entity, objet.debugDescription)
+                    self.l.info("🔘 supprimer objet \(objet.entity) \(objet.debugDescription)")
     //              objet.prepareForDeletion() // automatique
                     context.delete(objet)
                 }

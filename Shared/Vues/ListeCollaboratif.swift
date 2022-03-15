@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import os.log
 
 /// Lister les événements collaboratifs
 struct ListeCollaboratif: View {
@@ -41,16 +42,16 @@ struct ListeCollaboratif: View {
                   Image(systemName: multiSelection.contains(groupe)  ? "circle.inset.filled" : "circle")
                   Text(groupe.nom ?? "...").opacity(multiSelection.contains(groupe) ? 0.5 : 1.0)
                   }.onTapGesture {
-                      print("TAP", groupe.nom ?? "")
+                      Logger.interfaceUtilisateur.info("TAP \(groupe.leNom) ")
                       if multiSelection.contains(groupe) {
-                          print("REMOVE", groupe.nom ?? "")
+                          Logger.interfaceUtilisateur.info("REMOVE \(groupe.leNom)")
                           multiSelection.remove(groupe)
                           }
                       else {
-                          print("INSERT", groupe.nom ?? "")
+                          Logger.interfaceUtilisateur.info("INSERT \(groupe.leNom)")
                           multiSelection.insert(groupe)
                           }
-                      print("SELECT", multiSelection.count)
+                      Logger.interfaceUtilisateur.info("SELECT \(multiSelection.count)")
                   }
             }
           .toolbar { EditButton() }

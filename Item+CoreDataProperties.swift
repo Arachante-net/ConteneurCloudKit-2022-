@@ -1,7 +1,7 @@
 //Arachante
-// michel  le 03/01/2022
+// michel  le 02/03/2022
 // pour le projet  ConteneurCloudKit
-// Swift  5.0  sur macOS  12.1
+// Swift  5.0  sur macOS  12.2
 //
 //  2022
 //
@@ -17,6 +17,7 @@ extension Item {
         return NSFetchRequest<Item>(entityName: "Item")
     }
 
+    @NSManaged public var caracteristique: String?
     @NSManaged public var couleur: Data?
     @NSManaged public var createur: String?
     @NSManaged public var id: UUID?
@@ -28,7 +29,8 @@ extension Item {
     @NSManaged public var titre: String?
     @NSManaged public var valeur: Int64
     @NSManaged public var valide: Bool
-    @NSManaged public var caracteristique: String?
+    @NSManaged public var message: String?
+    @NSManaged public var integration: Bool
     @NSManaged public var groupes: NSSet?
     @NSManaged public var principal: Groupe?
 

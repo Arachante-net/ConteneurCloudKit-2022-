@@ -9,6 +9,7 @@
 import SwiftUI
 import MapKit
 import CoreData
+import os.log
 
   
 /// Affiche les propriétés du Groupe passé en argument
@@ -27,8 +28,10 @@ struct VueDetailGroupe: View {
     /// // 1er Février 1
     @StateObject private var groupe: Groupe //= Groupe()
     // le groupe est fourni par ListeGroupe, il est instancié plus bas, dans l'init()
-    //MARK: -
-   
+    
+    // litem Principal de ce groupe
+    @StateObject private var thePrincipal: Item
+
     @StateObject private var viewModel = ViewModel()
     
     
@@ -57,10 +60,13 @@ struct VueDetailGroupe: View {
     
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
-        _groupe = StateObject<Groupe>(wrappedValue: leGroupe)
-        
+        _groupe       = StateObject<Groupe>(wrappedValue: leGroupe)
+        _thePrincipal = StateObject<Item>  (wrappedValue: leGroupe.lePrincipal)
+
         _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)
-        _lesAnnotations   = State(wrappedValue: lesAnnotations ?? [])
+//      _lesAnnotations   = State(wrappedValue: lesAnnotations ?? [])
+        _lesAnnotations   = State(wrappedValue: leGroupe.lesAnnotations )
+
         }
     
     
@@ -80,13 +86,14 @@ struct VueDetailGroupe: View {
         
     if let lePrincipal = groupe.principal {
     // Si ce n'est pas un groupe isolé de son principal on présente la fiche
-        
+        Text("Indicateur : \(groupe.integration.voyant)")
     VStack {
     Form { //}(alignment: .leading, spacing: 2) {
         Section { //}(alignment: .leading, spacing: 2)  {
-            Etiquette( "Item principal", valeur: (groupe.principal != nil) ? lePrincipal.titre ?? "␀" : "❌")
-            Etiquette( "Valeur locale" , valeur: Int(lePrincipal.valeur))
-            Etiquette( "Créateur"      , valeur: groupe.createur).help("créateur")
+            Etiquette( "Item principal", valeur: (thePrincipal.titre)) //groupe.principal != nil) ? thePrincipal.titre ?? "␀" : "❌")
+            Etiquette( "Valeur locale" , valeur: Int(thePrincipal.valeur))
+            Etiquette( "Message"       , valeur: thePrincipal.leMessage)
+            Etiquette( "Créateur"      , valeur: groupe.createur)
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
 //            Etiquette( "Valide"        , valeur: groupe.valide)
 //            Etiquette( "Cohérent"      , valeur: groupe.estCoherent)
@@ -111,7 +118,7 @@ struct VueDetailGroupe: View {
                  Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
      //                ForEach(Array(groupe.lesItems).sorted()    ) { item in
                      ForEach(Array(groupe.tableauItemsTrié) ) { item in
-                         Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre))" , valeur : Int(item.valeur))//.equatable()
+                         Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre)   \(item.leMessage)" , valeur : Int(item.valeur))//.equatable()
                          }
                      }
                  Etiquette( "Valeur globale", valeur: groupe.valeur)
@@ -149,9 +156,9 @@ struct VueDetailGroupe: View {
 
         .onAppear() {
 //            viewModel.definirGroupe(groupe: leGroupe)
-            print("régionEnglobante ###### GET ONAPPEAR 2")
+            Logger.interfaceUtilisateur.info("régionEnglobante ###### GET ONAPPEAR 2")
 //            régionEnglobante = groupe.régionEnglobante
-            print("onAppear ###### régionEnglobante")//, régionEnglobante)
+            Logger.interfaceUtilisateur.info("onAppear ###### régionEnglobante")//, régionEnglobante)
             lesAnnotations   = groupe.lesAnnotations
             estFavoris       = configUtilisateur.estFavoris(groupe)
             estCoherent      = groupe.estCoherent
@@ -169,13 +176,14 @@ struct VueDetailGroupe: View {
                 // Lorsque VueModifGroupe quitera elle executera le code suivant sera executé
                 // avec en argument des informations provenant de VueModifGroupe
                 quiterLaVue in
-                print("Retour de VueModifGroupe avec", quiterLaVue.voyant )
+                Logger.interfaceUtilisateur.info("Retour de VueModifGroupe avec \(quiterLaVue.voyant)" )
                     feuilleModificationPresentée = false
                 } // fin closure
             
                 .border( .red, width: 0.3)
                 .ignoresSafeArea()
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
+                .onDisappear() {groupe.integration.toggle()}
             }
 //            .transition(.opacity) //.move(edge: .top))
         .navigationBarTitleDisplayMode(.inline)
@@ -183,7 +191,8 @@ struct VueDetailGroupe: View {
             ToolbarItemGroup() //placement: .navigationBarTrailing)
                 { barreMenu }
             }
-          .navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
+        // 15 mars
+          //.navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
         
         }
     } // body

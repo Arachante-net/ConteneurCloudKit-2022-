@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MapKit
+import os.log
 
 
 //struct IdentifiablePlace: Identifiable {
@@ -59,10 +60,8 @@ struct VueCarteItem: View {
 
     
   var body: some View {
-      let _ = print("🌐 Appel de VueCarte sur une région centrée en ",
-                  laRegion.center.latitude,
-                  laRegion.center.longitude)
-      let _ = print("🌐 suivi : ", suivi, item.coloris)
+      let _ = Logger.interfaceUtilisateur.info("🌐 Appel de VueCarte sur une région centrée en \(laRegion.center.latitude) \(laRegion.center.longitude)")
+      let _ = Logger.interfaceUtilisateur.info("🌐 suivi : \(suivi.hashValue) \(item.coloris)")
       
 //      var coul = item.coloris
 
@@ -153,7 +152,7 @@ struct VueCarteItem: View {
 //                   .frame(width: 30, height: 30).scaleEffect(laRegion.center == yPlace().location ? 0.5 : 1)
                  
 
-              .onAppear()    { print("onAppear VueCarteItem")}
+              .onAppear()    { Logger.interfaceUtilisateur.info("onAppear VueCarteItem")}
               .onDisappear() { }
               }
             }

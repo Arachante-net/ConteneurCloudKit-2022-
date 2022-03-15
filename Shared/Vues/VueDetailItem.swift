@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MapKit
+import os.log
 
 
 /// Vue statique qui affiche les propriétées de l'Item passé en argument
@@ -30,13 +31,15 @@ struct VueDetailItem: View {
     @State  private var item : Item
     /// Argument, Région géographique ou se situe l'Item
     @State  private var laRégion : MKCoordinateRegion
-
-    
+    //TODO: Pas utilisé ?
+    @State var message: String
     
     
     init (item:Item, laRégion:MKCoordinateRegion) {
         _item     = State(wrappedValue: item)
         _laRégion = State(wrappedValue: laRégion)
+        _message  = State(wrappedValue: item.leMessage)
+
     }
     
 
@@ -51,6 +54,8 @@ struct VueDetailItem: View {
                 }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading)
+            //TODO: A supprimer ?
+            .onChange(of: item) {msg in Logger.interfaceUtilisateur.info("change item Message \(msg.leMessage)")}
 
             Spacer()
 //            Text("VueDetailItem item      \(item.latitude), \(item.longitude)")
@@ -71,11 +76,7 @@ struct VueDetailItem: View {
 //                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
                     NavigationView {
                     VueModifItemSimple(item) { itemEnRetour in
-                        print("INFO EN RETOUR DE VUE MODIF ITEM SIMPLE DEPUIS VUE DETAIL ITEM",
-                              itemEnRetour.leTitre,
-                              itemEnRetour.longitude,
-                              itemEnRetour.latitude )
-                        
+                        Logger.interfaceUtilisateur.info("INFO EN RETOUR DE VUE MODIF ITEM SIMPLE DEPUIS VUE DETAIL ITEM \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude)")
                         Ξ.feuilleModificationItemPresentée = false
                         }
                     .toolbar {
@@ -104,14 +105,14 @@ struct VueDetailItem: View {
             }
 
         
-        
+
         .onAppear(perform: {
-            print("onAppear VueDetailItem")
+            Logger.interfaceUtilisateur.info("onAppear VueDetailItem \(item.leMessage) \(item.valeur) ")
             let _ = item.verifierCohérence(depuis: #file) })
         
         } // VStack
         .onAppear() {
-            print("onAppear VueDetailItem")
+            Logger.interfaceUtilisateur.info("onAppear VueDetailItem")
             apparaitre()
             }
     } // Body
@@ -128,6 +129,7 @@ struct VueDetailItem: View {
         VStack(alignment: .leading) {
 
             Etiquette("Identifiant", valeur: item.id?.uuidString ?? "❌")
+            Etiquette("Message", valeur: item.leMessage)
 
             Text("Crée le ").foregroundColor(.secondary)
             + Text(" \( formatDate.string(from: item.horodatage )) ")

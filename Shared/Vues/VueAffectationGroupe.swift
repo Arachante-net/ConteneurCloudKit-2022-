@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import os
 
 /// Associer (Rallier ou Abandonner,  Enrôler ou Révoquer)  ce groupe à d'autres groupes, avec lesquels il collaborera.
 ///  - parameters
@@ -139,7 +140,7 @@ struct VueAffectationGroupe: View {
                 } // toolbar
          } // NavigationVue
         .onAppear() {
-            print("onAppear VueAffectationGroupe")
+            Logger.interfaceUtilisateur.info("onAppear VueAffectationGroupe")
             var test = Set<Groupe>(groupesCollaboratifs)
             var _ = test.remove(groupe)
             }
@@ -154,12 +155,12 @@ struct VueAffectationGroupe: View {
     
 
     private func validerAffectations() {
-        print("☑️ validerAffectations")
+        Logger.interfaceUtilisateur.info("☑️ validerAffectations")
         reponseAmaMère(true, modeAffectation)
         }
  
     private func abandonerAffectations() {
-        print("☑️ abandonerAffectations")
+        Logger.interfaceUtilisateur.info("☑️ abandonerAffectations")
         reponseAmaMère(false, modeAffectation)
         }
     

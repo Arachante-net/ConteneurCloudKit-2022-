@@ -9,14 +9,16 @@
 import Foundation
 import CoreData
 import Combine
-import os.log
+import os
 
 
 
 public class Historien {
     
 //    var persistance: ControleurPersistance
+    
     var appError: ErrorType? // = nil
+    let  l = Logger.historien
 
     var abonnements: Set<AnyCancellable> = []
 //    private lazy
@@ -30,15 +32,11 @@ public class Historien {
           .createDirectory(at: urlRepertoire, withIntermediateDirectories: true, attributes: nil)
       } catch {
         let nsError = error as NSError
-        os_log(
-          .error,
-          log: .default,
-          "Failed to create history token directory: %@",
-          nsError)
+          l.error("Échec de la création du répertoire d'historique des jetons : \(nsError)")
       }
       let urlFichier = urlRepertoire.appendingPathComponent("token.plist", isDirectory: false)
 
-      print("Fichier des tokens :" , urlFichier)
+        l.info("Fichier des jetons : \(urlFichier)")
       return urlFichier
     }()
 
@@ -46,13 +44,14 @@ public class Historien {
     //FIXME: un autre moyen d'obtenir le conteneur ?
     var conteneur : NSPersistentCloudKitContainer
     
+
     init(conteneur : NSPersistentCloudKitContainer)
         {self.conteneur = conteneur}
   
     
     // 🔴 Integrer les évolutions du magasin distant (0)
     @objc func traiterLesEvolutionsDuStockageDistant_DEBUG(notification: NSNotification) {
-        print("\n🔴", #function, "№ \t DEBUG VIDE NOTIFICATION D'ÉVOLUTION DU STOCKAGE DISTANT\n")
+        l.debug("\n🔴 \(#function)  № \t VIDE NOTIFICATION D'ÉVOLUTION DU STOCKAGE DISTANT\n")
 //      let contexte = conteneur.viewContext ///    ou newBackgroundContext() ??
         }
                 
@@ -105,7 +104,13 @@ public class Historien {
         
                         // Sauver si besoin
                     // persistance ...
+//                    persistance.sauverContexte(nom:"GroupeItem"  , auteur:"Historien") 
+
                         if monContexte.hasChanges {
+                            print("♻️")
+//                            os_log("User %{public}@ logged in", log: OSLog.userFlow, type: .info, username)
+//                            os_log("♻️", log: OSLog.default)
+
                             do {
                                 let auteurActu =  monContexte.transactionAuthor
                                     monContexte.transactionAuthor = "Historien"
@@ -126,20 +131,25 @@ public class Historien {
     
     // 🟣 Prendre en considération les dernières évolutions du stokage distant  (2 combine)
     func traiterLesDernieresEvolutionsDuStockageDistant(_ notification : Notification) {
-        print("🟣🟣🟣 Début de traiterLesDernieresEvolutionsDuStockageDistant")
+        l.info("🟣🟣🟣 Début de traiterLesDernieresEvolutionsDuStockageDistant")
         // cf. processRemoteStoreChange
-        print("\n\n🟣", #function , "==========")
+        l.debug("\n\n🟣 \(#function)")
 //      print ("#notification", notification.userInfo?.keys ?? "") // NSStoreUUID, storeURL
-        print ("\n🟣#notification UUID", notification.userInfo?["NSStoreUUID"] ?? ""  , " URL ", notification.userInfo?["storeURL"   ] ?? ""  )
-        if !abonnements.isEmpty
-        {print("🟣(", abonnements.count, "abonnés, le premier :", abonnements.first ?? "" , ")")}
-        print("🟣\n")
+        let storeID  = notification.userInfo?["NSStoreUUID"].debugDescription ?? ""
+        let storeURL = notification.userInfo?["storeURL"   ].debugDescription ?? ""
+        l.debug ("\n🟣 #notification  UUID \(storeID )  URL \(storeURL) ")
+        if !abonnements.isEmpty {
+            let nb      = abonnements.count
+            let premier = abonnements.first.debugDescription
+            l.debug("🟣 \(nb) abonnés, le premier est : \(premier)  ")
+        }
+//        print("🟣\n")
 
 
 
      // Exécuter le bloc de code dans la file d'attente de l'historique "historyRequestQueue"
       historyRequestQueue.async {
-        print("🟣🟣🟣 Début d'éxécution de la file d'attente")
+          self.l.info("🟣🟣🟣 Début d'éxécution de la file d'attente")
         // Obtenir un contexte dans lequel s'exécute une file d'attente privée. (pour ne pas bloquer)
         let backgroundContext = self.conteneur.newBackgroundContext()
         // Gérer chaque notification en série.
@@ -153,7 +163,9 @@ public class Historien {
           // Afin d’incorporer aux existantes uniquement les externes au contexte.
           // Identifier le contexte et l’auteur de création de cette transaction.
           if let requetteHistorique = NSPersistentHistoryTransaction.fetchRequest {
-              print("🟣 Filtrer la requête sur", ControleurPersistance.auteurTransactions ?? "", "et", ControleurPersistance.nomContexte)
+              let auteur   = ControleurPersistance.auteurTransactions ?? ""
+              let contexte = ControleurPersistance.nomContexte
+              self.l.info("🟣 Filtrer la requête sur \(auteur) et \(contexte)")
               //FIXME: A ECRIRE COMPLETEMENT
               
 //            let predicatTout             = NSPredicate(value:true)
@@ -193,36 +205,33 @@ public class Historien {
               let transactions = resultatRequeteHistorique?.result as? [NSPersistentHistoryTransaction],
               !transactions.isEmpty
             else {
-              print("🟣 Pas de transaction à traiter")
+                self.l.info("🟣 Pas de transaction à traiter")
               return
               }
               
-            print("🟣🟣 Il y-a dans l'historique des transactions à traiter")
+              self.l.info("🟣🟣 Il y-a dans l'historique des transactions à traiter")
             // Afficher les transactions de l'historique
             self.afficherLesEvolutions(from: transactions)
               
             // MàJ de notre contexte (viewContext) avec les changements issues de l'historique
             self.integrerLesEvolutions(from: transactions)
-            print("🟣🟣🟣 MàJ dernierPoint")
+              self.l.info("🟣🟣🟣 MàJ dernierPoint")
             if let dernierPoint = transactions.last?.token {
             // Memoriser la derniere transaction
               self.consignerEvenement(dernierPoint)
-              print("🟣🟣🟣 MàJ dernierPoint éffectuée")
+                self.l.info("🟣🟣🟣 MàJ dernierPoint éffectuée")
             }
           } catch {
             let nsError = error as NSError
               self.appError = ErrorType( .trucQuiVaPas(num: 666) )
-            os_log(
-              .error,
-              log: .default,
-              "🟣 Erreur de traitement de la requête sur l'historique des transactions : %@",
-              nsError)
+              self.l.error("🟣 Erreur de traitement de la requête sur l'historique des transactions : \(nsError)")
           }
         }
-      print("🟣🟣🟣 Fin du Bloc")
+          self.l.info("🟣🟣🟣 Fin du Bloc")
+          
       } // Fin du bloc "historyRequestQueue"
     
-        print("🟣🟣🟣 Fin de traiterLesDernieresEvolutionsDuStockageDistant")
+        l.info("🟣🟣🟣 Fin de traiterLesDernieresEvolutionsDuStockageDistant")
     } ////
 
     
@@ -232,7 +241,7 @@ public class Historien {
 
 //    private
     func consulterMaPositionDansHistorique() {
-    print("🟡 Retrouver ou j'en étais dans l'historique")
+        l.info("🟡 Retrouver ou j'en étais dans l'historique")
     // cf. loadHistoryToken
       do {
         let donnéesBrutes = try Data(contentsOf: urlFichierDesTokens) //tokenFileURL)
@@ -253,21 +262,21 @@ public class Historien {
     
     
     private func consignerEvenement(_ evenement: NSPersistentHistoryToken) {
-        print("🟣🟣 Mémoriser ma position dans l'historique", evenement.hashValue)
+        l.info("🟣🟣 Mémoriser ma position dans l'historique \(evenement.hashValue)")
         // cf storeHistoryToken
       do {
         let donnéesBrutes = try NSKeyedArchiver
           .archivedData(withRootObject: evenement, requiringSecureCoding: true)
         try donnéesBrutes.write(to: urlFichierDesTokens) // tokenFileURL)
         dernierEvenement = evenement
-          print("🟣🟣 l'événement", evenement.hashValue, "est consigné")
+          l.info("🟣🟣 l'événement \(evenement.hashValue) est consigné")
       } catch {
         let nsError = error as NSError
-        os_log(
-          .error,
-          log: .default,
-          "Impossible de mémoriser le dernier événement traité : %@",
-          nsError)
+//        os_log(
+//          .error,
+//          log: .default,
+          l.error("Impossible de mémoriser le dernier événement traité : \(nsError)")
+          
       }
     }
     
@@ -298,15 +307,12 @@ public class Historien {
     // cf. mergeChanges
 //      let context = viewContext
         let contexte = conteneur.viewContext ///    ou newBackgroundContext() ??
-      print("🟪 Affichons les évolutions (transactions)")
+        l.info("🟪 Affichons les évolutions (transactions)")
       contexte.perform {
         historiqueDesTransactions.forEach { transaction in
           // S'assurer qu'on a bien acces aux informations relatives à cette notification
           guard let infosNotification = transaction.objectIDNotification().userInfo else {
-              print("🟪 Pas d'information spécifique pour cette transaction ",
-                    transaction.author ?? "",
-                    transaction.contextName ?? "",
-                    transaction.hashValue)
+              self.l.info("🟪 Pas d'information spécifique pour cette transaction \(transaction.author ?? "") \(transaction.contextName ?? "") \(transaction.hashValue)   ")
               return
                 }
 //
@@ -323,12 +329,7 @@ public class Historien {
             
             let _ = infosNotification.keys
             
-            print ("🟪 Transaction №", jeton, numéro,
-                   ", Magasin :"   , magasin,
-                   ", Bundle :"    , bundle,
-                   ", Processus :" , processus,
-                   ", Auteur :"    , auteur,
-                   ", Contexte :"  , Kontexte, ".")
+            self.l.info ("🟪 Transaction № \(jeton) \(numéro), Magasin : \(magasin), Bundle : \(bundle), Processus : \(processus), Auteur : \(auteur), Contexte : \(Kontexte).")
             
             guard let évolutions = transaction.changes else { return }
             
@@ -342,17 +343,17 @@ public class Historien {
                 switch(changeType) {
                 case .update:
                     guard let updatedProperties = évolution.updatedProperties else {
-                        print("\t🟪 MàJ №", changeID, "Pas de propriétés modifiées" )
+                        self.l.info("\t🟪 MàJ № \(changeID) Pas de propriétés modifiées")
                         break
                         }
                     for updatedProperty in updatedProperties {
                         let nom = updatedProperty.name
-                        print("\t🟪 MàJ №", changeID, "de la propriété :", nom)
+                        self.l.info("\t🟪 MàJ № \(changeID) de la propriété : \(nom)")
                         }
                 case .delete:
                     if let cimetière = évolution.tombstone {
-                        let nom = cimetière["name"]
-                        print("\t🟪 Suppression №" , changeID, "de :", nom ?? "?")
+                        let nom = cimetière["name"].debugDescription
+                        self.l.info("\t🟪 Suppression № \(changeID) de : \(nom) ")
                         }
                 default:
                     break
@@ -361,12 +362,12 @@ public class Historien {
 
         }
       } // perform
-        print(#function, "\n\n")
+        l.info(" Fin de \(#function) \n\n")
     } // afficher
     
     /// MàJ de notre contexte (viewContext du conteneur) avec les changements issues de l'historique
     private func integrerLesEvolutions(from historiqueDesTransactions: [NSPersistentHistoryTransaction]) {
-       print("🟣 Intégrer les évolutions")
+        l.info("🟣 Intégrer les évolutions")
     // cf. mergeChanges
 //      let context = viewContext
       let contexte = conteneur.viewContext ///    ou newBackgroundContext() ??
@@ -378,13 +379,13 @@ public class Historien {
                 let infosNotification = transaction.objectIDNotification().userInfo
               else { return }
                 
-              print("🟣🟣🟣 Intégrer la transaction :", transaction.hashValue)
+              self.l.info("🟣🟣🟣 Intégrer la transaction : \(transaction.hashValue)")
 
               NSManagedObjectContext.mergeChanges(
                 fromRemoteContextSave: infosNotification,
                 into: [contexte]
                 )
-              print("🟣🟣🟣 Intégration terminée :", transaction.hashValue)
+              self.l.info("🟣🟣🟣 Intégration terminée : \(transaction.hashValue)")
 
                 // ERREUR :Vous avez enregistré un observateur de notification sur un objet qui a été libéré
                 // et qui n'a pas supprimé l'observateur.
@@ -392,7 +393,7 @@ public class Historien {
                 //
               }
         } // perform
-        print(#function, "\n\n")
+        l.info(" Fin de \(#function) \n\n")
     } // integrerLesEvolutions
 
     private func faireLeMenage() {

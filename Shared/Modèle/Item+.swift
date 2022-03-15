@@ -89,6 +89,8 @@ extension Item {
             nouvelItem.mode             = .bien
             nouvelItem.ordre            = 0
             nouvelItem.valeur           = 0
+            nouvelItem.message          = "␀"
+
      return nouvelItem
         }
     
@@ -102,6 +104,8 @@ extension Item {
             //FIXME: ne sauver que s'il y a des trucs à sauver
             //FIXME: ? écrire ailleur  PERSITANCE
             //FIXME: meilleure gestion des erreurs
+//        persistance.sauverContexte(nom:"Item" )
+            print("♻️")
                         do {
                             contexte.name = "Item"
                             try contexte.save()
@@ -131,6 +135,7 @@ extension Item {
             nouvelItem.coloris   = .secondary // appel le 'setter' qui convertira Color en données binaires pour être stockées en CoreData
             nouvelItem.createur  = UserDefaults.standard.string(forKey: "UID") ?? "anonyme"
             nouvelItem.valide    = true
+            nouvelItem.message   = "Bonjour à tous"
          return nouvelItem
         }
 
@@ -222,6 +227,19 @@ extension Item {
         set {titre = newValue}
         }
     
+    /// Le champ message non optionel
+    var leMessage:String {
+        get {message ?? "␀"}
+        set {
+            message = newValue
+            objectWillChange.send()
+            }
+        }
+    
+//    var unMessage: String {
+//         willSet {objectWillChange.send()}
+//     }
+    
     /// Utilisé pour convertir une Couleur Core Data
     private struct Couleur: Codable {
       var rouge: Double
@@ -304,14 +322,13 @@ extension Item {
         #elseif os(macOS)
             let coul = NSColor(self.coloris)
         #endif
-            return AnnotationGeographique( // id = UUID(),
-                libellé:  self.titre ?? "␀",
-                message: "Bonjour, Au Revoir, Adieu, Salut",
-                coordonnées : self.coordonnées, //: CLLocationCoordinate2D
+            return AnnotationGeographique(
+                libellé:      self.leTitre,
+                message:      self.leMessage,
+                coordonnées : self.coordonnées,
                 couleur : coul,
-                valeur : Int(self.valeur),
-//                item: self
-                itemID : self.id ?? UUID()
+                valeur:   Int(self.valeur),
+                itemID:       self.id ?? UUID()
                )
             }
         }

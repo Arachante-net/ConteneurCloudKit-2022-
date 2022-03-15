@@ -40,8 +40,8 @@ struct VueAjouterGroupe: View {
             Text("Enregistrer le nouveau groupe").bold()
             }.buttonStyle(.borderedProminent)
         }
-        
-      .navigationTitle(Text("Création d'un nouveau groupe"))
+        // 15 mars
+      //.navigationTitle(Text("Création d'un nouveau groupe"))
     }
   }
 
