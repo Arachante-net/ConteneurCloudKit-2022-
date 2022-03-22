@@ -17,6 +17,7 @@ extension IndexSet: Identifiable {
 }
 
 
+/// Afficher la liste des items
 struct ListeItem: View {
     
 //    static var demandeDeRecuperation: NSFetchRequest<Item> {
@@ -69,8 +70,8 @@ struct ListeItem: View {
         List {
         ForEach(items) { item in
             NavigationLink( destination: VueDetailItem (
-                item: item ,
-                laRégion: item.région
+                item: item //,
+//                laRégion: item.région
                 ))
             { HStack {
                 Text(item.leTitre)//.frame(alignment: .leading)
@@ -199,7 +200,7 @@ struct ListeItem: View {
 //            let item = items[$0]
             Logger.interfaceUtilisateur.info("\t🔘 Suppression de : \(items[$0].leTitre) ")
             items[$0].removeFromGroupes(items[$0].groupes ?? [])
-            persistance.sauverContexte()
+            persistance.sauverContexte(depuis:#function)
             }
                     
         withAnimation {

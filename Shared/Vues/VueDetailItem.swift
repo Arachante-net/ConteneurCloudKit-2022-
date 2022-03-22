@@ -28,18 +28,28 @@ struct VueDetailItem: View {
     // ♔ La Source de verité pour Item ♔
     //
     /// Argument, Item en cours d'édition propriété de VueDetailItem
-    @State  private var item : Item
+    @StateObject private var item: Item
+//    @State  private var item_ : Item
+
+
     /// Argument, Région géographique ou se situe l'Item
     @State  private var laRégion : MKCoordinateRegion
     //TODO: Pas utilisé ?
     @State var message: String
     
+    let longitudeInitiale : Double
+    let latitudeInitiale  : Double
     
-    init (item:Item, laRégion:MKCoordinateRegion) {
-        _item     = State(wrappedValue: item)
-        _laRégion = State(wrappedValue: laRégion)
+    
+    init (item:Item) { //}, laRégion:MKCoordinateRegion) {
+//        _item_    = State(wrappedValue: item)
+        _item     = StateObject<Item>(wrappedValue: item)
+        
+        _laRégion = State(wrappedValue: item.région) //  laRégion:
         _message  = State(wrappedValue: item.leMessage)
-
+        Logger.interfaceUtilisateur.debug("Init de VueDetailItem \(item.leTitre) \(item.longitude) \(item.latitude) (avant déplacement)")
+        longitudeInitiale = item.longitude
+        latitudeInitiale  = item.latitude
     }
     
 
@@ -66,7 +76,8 @@ struct VueDetailItem: View {
             // donc Binding pour item et laRegion
             // RQ1 : la position de l'Item n'est pas modifiée par la Vue CarteItem
             // RQ2 : la région affichée peut être deplacée par l'utilisateur
-            VueCarteItem( item: $item,  laRegion: $laRégion )
+            // 17 Mars
+            VueCarteItem( item,  uneRegion: $laRégion )
             
                 .isHidden( (item.isDeleted || item.isFault) ? true : false  )
                 .opacity(item.valide ? 1.0 : 0.1)
@@ -75,21 +86,33 @@ struct VueDetailItem: View {
 //                    Text("VueDetailItem $laRegion \(laRegion.center.longitude), \(laRegion.center.latitude)")
 //                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
                     NavigationView {
-                    VueModifItemSimple(item) { itemEnRetour in
-                        Logger.interfaceUtilisateur.info("INFO EN RETOUR DE VUE MODIF ITEM SIMPLE DEPUIS VUE DETAIL ITEM \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude)")
+                    VueModifItemSimple(item) { aSauver, itemEnRetour in
+                        Logger.interfaceUtilisateur.info("🌐 retour de VueModifItemSimple(item) depuis VueDetailItem : \(aSauver ? "SAUVER" : "ABANDONNER") \(itemEnRetour.leTitre) déplacement de \(item.longitude) \(item.latitude) \(longitudeInitiale) \(latitudeInitiale) vers \(itemEnRetour.longitude) \(itemEnRetour.latitude)")
                         Ξ.feuilleModificationItemPresentée = false
-                        }
-                    .toolbar {
-                        // Barre d'outils pour VueModifItemSimple ??
-                        ToolbarItemGroup(placement: .navigationBarTrailing)
-                        {  Button(action: { print("A ECRIRE")  }) {
-                            VStack {
-                                Icones.valider.imageSystéme
-                                Text("Valider").font(.caption)
+                        if aSauver {
+                            // Mettre à jour les coordonnées de l'item avec le centre de la région cartographique affichée
+                            withAnimation(.easeInOut(duration: 20)) {
+                                laRégion.centrerSur(itemEnRetour)
+                                //itemEnRetour.centrerSur(laRégion)
                                 }
-                          }.buttonStyle(.borderedProminent)  }
+                            persistance.sauverContexte(depuis: "Retour VueModifItemSimple") //#function)
+                            }
+                        else {
+                            persistance.retourArriereContexte()
+                            }
+//}
                         }
-                    }
+//                    .toolbar {
+//                        // Barre d'outils pour VueModifItemSimple ??
+//                        ToolbarItemGroup(placement: .navigationBarTrailing)
+//                        {  Button(action: { print("A ECRIRE")  }) {
+//                            VStack {
+//                                Icones.valider.imageSystéme
+//                                Text("? Valider ?").font(.caption)
+//                                }
+//                          }.buttonStyle(.borderedProminent)  }
+//                        }
+                    } // NavigationView
                 
                     
                     .border( .red, width: 0.3)

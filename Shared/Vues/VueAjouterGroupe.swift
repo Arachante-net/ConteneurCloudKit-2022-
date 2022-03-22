@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-// Recuperer les informations minimales pour créer un nouveau Groupe
-// son Nom et son eventuelle collaboration
+/// Recuperer les informations minimales pour créer un nouveau Groupe
+/// son Nom et son eventuelle collaboration
 struct VueAjouterGroupe: View {
   @State private var nom = ""
   @State private var collaboratif = false

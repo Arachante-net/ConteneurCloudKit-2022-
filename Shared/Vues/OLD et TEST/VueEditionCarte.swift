@@ -129,8 +129,8 @@ struct VueEditionCarte: View {
                             
                             Ξ.item.longitude = nouveauLieu.longitude
                             Ξ.item.latitude  = nouveauLieu.latitude
-                            
-                            let _ = Logger.interfaceUtilisateur.info("🌐 Nouveau lieu : \(nouveauLieu.longitude) \(nouveauLieu.latitude)")
+                            print("ICI")
+                            let _ = Logger.interfaceUtilisateur.info("🌐 ICI Nouveau lieu : \(nouveauLieu.longitude) \(nouveauLieu.latitude)")
 //
 
                         } label: {

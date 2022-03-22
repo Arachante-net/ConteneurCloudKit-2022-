@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 import os.log
 
-/// Afficher  sur une carte un groupe d'item representés par des annotations
+/// Afficher  sur une carte le groupe d'item representés par des annotations
 struct VueCarteGroupe: View {
     
     //MARK: La source de verité de groupe est VueDetailGroupe

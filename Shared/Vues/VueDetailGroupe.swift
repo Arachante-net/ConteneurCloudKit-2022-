@@ -176,8 +176,10 @@ struct VueDetailGroupe: View {
                 // Lorsque VueModifGroupe quitera elle executera le code suivant sera executé
                 // avec en argument des informations provenant de VueModifGroupe
                 quiterLaVue in
-                Logger.interfaceUtilisateur.info("Retour de VueModifGroupe avec \(quiterLaVue.voyant)" )
+                Logger.interfaceUtilisateur.info("Retour de VueModifGroupe avec \(quiterLaVue ? "OK" : "KO")" )
                     feuilleModificationPresentée = false
+//                Ξ.feuilleModificationItemPresentée = false
+
                 } // fin closure
             
                 .border( .red, width: 0.3)

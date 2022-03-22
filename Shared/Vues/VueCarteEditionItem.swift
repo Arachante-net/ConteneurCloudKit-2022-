@@ -16,11 +16,11 @@ import os.log
 //TODO: A mettre à jour
 /// Affiche pour édition une région géographique, permet de définir un lieu sur une carte géographique
 ///
-///                 VueCarteEditionItem(item: $item, laRegion: $laRegion)
+///                 VueCarteEditionItem(item: $item, laRegion: $uneRegion)
 ///
 ///     - Paramêtres :
-///         - item en cours d'édition
-///         - laRegion géographique rectangulaire centrée autour des coordonnées du lieu
+///         - entrée : item en cours d'édition
+///         - liaison : laRegion géographique rectangulaire centrée autour des coordonnées du lieu
 struct VueCarteEditionItem: View {
     
     
@@ -29,35 +29,42 @@ struct VueCarteEditionItem: View {
     
     
     /// Région géographique ou se situe l'Item
-    @State var laRégion: MKCoordinateRegion
+//    @State var laRégion: MKCoordinateRegion
+    // 22 mars State => Binding
+    
+    /// Région géographique où se situe l'Item, initialisée par la vue mère, modifiée par et liée à Map
+    @Binding var laRégion: MKCoordinateRegion
+
     
  //   Cannot convert value of type 'ObservedObject<Item>.Wrapper' to expected argument type 'Binding<Item>'
     
     
     
   @State private var suivi:MapUserTrackingMode = .follow
-  @State private var monSuivi:Bool = false
+  @State private var survolerMaPosition:Bool = false
     
-    lazy var place:PositionIdentifiable = PositionIdentifiable(lat: item.latitude, long: item.longitude)
-    lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
+//    lazy var place:PositionIdentifiable = PositionIdentifiable(lat: item.latitude, long: item.longitude)
+//    lazy var lieu:Lieu = Lieu( latitude: item.latitude, longitude: item.longitude)
     
-    func Place_() -> PositionIdentifiable {
-        var moiMutable = self
-        return moiMutable.place
-        }
+//    func Place_() -> PositionIdentifiable {
+//        var moiMutable = self
+//        return moiMutable.place
+//        }
     
     func yPlace() -> PositionIdentifiable {
         PositionIdentifiable(lat: item.latitude, long: item.longitude)
         }
     
     
-    init(_ unItem: Item) { //}, achevée: @escaping  RetourInfoItemAchevée) {
+    init(_ unItem: Item, uneRégion:Binding<MKCoordinateRegion>) { //}, achevée: @escaping  RetourInfoItemAchevée) {
         
         _item = ObservedObject<Item>(wrappedValue : unItem)
         
 //         self.laModificationDeItemEstRéalisée    = achevée
         
-        _laRégion          = State(wrappedValue : unItem.région)
+         // 22 mars State => Binding
+//      _laRégion      = State(wrappedValue : unItem.région)
+        _laRégion      = uneRégion //Binding<MKCoordinateRegion>(wrappedValue : unItem.région)
 
         }
     
@@ -66,13 +73,20 @@ struct VueCarteEditionItem: View {
 
       VStack(alignment: .leading) {
           
-      EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRégion.center.latitude,         longitude: laRégion.center.longitude,         font: .caption).padding(.leading)
-//    EtiquetteCoordonnees(prefix: "pointeur ",     latitude: item.latitude,                    longitude: item.longitude,                    font: .body).padding(.leading)
+          HStack {
+              EtiquetteCoordonnees(prefix: "centre carte ", latitude: laRégion.center.latitude,         longitude: laRégion.center.longitude,         font: .caption).padding(.leading)
+              Spacer()
+              Menu("Lieux") {
+                  ForEach(Lieu.exemples) { unLieu in
+                      Button { localiser(unLieu) } label: { Text(unLieu.libellé) }
+                    }
+                  }
+              }
       ZStack {
           Map(
             coordinateRegion: $laRégion,
             showsUserLocation:true,
-            userTrackingMode: monSuivi ? .constant(.follow) : .constant(.none) ,
+            userTrackingMode: survolerMaPosition ? .constant(.follow) : .constant(.none) ,
             annotationItems: [ PositionIdentifiable(lat: item.latitude, long: item.longitude) /* yPlace()  */   ])   { place in
               MapPin(
                 coordinate: place.location, //yPlace().location,
@@ -89,7 +103,7 @@ struct VueCarteEditionItem: View {
                   Spacer()
                   Button {
                       // Survoler la position de l'utilisateur
-                      monSuivi = true
+                      survolerMaPosition = true
 
                   } label: {
                       Image(systemName: "paperplane.fill")
@@ -110,6 +124,7 @@ struct VueCarteEditionItem: View {
               HStack {
                   Spacer()
                   Button {
+                      Logger.interfaceUtilisateur.info("🌐 Mettre à jour les coordonnées de l'item avec \(laRégion.center.longitude) \(laRégion.center.longitude)")
                       item.centrerSur(laRégion)
                     } label: { Image(systemName: "plus") }
                   .buttonStyle(.borderless)
@@ -129,9 +144,17 @@ struct VueCarteEditionItem: View {
           
           }
           .onAppear()    {Logger.interfaceUtilisateur.info("onAppear VueCarteEditionItem")}
-          .onDisappear() { monSuivi = false }
+          .onDisappear() { survolerMaPosition = false }
         }
       }
+    
+    // Placer la région autour du lieu
+    func localiser(_ l:Lieu) {
+        laRégion.center.latitude  = l.latitude
+        laRégion.center.longitude = l.longitude
+        item.centrerSur(laRégion)
+        }
+    
     }
    
      

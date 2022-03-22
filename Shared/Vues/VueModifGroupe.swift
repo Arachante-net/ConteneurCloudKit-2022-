@@ -102,11 +102,18 @@ struct VueModifGroupe: View {
 
                     VStack {
                         VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
-                        VueModifItemSimple(groupe) { itemEnRetour in
-                            Logger.interfaceUtilisateur.debug("INFO EN RETOUR DE VUE MODIF ITEM \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude) ")
-                            
-                            feuilleEditionPrincipalPrésentée = false
-                            }
+// 22 mars
+//                        VueModifItemSimple(groupe) { aSauver, itemEnRetour in
+//                            Logger.interfaceUtilisateur.debug("🌐 Retour de VueModifItemSimple(groupe) depuis VueModifGroupe : \(aSauver ? "SAUVER" : "ABANDONNER") \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude) ")
+//                            feuilleEditionPrincipalPrésentée = false
+//                            if aSauver {
+////                                persistance.sauverContexte(depuis: "Retour VueModifItemSimple(groupe)")
+//                                }
+//                            else {
+////                                persistance.retourArriereContexte()
+//                                }
+//
+//                            }
                         }
 
                     VStack {// Indicateurs binaires
@@ -126,9 +133,27 @@ struct VueModifGroupe: View {
 
                 }
                 .sheet(isPresented: $feuilleEditionPrincipalPrésentée) {
-                    Text("Bientôt ici : EDITION DU PRINCIPAL")
-                    Button("OK") { feuilleEditionPrincipalPrésentée = false}
-                    }
+                    NavigationView {
+//                    Text("Bientôt ici : EDITION DU PRINCIPAL")
+                    VueModifItemSimple(groupe) { aSauver, itemEnRetour in
+                        Logger.interfaceUtilisateur.debug("🌐 Retour de VueModifItemSimple(groupe) depuis VueModifGroupe : \(aSauver ? "SAUVER" : "ABANDONNER") \(itemEnRetour.leTitre) \(itemEnRetour.longitude) \(itemEnRetour.latitude) ")
+                        feuilleEditionPrincipalPrésentée = false
+                        if aSauver {
+                                persistance.sauverContexte(depuis: "Retour VueModifItemSimple(groupe)")
+                            }
+                        else {
+                                persistance.retourArriereContexte()
+                            }
+                        
+                        }
+//                    Button("OK") { feuilleEditionPrincipalPrésentée = false}
+                    } // NavigationView
+                
+                    
+                    .border( .red, width: 0.3)
+                    .ignoresSafeArea()
+
+                    } //Sheet
                 
                 .sheet(isPresented: $feuilleAffectationPrésentée) {
                     VueAffectationGroupe( groupe,
@@ -151,17 +176,19 @@ struct VueModifGroupe: View {
                 //.navigationBarTitleDisplayMode(.inline)
                 .toolbar {
 
-                    ToolbarItemGroup(placement: .principal) //.automatic .bottomBar .principal
-                        { barreMenu }
+                    
         //
                     ToolbarItem(placement: .cancellationAction) {
                         Button(role: .cancel, action: abandonerFormulaire) {
                             VStack {
                                 Icones.abandoner.imageSystéme
-                                Text("Abandon").font(.caption)
+                                Text("Abandon !!").font(.caption)
                                 }
                           }
                         }
+                    
+                    ToolbarItemGroup(placement: .principal)// .principal) //.automatic .bottomBar .principal
+                        { barreMenu }
         //
                     ToolbarItem(placement: .confirmationAction ) {
                         Button( action: validerFormulaire) {
@@ -215,7 +242,7 @@ struct VueModifGroupe: View {
 //                        .frame(maxWidth: geo.size.width / 16, alignment: .bottom)
 //                        .foregroundColor(.secondary)
 //                    }
-                
+                Spacer()
                 Button(action: affecterUnGroupe) {
                     VStack {
                         Icones.affecter.imageSystéme
@@ -252,6 +279,7 @@ struct VueModifGroupe: View {
                   }
                 }
             
+            Spacer()
 //MARK: - THE BUG  ! (sans le point) frame(maxHeight: .infinity, alignment: .bottom).border(.yellow) -
             
         }//.border(.gray.opacity(0.5))
@@ -268,7 +296,7 @@ struct VueModifGroupe: View {
              
         // Executer le code (closure) fourni à cette Vue (VueModifItem) en parametre d'entrée
         // par la vue appelante. (permet une remontée d'information)
-        persistance.sauverContexte("Groupe Item")
+        persistance.sauverContexte("Groupe Item", depuis:#function)
         let _ = groupe.verifierCohérence(depuis: "validation du formulaire" )
         // Informer la vue appelante qu'il y a eu des modifications du Groupe
         reponseAmaMère(true)

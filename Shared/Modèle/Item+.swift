@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import SwiftUI
 import MapKit
+import os.log
 
 
 #if os(iOS)
@@ -74,9 +75,10 @@ extension Item {
     
 //    static func vide() { Item() }
     
-    static func bidon() -> Item {
-        let nouvelItem = Item()
-            nouvelItem.valide           = true
+    static func bidon(contexte:NSManagedObjectContext) -> Item {
+        Logger.modélisationDonnées.info("💢\(#function)")
+        let nouvelItem = fournirNouveau(contexte:contexte) // nouvelItem
+//        let nouvelItem = Item()
             nouvelItem.timestamp        = Date(timeIntervalSince1970:0)
             nouvelItem.titre            = "␀"
             nouvelItem.id               = UUID()
@@ -89,6 +91,7 @@ extension Item {
             nouvelItem.mode             = .bien
             nouvelItem.ordre            = 0
             nouvelItem.valeur           = 0
+            nouvelItem.valide           = false
             nouvelItem.message          = "␀"
 
      return nouvelItem
@@ -98,14 +101,15 @@ extension Item {
     /// - Parameters:
     ///   - titre: de l'Item
     static func creer(contexte:NSManagedObjectContext , titre:String="⚡︎⚡︎⚡︎") {
-        
+        Logger.modélisationDonnées.info("💢\(#function)")
+
         _ = fournirNouveau(contexte:contexte , titre:titre) // nouvelItem
 //        persistance.sauverContexte("")
             //FIXME: ne sauver que s'il y a des trucs à sauver
             //FIXME: ? écrire ailleur  PERSITANCE
             //FIXME: meilleure gestion des erreurs
 //        persistance.sauverContexte(nom:"Item" )
-            print("♻️")
+        Logger.modélisationDonnées.info("💰")
                         do {
                             contexte.name = "Item"
                             try contexte.save()
@@ -124,7 +128,7 @@ extension Item {
     ///   - titre: de l'Item
     /// - Returns: un Item
     static func fournirNouveau(contexte:NSManagedObjectContext , titre:String="N/A") -> Item {
-        
+        Logger.modélisationDonnées.info("💢\(#function)")
         let nouvelItem = Item(context: contexte)
             nouvelItem.timestamp = Date()
             nouvelItem.titre     = titre
@@ -379,10 +383,10 @@ extension Item {
 //        (latitude, longitude) = centrerSur(région)
 //      }
     
-    /// Positioner  les coordonnées de l'Item sur le centre de la Région géographique 
+    /// Positioner  les coordonnées de l'Item avec celles du centre de la région géographique passée en paramètre
     func centrerSur(_ région: MKCoordinateRegion )  { //}-> (latitude:Double, longitude:Double) {
 //       (latitude: région.center.latitude, longitude: région.center.longitude)
-        latitude = région.center.latitude
+        latitude  = région.center.latitude
         longitude = région.center.longitude
       }
     

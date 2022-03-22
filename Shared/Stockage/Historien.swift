@@ -98,8 +98,8 @@ public class Historien {
                             }
         
                         //TODO: à écrire
-                        print("\n🔹",   items.count, "ITEMS"  , items.first?.timestamp ?? "", "...", items.last?.timestamp ?? "")
-                        print("\n🔹", groupes.count, "GROUPES", groupes.first?.nom ?? "")
+//                    Logger.historien.info("\n🔹 \(items.count)   ITEMS   \(items.first?.timestamp.description) ... \(items.last?.timestamp ?? "") ")
+                        Logger.historien.info("\n🔹 \(groupes.count) GROUPES \(groupes.first?.nom ?? "") ")
 //                      jouerAvec(cartes: items)
         
                         // Sauver si besoin
@@ -107,7 +107,7 @@ public class Historien {
 //                    persistance.sauverContexte(nom:"GroupeItem"  , auteur:"Historien") 
 
                         if monContexte.hasChanges {
-                            print("♻️")
+                            Logger.historien.info("💰")
 //                            os_log("User %{public}@ logged in", log: OSLog.userFlow, type: .info, username)
 //                            os_log("♻️", log: OSLog.default)
 

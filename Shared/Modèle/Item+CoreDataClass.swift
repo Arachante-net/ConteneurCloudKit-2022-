@@ -10,6 +10,7 @@
 import Foundation
 import CoreData
 
+/// Représente un évenement suivi  par le logiciel
 @objc(Item)
 public class Item: NSManagedObject {
 

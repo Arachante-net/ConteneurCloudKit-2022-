@@ -36,8 +36,10 @@ import os.log
 ///
 struct VueCarteItem: View {
     
-   
-    @Binding var item:Item
+   // 17 mars
+//    @Binding var item_:Item
+    @ObservedObject var item: Item
+
     
     // La région doit etre mise à jour par la VueDeatailItem
     // @Binding pour laRégion car son évolution doit être retournée à la Vue appelante (VueDetailItem)
@@ -48,7 +50,8 @@ struct VueCarteItem: View {
     @State private var suivi:MapUserTrackingMode = .follow
     @State private var monSuivi:Bool = false
     
-    lazy var place:PositionIdentifiable = PositionIdentifiable(lat: item.latitude, long: item.longitude)
+//    lazy var place:PositionIdentifiable = PositionIdentifiable(lat: item.latitude, long: item.longitude)
+    var place:PositionIdentifiable
 
    
     
@@ -57,10 +60,20 @@ struct VueCarteItem: View {
 //        return moiMutable.place
 //        }
     
+    // 17 mars
+    init(_ unItem: Item, uneRegion:Binding<MKCoordinateRegion>)  {
+        _item = ObservedObject<Item>(wrappedValue : unItem)
+        place = PositionIdentifiable(lat: unItem.latitude, long: unItem.longitude)
+        let _ = Logger.interfaceUtilisateur.info("🌐 Init de VueCarte pour un Item en \(unItem.latitude) \(unItem.longitude)")
+        _laRegion = Binding(projectedValue: uneRegion)
+        let lat  = uneRegion.wrappedValue.center.latitude
+        let long = uneRegion.wrappedValue.center.longitude
+        let _ = Logger.interfaceUtilisateur.info("🌐 Init de VueCarte sur une région centrée en \(lat) \(long)")
+        }
 
     
   var body: some View {
-      let _ = Logger.interfaceUtilisateur.info("🌐 Appel de VueCarte sur une région centrée en \(laRegion.center.latitude) \(laRegion.center.longitude)")
+      let _ = Logger.interfaceUtilisateur.info("🌐 Affichage de VueCarte sur une région centrée en \(laRegion.center.latitude) \(laRegion.center.longitude)")
       let _ = Logger.interfaceUtilisateur.info("🌐 suivi : \(suivi.hashValue) \(item.coloris)")
       
 //      var coul = item.coloris

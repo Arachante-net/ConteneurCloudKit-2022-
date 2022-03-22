@@ -10,6 +10,7 @@
 import Foundation
 import CoreData
 
+/// Représente un ensemble d'événements individuels (Items) concourant à un objectif  partagé
 @objc(Groupe)
 public class Groupe: NSManagedObject {
 

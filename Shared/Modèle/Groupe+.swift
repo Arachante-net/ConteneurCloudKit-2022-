@@ -14,6 +14,7 @@ import os.log
 
 
 //MARK: - Requêtes -
+/// Coin, coin
 extension Groupe {
     
     //MARK: Critères d'extraction depuis le stockage permanent -
@@ -76,7 +77,7 @@ extension Groupe {
         // persistance
 //        persistance.sauverContexte(nom:"Groupe")
 //        print("♻️")
-        Logger.modélisationDonnées.info("♻️")
+        Logger.modélisationDonnées.info("💰")
         do {
             contexte.name = "Groupe"
             try contexte.save()
@@ -112,7 +113,7 @@ extension Groupe {
 
         // sauver le contexte
 //        persistance.sauverContexte(nom:"Groupe")
-        Logger.modélisationDonnées.info("♻️")
+        Logger.modélisationDonnées.info("💰")
         do {
             contexte.name = "Groupe"
             try contexte.save()
@@ -243,7 +244,8 @@ extension Groupe {
 
 //                fatalError("🔴 ERREUR le principal de \( nom ?? "") n'existe pas !!") ////
 //              print("🔴 ERREUR le principal de", nom ?? "" , "n'existe pas !!")
-              return Item.bidon()
+                Logger.modélisationDonnées.error("💢 Le principal de \(self.leNom) n'existe pas !!")
+                return Item.bidon(contexte: NSManagedObjectContext() )
                 }
             }
         }

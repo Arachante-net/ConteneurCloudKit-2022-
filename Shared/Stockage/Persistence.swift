@@ -13,6 +13,10 @@ import os.log
 
 
 //struct ControleurPersistance  {
+
+/// Fourni :
+/// - un conteneur qui encapsule la pile Core Data et qui met en miroir les magasins persistants sélectionnés dans une base de données privée CloudKit.
+/// - ainsi qu'une gestion de l'historique des transactions.
 class ControleurPersistance : ObservableObject {
     @Published var appError: ErrorType? = nil
     // Singleton
@@ -292,16 +296,37 @@ class ControleurPersistance : ObservableObject {
         }
 
     func retourArriereContexte() {
+        l.debug("💰 retour arriere contexte (\(self.conteneur.viewContext.hasChanges ? "il y avait des évolutions" : "rien a sauver")), \t \(self.conteneur.viewContext.updatedObjects.count) évolutions, \(self.conteneur.viewContext.insertedObjects.count) insertions, \(self.conteneur.viewContext.deletedObjects.count) suppressions.")
         conteneur.viewContext.rollback()
         // This method does not refetch data from the persistent store or stores.
         }
         
-    func sauverContexte( _ nom:String="ContexteParDefaut"  , auteur:String = UserDefaults.standard.string(forKey: "UID")  ?? "AuteurParDefaut") {
+    func sauverContexte( _ nom:String="ContexteParDefaut"  , auteur:String = UserDefaults.standard.string(forKey: "UID")  ?? "AuteurParDefaut", depuis:String="") {
       // Y-a bien eu des changements
       guard conteneur.viewContext.hasChanges else { return }
 
       do {
-            l.info("♻️ Sauvegarde du contexte.")
+          l.debug("💰💰 Sauvegarde [\(self.conteneur.viewContext.registeredObjects.count) enregistrements], du contexte (depuis \(depuis), nom \(nom), auteur, \(auteur)) \(self.conteneur.viewContext.hasChanges ? "☑️" : "🟰"), \t \(self.conteneur.viewContext.updatedObjects.count) évolutions, \(self.conteneur.viewContext.insertedObjects.count) insertions, \(self.conteneur.viewContext.deletedObjects.count) suppressions.")
+//          let lesEnregistrements = self.conteneur.viewContext.registeredObjects.compactMap(\.entity.name )
+          l.info("💰- \( self.conteneur.viewContext.registeredObjects.compactMap(\.entity.name) )")
+
+     ////////     l.info("💰▫️ \( self.conteneur.viewContext.registeredObjects.map(\.entity.name ) )")
+//          self.conteneur.viewContext.registeredObjects.forEach() {
+//              l.info("💰▫️ \($0.entity.name ?? "*")")
+//            }
+
+          self.conteneur.viewContext.updatedObjects.forEach() {
+              switch $0.entity.name {
+                  case "Item" :
+                      let O = $0 as! Item
+                      l.debug("💰 -> [Item] : \(O.leTitre) V:\(O.valeur), M:\(O.leMessage), long:\(O.longitude) lat:\(O.latitude)")
+                  case "Groupe" :
+                      let O = $0 as! Groupe
+                      l.debug("💰 -> [Groupe] \(O.leNom) ")
+                  default: l.debug("💰 -> [[\($0.entity.debugDescription)]] ") //"   .entity.name)") //"break
+                      }
+                  } // foreach
+          
             conteneur.viewContext.transactionAuthor = auteur // + "Persistance"
             conteneur.viewContext.name = nom
         try conteneur.viewContext.save()
@@ -333,7 +358,7 @@ class ControleurPersistance : ObservableObject {
     //            objects.forEach(context.delete)
 
 
-                self.sauverContexte()
+                self.sauverContexte(depuis:#function)
                 }
             }
         }

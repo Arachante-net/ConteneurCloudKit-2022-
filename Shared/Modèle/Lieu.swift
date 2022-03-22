@@ -10,6 +10,7 @@ import Foundation
 import MapKit
 import os.log
 
+/// Un jeu de coordonnées géographiques identifiable
 struct Lieu: Identifiable, Codable, Equatable {
     var id: UUID // ?? UUID() on peut avoir à le modifier
 
@@ -22,6 +23,8 @@ struct Lieu: Identifiable, Codable, Equatable {
     let longitude: Double
 //    let couleur: UIColor sinon il manque Codable
 
+    static var exemples:[Lieu] = [BuckinghamPalace, MontSaintMichel, Paris, Londres, Tonga, Fidji, Edanna, Régnault, Cézembre]
+    static let exemple = MontSaintMichel
 
     static let BuckinghamPalace = Lieu(latitude:  51.501   , longitude:   -0.141    ,libellé: "Buckingham Palace", description: "Where Queen Elizabeth lives with her dorgis."                                              )
     static let MontSaintMichel  = Lieu(latitude:  48.636021, longitude:   -1.511496 ,libellé: "Mont Saint-Michel", description: "Îlot rocheux consacré à saint Michel où s’élève aujourd’hui l’abbaye du Mont-Saint-Michel.")
@@ -29,9 +32,10 @@ struct Lieu: Identifiable, Codable, Equatable {
     static let Londres          = Lieu(latitude:  51.507222, longitude:   -0.1275   ,libellé: "Londres",           description: "La capitale des Anglais"                                                                   )
     static let Tonga            = Lieu(latitude: -19.916086, longitude: -175.202622 ,libellé: "Tonga",             description: "Une île trés à l'Ouest presque 20° sous l'équateur"                                        )
     static let Fidji            = Lieu(latitude: -18.123973, longitude:  179.01226  ,libellé: "Fidji",             description: "Une île trés à l'Est presque 20° sous l'équateur"                                          )
+    static let Edanna           = Lieu(latitude:  46.221460, longitude:   -1.435337 ,libellé: "Edanna",            description: "Le nid du Lidou"                                                                           )
+    static let Régnault         = Lieu(latitude:  48.847016, longitude:    2.189243 ,libellé: "Régnault",          description: "Le nid du Chat"                                                                           )
+    static let Cézembre         = Lieu(latitude:  48.676389, longitude:   -2.071944 ,libellé: "Cézembre",          description: "L'ile des flibustiers"                                                                           )
 
-    static let exemple = MontSaintMichel
-    
     static func ==(lhs: Lieu, rhs: Lieu) -> Bool { lhs.id == rhs.id }
     
     static let coordonnéesParDéfaut = CLLocationCoordinate2D(
@@ -61,6 +65,7 @@ struct Lieu: Identifiable, Codable, Equatable {
 }
 
 
+/// Version légère d'un Lieu
 struct PositionIdentifiable: Identifiable {
     let id: UUID
     let location: CLLocationCoordinate2D
@@ -77,6 +82,7 @@ struct PositionIdentifiable: Identifiable {
 
 
 //FIXME: Une Annotation c'est different d'un Lieu (A RATIONALISER)
+/// Informations décrivant un lieu géographique sur une carte
 struct AnnotationGeographique: Identifiable, Hashable {
   let id = UUID()
   let libellé: String
@@ -103,8 +109,13 @@ struct AnnotationGeographique: Identifiable, Hashable {
 //  }
 
 
-extension MKCoordinateRegion {
-    /// recentrer la Région sur les coordonnées de l'Item
+extension MKCoordinateRegion : Equatable {
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center.latitude  == rhs.center.latitude &&
+        lhs.center.longitude == rhs.center.longitude
+    }
+    
+    /// Positionner la région autour des coordonnées de l'Item passé en paramètre
     mutating func centrerSur(_ item:Item) {
         center.latitude  = item.latitude
         center.longitude = item.longitude
@@ -115,9 +126,9 @@ extension MKCoordinateRegion {
 //        span.longitudeDelta = 10
 //        }
     
-    /// La région géographique qui  englobe  un ensemble de coordonnées
-    /// En entrée lesCoordonnées    : [CLLocationCoordinate2D]
-    /// En sortie la région: MKCoordinateRegion  englobant toutesLesCoordonnées
+    /// Determiner la région géographique qui  englobe  un ensemble de coordonnées
+    /// En entrée : le tableau des coordonnées  de l'ensemble des points
+    /// En sortie : la région (position et étendue)   englobant toutesLesCoordonnées
     static func englobante(lesCoordonnées : [CLLocationCoordinate2D]) -> MKCoordinateRegion {
 #warning("Attention ...    ")
 //#error("Erreur ! ")
@@ -228,6 +239,7 @@ extension MKCoordinateRegion {
 
     }
     
+    /// Un exemple de région géographique (position & étendue)
     static let ApplePark = MKCoordinateRegion(
           center: CLLocationCoordinate2D(latitude: 37.334_900,
                                          longitude: -122.009_020),

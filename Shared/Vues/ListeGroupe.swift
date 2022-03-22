@@ -10,6 +10,7 @@ import SwiftUI
 import CoreData
 import os.log
 
+/// Affiche la liste des groupes
 struct ListeGroupe: View {
     
   let  l = Logger.interfaceUtilisateur

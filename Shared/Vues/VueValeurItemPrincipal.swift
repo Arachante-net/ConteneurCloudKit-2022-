@@ -9,6 +9,7 @@
 import SwiftUI
 import os.log
 
+/// Affiche et permet la modification direct de la valeur principale
 struct VueValeurItemPrincipal: View {
     
 @EnvironmentObject private var persistance : ControleurPersistance
