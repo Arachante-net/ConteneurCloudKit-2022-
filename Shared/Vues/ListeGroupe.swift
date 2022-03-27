@@ -55,14 +55,19 @@ struct ListeGroupe: View {
               NavigationLink(destination: VueDetailGroupe(groupe), //.equatable(),
                              tag: groupe.leNom,
                              selection: $courant) {
-              HStack {
-                  Text("\(groupe.leNom)").fontWeight(groupe.collaboratif ? .heavy : .thin )
-                  Text("\(groupe.lePrincipal.leMessage)")
-                Spacer()
-              }//.aspectRatio(16/9, contentMode: .fit)
+                  Cellule(groupe: groupe, config: [.entête]) //, .description, .indicateurs]) //, .description, .informations, .indicateurs])
+//                      .frame(width: 255, height: 150)
+//                      .aspectRatio(16/9, contentMode: .fill)
+//                      .padding()
+//              HStack {
+//                  Text("\(groupe.leNom)").fontWeight(groupe.collaboratif ? .heavy : .thin )
+//                  Text("\(groupe.lePrincipal.leMessage)")
+//                Spacer()
+//              }//.aspectRatio(16/9, contentMode: .fit)
 //              .background(RoundedRectangle(cornerRadius: 3).fill(.red))
 //              .aspectRatio(16/9, contentMode: .fit)
-                      .badge( Text("\(groupe.valeur)")    )
+                  
+                      //.badge( Text("\(groupe.valeur)")    )
             }
 
         }

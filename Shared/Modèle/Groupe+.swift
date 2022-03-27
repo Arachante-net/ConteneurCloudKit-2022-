@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 import MapKit
 import os.log
 
@@ -53,6 +54,22 @@ extension Groupe {
                nouveauGroupe.valide = true
         return nouveauGroupe
        }
+    
+    static func exemple(contexte:NSManagedObjectContext) -> Groupe {
+        Logger.modélisationDonnées.info("💢\(#function)")
+        let nouveauGroupe = fournirNouveau(contexte:contexte) // nouvelItem
+//        let nouvelItem = Item.exemple(contexte:contexte) // nouvelItem
+
+//        let nouvelItem = Item()
+            nouveauGroupe.icone            = "rectangle"
+            nouveauGroupe.nom              = "Exemple de groupe"
+            nouveauGroupe.objectif         = "Voyage avec notre vaisseau spatial dans l'Espace, cette frontière de l'infini. Notre mission de cinq ans : explorer de nouveaux mondes étranges, découvrir de nouvelles vies, d'autres civilisations, et au mépris du danger avancer vers l'inconnu..."
+            nouveauGroupe.id               = UUID()
+            nouveauGroupe.ordre            = 0
+            nouveauGroupe.valide           = true
+//            nouveauGroupe.principal        = nouvelItem
+     return nouveauGroupe
+        }
 
     /// Création d'un nouveau couple Groupe/Item
     /// - Parameters:
@@ -271,6 +288,20 @@ extension Groupe {
         get {nom ?? "␀"}
         set {nom = newValue}
         }
+    
+    /// L'objectif non optionel du groupe
+    var lObjectif:String {
+        get {objectif ?? "␀"}
+        set {objectif = newValue}
+        }
+    
+    /// L'icône non optionel du groupe
+    var lIcone:String {
+        get {icone ?? "rectangle"}
+        set {icone = newValue}
+        }
+    
+    var image:Image { Image(systemName: lIcone) }
     
     /// La valeur d'un groupe, c'est la somme (Int) des valeurs (Int64) de ses participants
     var valeur:Int { Int(

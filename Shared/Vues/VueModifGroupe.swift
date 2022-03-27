@@ -83,6 +83,8 @@ struct VueModifGroupe: View {
         //TODO: déclarer ici dans l'init ou lors de onAppear ? ?
         mesChefsInitiaux          = unGroupe.groupesAuxquelsJeParticipe
         mesCollaborateursInitiaux = unGroupe.collaborateursSansLePrincipal
+        
+        UITextView.appearance().backgroundColor = .clear
         }
 
     var body: some View {
@@ -90,16 +92,67 @@ struct VueModifGroupe: View {
             ScrollView {
                 VStack { //}(alignment: .leading, spacing: 2){
                 Group {
-                    VStack { //(alignment: .leading, spacing: 1) {
-                        Text(" Nom du groupe :")
-                        TextField("Nouveau nom du groupe", text: $groupe.leNom)
-                            .foregroundColor(Color.accentColor)
-                            .submitLabel(.done)
-                            .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
-        //                    .padding()
-                            .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER LE CONTEXT") }
-                        }
+                    VStack {
+                        VStack { //(alignment: .leading, spacing: 1) {
+                            Text("Nom :").frame(maxWidth: .infinity,alignment: .leading)
+                            TextField("Nouveau nom du groupe", text: $groupe.leNom)
+                                .foregroundColor(Color.accentColor)
+//                                .submitLabel(.done)
+//                                .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+            //                    .padding()
+                                .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER LE NOM") }
+                            }
+                        
+                        VStack {
+                            Text("Raison d'être :").frame(maxWidth: .infinity,alignment: .leading)
+                                .lineLimit(nil)
+                            TextEditor(text: $groupe.lObjectif)
+                                .lineLimit(10)
+                                .padding()
+                                .background(Color.black.opacity(0.25))
+                                .foregroundColor(Color.accentColor)
+                                .font(.custom("HelveticaNeue", size: 17))
+                                .lineSpacing(5)
+                                .clipShape(RoundedRectangle(cornerRadius :5.0 ))
+                                .background(Color.black)
+                                .cornerRadius(5)
+//                                .border(Color.blue)
+                                .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER L'OBJECTIF") }
 
+
+                                
+//                            TextField("Nouvel objectif du groupe", text: $groupe.lObjectif)
+//                                .foregroundColor(Color.accentColor)
+////                                .submitLabel(.done)
+////                                .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+//            //                    .padding()
+//                                .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER L'OBJECTIF") }
+                            }
+                        HStack {
+                            VStack {
+                                Text("Icône :").frame(maxWidth: .infinity,alignment: .leading)
+                                TextField("Nouvelle icône du groupe", text: $groupe.lIcone)
+                                    .textCase(.lowercase)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .foregroundColor(Color.accentColor)
+    //                                .submitLabel(.done)
+    //                                .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+                //                    .padding()
+                                    .onSubmit { Logger.interfaceUtilisateur.info("ENREGISTRER ET SAUVER L'ICONE") }
+                                
+                                }
+//                            Image(systemName: groupe.lIcone)
+                            groupe.image
+                                .scaleEffect(2) //, anchor: .leading)
+                                .padding()
+                            Link("Symboles SF", destination: URL(string : "https://devimages-cdn.apple.com/design/resources/download/SF-Symbols-3.2.dmg" )!) //https://hotpot.ai/free-icons?s=sfSymbols")! )
+                            }
+                        }
+//                    .foregroundColor(Color.accentColor)
+                    .submitLabel(.done)
+                    .textFieldStyle(RoundedBorderTextFieldStyle()) //.roundedBorder)
+                    
                     VStack {
                         VueValeurItemPrincipal(item: groupe.lePrincipal , groupe: groupe )
 // 22 mars
@@ -187,7 +240,7 @@ struct VueModifGroupe: View {
                           }
                         }
                     
-                    ToolbarItemGroup(placement: .principal)// .principal) //.automatic .bottomBar .principal
+                    ToolbarItemGroup(placement: .principal) //.bottomBar )// .principal) //.automatic .bottomBar .principal
                         { barreMenu }
         //
                     ToolbarItem(placement: .confirmationAction ) {

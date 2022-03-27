@@ -34,6 +34,7 @@ struct Reglages: View {
     var body: some View {
 
         HStack {
+            Text("Titre")
             VStack(alignment: .leading) {
                 Section(header: Text("Utilisateur").font(.title)) {
                     Text("Statut : ") .bold().foregroundColor(.secondary)
@@ -48,27 +49,27 @@ struct Reglages: View {
                     + Text("\(persistance.nomConteneur)")
                     Text(", URL : ").bold().foregroundColor(.secondary)
                     + Text("\(persistance.conteneur.persistentStoreDescriptions.first!.url?.absoluteString ?? "") ")
-                    
+
                     Text("Base CloudKit : ").bold().foregroundColor(.secondary)
                     + Text("\(persistance.conteneur.persistentStoreDescriptions.first!.cloudKitContainerOptions?.containerIdentifier ?? "") ")
-                    
+
                     let options = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.Arachante.Espoir")
                     Text("Portée : ").bold().foregroundColor(.secondary)
                     + Text("\(options.__databaseScope) ") // 2 = privée ?
-                    
+
                     Text("Modele : ").bold().foregroundColor(.secondary)
                     + Text("\(persistance.conteneur.managedObjectModel.entities.count) Entitées")
-                    
+
                     ForEach (persistance.conteneur.managedObjectModel.entities.map {$0.name ?? ""} , id:\.self) { nom in
                         Text("   \(nom)")
                         }
-                    
+
                 }.padding(.horizontal)
-                
-    
+
+
                 Divider()
 //                Spacer()
-                
+
                 Text("\(orphelins.count) Orphelins (qui ne participent à aucun groupe)").bold()
                 List {
                     ForEach(orphelins) {orphelin in
@@ -80,8 +81,8 @@ struct Reglages: View {
                       supprimer(contexte: contexte, objet: orphelin as Item)
                       }
                     }
-                
-                Text("\(isolés.count) isolés (non assicié à un évenement prinipal)").bold()
+////////
+                Text("!!! \(isolés.count) isolés (non associé à un évenement prinipal)").bold()
                 List {
                     ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
                     }
@@ -97,6 +98,8 @@ struct Reglages: View {
             
             VStack {
                 Text("⭕️ Historique").bold()
+
+
                 Button("⭕️ Ménage") {
                     let backgroundContext = persistance.conteneur.newBackgroundContext()
                     backgroundContext.performAndWait {
@@ -107,7 +110,7 @@ struct Reglages: View {
                             //NSPredicate(value:true)
                             recupererHistorique.fetchRequest = requetteHistorique
                             }
-                        
+
                         do {
                           let resultatRequeteHistorique = try backgroundContext.execute(recupererHistorique) as? NSPersistentHistoryResult
                           transacs = resultatRequeteHistorique?.result as! [NSPersistentHistoryTransaction]
@@ -126,36 +129,39 @@ struct Reglages: View {
                                       "[",transaction.contextName ?? "...", "]",
                                       transaction.author ?? "...")
                                 }
-                            
+
                           } // do
                         catch {}
                     } // perform and wait
-                    
-                    
-                    
-                   }
+
+
+
+                   } // bouton ménage
+
+
                 List {
                     ForEach(transacs, id: \.self) {transaction in
                         Text("\(transaction.timestamp.formatted(.dateTime.day().month().year())) [\(transaction.contextName ?? "")]     \(transaction.author ?? "") ")
                         }
                     }
 
+
+
                  ForEach(Icones.allCases, id: \.self) { val in
                      HStack {
                          val.imageSystéme
-//                             .resizable()
                              .scaleEffect(2, anchor: .leading)
                              .padding()
                          Text(val.rawValue)
                          }//.tag(val)
                     }
-        
+
             }
             
             
-            }
-        }
-    }
+            } // HStack
+        } // Body
+    } // Reglages
 
 func supprimer(contexte:NSManagedObjectContext, objet:NSManagedObject) {
     contexte.delete(objet)

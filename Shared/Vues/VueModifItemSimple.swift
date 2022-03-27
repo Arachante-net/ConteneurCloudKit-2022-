@@ -1,9 +1,7 @@
 //
-//  ListItemView.swift
-//  OrderedList
 //
-//  Created by SchwiftyUI on 9/2/19.
-//  Copyright © 2019 SchwiftyUI. All rights reserved.
+//  Created by me
+//  Copyright © 2021 Arachante
 //
 
 import SwiftUI
@@ -12,50 +10,56 @@ import os.log
 
 
 /// Vue permettant d'éditer les propriétées d'un Item
-///     VueModifItem(item) { valeur in ... code à éxecuter afin de retourner des infos à la vue appelante }
-/// Deux modes de validation sont envisageables :
-///     global : toutes les évolutions de proprieté sont valider ensemble par le bouton "VALIDER"
-///     individuel : proprieté par proprieté, le bouton global s'appele plutôt "TERMINER"
+/// -  `VueModifItem(item) { valeur in ...` code à éxecuter afin de retourner des infos à la vue appelante }
+/// -  `VueModifItem(groupe) { ... }`
+/// 
+///
+/// - Si l'appel s'effectue sur un groupe, la vue édite l'item principal de ce groupe
+///
+/// - Deux modes de validation sont envisageables :
+///     - global : toutes les évolutions de proprieté sont validées ensemble par le bouton "VALIDER"
+///     - individuel : proprieté par proprieté, le bouton global s'appele plutôt "TERMINER"
 
 struct VueModifItemSimple: View {
     
     @EnvironmentObject private var persistance : ControleurPersistance
 
-    // La Source de vérité est la Vue ............;
-//    /// Item en cours d'édition, propiété de VueDetailItem
-//    @Binding var item:Item
-//    
+  
     /// L'Iten cour d'édition, ( il est la propriété de  la vue mère)
     @ObservedObject var item: Item
     /// Groupe en cours d'edition, propriété de VueDetailGroupe
     @ObservedObject var groupeParent: Groupe
     
-    /// Région géographique ou se situe l'Item
+    /// La région géographique ou se situe l'Item,
+    /// elle sera eventuellement modifiée par  la  vue Map (et par l'utilisateur)
     @State var laRégion: MKCoordinateRegion
     
     typealias RetourInfoItemAchevée = (Bool, Item) -> Void
-    /// Code à effectuer lorsque terminée afin de retourner des info
+    /// Code à effectuer lorsque terminée afin de retourner des info à la vue mère
+    ///  true si l'item à évolué,  aussi la nouvelle valeur de l'item
     let reponseAmaMère : RetourInfoItemAchevée
     
 
     @Environment(\.managedObjectContext) var contexte
     @Environment(\.presentationMode)     var modePresentation
     
-    // Rejet de la présentation actuelle
+    // Rejet de la présentation actuelle //pas utilisée
     @Environment(\.dismiss) var cloreLaVueActuelle
 
 
         
     @FocusState var champTexteActif: Bool
     
-    // Modifier l'Item passé passé en argument
+    /// Modifier/Editer l'Item passé passé en argument
     init(_ unItem: Item, achevée: @escaping  RetourInfoItemAchevée) {
 
         _item = ObservedObject<Item>(wrappedValue : unItem)
         
+        // retrouver le groupe principal parent de cet item
         if let parent = unItem.principal {
             _groupeParent   = ObservedObject<Groupe>(wrappedValue : parent)
             }
+        // ou un nouveau groupe s'il n'existe pas
         else {
             _groupeParent = ObservedObject<Groupe>(wrappedValue : Groupe() )
             }
@@ -82,7 +86,7 @@ struct VueModifItemSimple: View {
         
         reponseAmaMère = achevée
         
-        Logger.interfaceUtilisateur.info("🌐 Init de VUE MODIF ITEM SIMPLE \(unGroupe.leNom) Position  \(unGroupe.principal!.longitude) \(unGroupe.principal!.latitude) ")
+        Logger.interfaceUtilisateur.info("🌐 Init de VueModifItemSimple pour le groupe \(unGroupe.leNom), positioné en  \(unGroupe.principal!.longitude) \(unGroupe.principal!.latitude) ")
 
         }
 
@@ -158,8 +162,11 @@ struct VueModifItemSimple: View {
 //                        item.lesGroupes.forEach { $0.integration.toggle() }
 //                        persistance.sauverContexte()
 //                        }
+                
+                /// Validation locale du message
                 Button(action: {
-                    // Faire des choses plus pertinentes
+                    // Faire des choses plus pertinentes (cf les modes de validation individuelle ou globale)
+                    // pourait éviter un flux à chaque nouvelle lettre saisie
                     Logger.interfaceUtilisateur.info("Message à envoyer : '\(item.leMessage)'")
                     }) {
                         Label("Envoyer", systemImage: "chevron.forward.circle.fill")
@@ -168,25 +175,34 @@ struct VueModifItemSimple: View {
                 Spacer()
                 }
             
+            
             Text("Signature : \(item.signature)")
             
             
             
-            // Définir le lieu de l'item sur la carte
-            // 22 mars
-            VueCarteEditionItem(item, uneRégion: $laRégion) //, laRégion: laRégion)
+            /// Définir le lieu de l'item sur la carte, l'utilisateur peut déplacer la région pour désigner une  autre position
+            VueCarteEditionItem(item, uneRégion: $laRégion)
 //                .onChange(of: item.coordonnées) { nouvelItem in
 //                    Logger.interfaceUtilisateur.debug("🌐 Coord Actu \(item.coordonnées.longitude) \(item.coordonnées.latitude),\t Nouv \(nouvelItem.longitude) \(nouvelItem.latitude) ")
 //                   ///////////////////: item.centrerSur(laRégion)    non !!
 //                    ////persistance.sauverContexte("Item", depuis:"ModifItem.CarteEditionItem") //"#function) // centraliser ?
 //                    groupeParent.integration.toggle()
 //                    }
+            
                 .onChange(of: item.région) { nouvelleRégion in
-                    Logger.interfaceUtilisateur.debug("🌐 Région Actu \(item.région.center.longitude) \(item.région.center.latitude),\t Nouv \(nouvelleRégion.center.longitude) \(nouvelleRégion.center.latitude) ")
+                    // évolue si l'item est mis à jour
+                    Logger.interfaceUtilisateur.debug("🌐🌐 carte item.région Actu \(item.région.center.longitude) \(item.région.center.latitude),\t Nouv \(nouvelleRégion.center.longitude) \(nouvelleRégion.center.latitude) ")
+                    // item = f( nouvelleRégion )
                     item.centrerSur(nouvelleRégion)   // non !! ///////////////: 21 mars
                     ////persistance.sauverContexte("Item", depuis:"ModifItem.CarteEditionItem") //"#function) // centraliser ?
                     groupeParent.integration.toggle()
                     }
+            
+                .onChange(of: laRégion) { nouvelleRégion in
+                    // évolue en permance
+                    Logger.interfaceUtilisateur.debug("🌐🌐 carte laRégion Actu \(item.région.center.longitude) \(item.région.center.latitude),\t Nouv \(nouvelleRégion.center.longitude) \(nouvelleRégion.center.latitude) ")
+                    }
+            
                 .aspectRatio(16/9, contentMode: .fit)
 
         }
@@ -196,28 +212,17 @@ struct VueModifItemSimple: View {
         
         
         
-//        .sheet(isPresented: $feuilleAffectationGroupesPresentée) {
-//            Text("Rallier les groupes")
-//
-////            VueAffectationItemGroupe(groupe: groupe, lesGroupesARetenir: item.lesGroupes ) {
-////                rallierGroupes($0)
-////                feuilleAffectationGroupesPresentée = false
-////                }
-//                .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-//            }
-        
-        
         
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 Button(action: {
                     Logger.interfaceUtilisateur.debug("Abandonner les modifs de l'Item (A ENRICHIR ?)")
-//                    laRégion.centrerSur(item)
+                    /// Dire à ma vue mère que rien n'a changé
                     reponseAmaMère(false, item)
                 }) {
                     VStack {
                         Icones.abandoner.imageSystéme
-                        Text("Abandonner ??").font(.caption)
+                        Text("Abandonner").font(.caption)
                         }
                   }.buttonStyle(.borderedProminent)
 
@@ -236,10 +241,7 @@ struct VueModifItemSimple: View {
                     Logger.interfaceUtilisateur.debug("🌐 Région \(laRégion.center.longitude)  \(laRégion.center.latitude) ")
                     Logger.interfaceUtilisateur.debug("🌐 Item \(item.longitude)  \(item.latitude) ")
 
-//                    laRégion.centrerSur(item)
-                    ////////// 21 mars
-//                    item.centrerSur(laRégion)
-                    // 22 mars
+                    /// Validation globale, modifier la position de l'item avec le centre de la région actuellement affichée
                     item.centrerSur(laRégion)
                     reponseAmaMère(true, item)
                 }) {
@@ -250,29 +252,6 @@ struct VueModifItemSimple: View {
                   }.buttonStyle(.borderedProminent)
                 
                 Spacer()
-//                Button(role: .cancel, action: {
-//                    print("BOF")
-//                    cloreLaVueActuelle()
-//                } ) {
-//                    VStack {
-//                        Image(systemName: "backward")
-//                        Text("Annuler").font(.caption)
-//                        }
-//                }
-                
-//                Button(action: {
-//                    item.centrerSur(laRégion)
-//
-//                    persistance.sauverContexte("Item")
-//
-//                    // Executer le code (closure) fourni à cette Vue (VueModifItem) en parametre d'entrée
-//                    // par la vue appelante. (permet une remontée d'information)
-//                    laModificationDeItemEstRéalisée(item)
-//                    }
-//                    ) { Text("VALIDER ?") }
-//                    .buttonStyle(.borderedProminent)
-
-               //////////////////:  Button("Rejet") { feuilleAffectationGroupesPresentée=false}
                 }
             }
 
@@ -280,9 +259,6 @@ struct VueModifItemSimple: View {
         // et qu'il faut rafraichier l'écran en direct
         .onChange(of: item.valeur)    { _ in rafraichirLesGroupes() }
         .onChange(of: item.leMessage) { _ in rafraichirLesGroupes() }
-//        .onSubmit {
-//            Logger.interfaceUtilisateur.debug("SUBMIT")
-//        }
 
         .onChange(of: item.titre)     { _ in rafraichirLesGroupes() }
         .onChange(of: item.coloris)   { _ in rafraichirLesGroupes() }
@@ -297,7 +273,7 @@ struct VueModifItemSimple: View {
             }
         
         .onChange(of: item.région) { _ in
-            Logger.interfaceUtilisateur.debug("🌐 région chang")
+            Logger.interfaceUtilisateur.debug("🌐🌐 VueModif région chang")
 //          rafraichirLesGroupes()
             }
 
@@ -309,8 +285,6 @@ struct VueModifItemSimple: View {
             let _ = item.verifierCohérence(depuis: #function)
             })
         
-//        } // navigation
-
     }
 
 
@@ -320,7 +294,6 @@ struct VueModifItemSimple: View {
 
     private func rafraichirLesGroupes() {
         Logger.interfaceUtilisateur.debug("♻️ Rafraichir les groupes")
-        /////////////persistance.sauverContexte(depuis:#function)
         item.lesGroupes.forEach { $0.integration.toggle() }
         }
     
@@ -328,7 +301,6 @@ struct VueModifItemSimple: View {
         withAnimation {
             item.rallier(contexte:contexte, communauté: groupes )
             }
-//        persistance.sauverContexte("Groupe")
         }
     
 }

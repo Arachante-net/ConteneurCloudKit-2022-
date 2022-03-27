@@ -1,7 +1,7 @@
 //Arachante
-// michel  le 06/01/2022
+// michel  le 22/03/2022
 // pour le projet  ConteneurCloudKit
-// Swift  5.0  sur macOS  12.1
+// Swift  5.0  sur macOS  12.3
 //
 //  2022
 //
@@ -25,6 +25,8 @@ extension Groupe {
     @NSManaged public var nombre: Int64
     @NSManaged public var ordre: Int64
     @NSManaged public var valide: Bool
+    @NSManaged public var objectif: String?
+    @NSManaged public var icone: String?
     @NSManaged public var items: NSSet?
     @NSManaged public var principal: Item?
 

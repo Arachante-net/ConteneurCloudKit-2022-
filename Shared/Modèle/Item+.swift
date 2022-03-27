@@ -38,6 +38,7 @@ extension Item {
         }
     
     // https://academy.realm.io/posts/nspredicate-cheatsheet/
+    /// items qui ne participent à aucun groupe
     static var extractionOrphelins: NSFetchRequest<Item> {
         let requette: NSFetchRequest<Item> = Item.fetchRequest()
             requette.sortDescriptors = [NSSortDescriptor(keyPath: \Item.titre, ascending: true)]
@@ -52,12 +53,20 @@ extension Item {
         return requette
         }
     
+    
+    // bug 22 mars
+    /// items non associés à un évenement prinipal
     static var extractionIsolés: NSFetchRequest<Item> {
         let requette: NSFetchRequest<Item> = Item.fetchRequest()
             requette.sortDescriptors = [NSSortDescriptor(keyPath: \Item.titre, ascending: true)]
-            requette.predicate = NSPredicate(format: "principal.@count == 0")
+  // 22 mars
+  //   requette.predicate = NSPredicate(format: "principal.@count==0") // ne marche plus, provoque :
+  // Thread 1: EXC_BREAKPOINT (code=1, subcode=0x1b45115b4)
+  //  nouveau predicat équivalent ?   mais qui plante pas
+            requette.predicate = NSPredicate(format: "principal==nil") //.@count > 0")
 
 //            requette.predicate = NSPredicate(format: "")
+//          requette.predicate = NSPredicate(format: "principal.length > 0")
 
 //            requette.predicate = NSPredicate(format: "groupes[SIZE] == 0")
             // "groupes == nil"
