@@ -50,6 +50,16 @@ struct VueModifItemSimple: View {
         
     @FocusState var champTexteActif: Bool
     
+    @State var saisieMessageTerminée:Bool = false
+    
+    private enum ChampTexte: Int, CaseIterable { case message, signature }
+     
+        @State private var message  : String = ""
+        @State private var signature: String = ""
+     
+        @FocusState private var champAvecFocus: ChampTexte?
+    
+    
     /// Modifier/Editer l'Item passé passé en argument
     init(_ unItem: Item, achevée: @escaping  RetourInfoItemAchevée) {
 
@@ -125,7 +135,9 @@ struct VueModifItemSimple: View {
                                 //FIXME: !! Y-a vraiment besoin de cette bidouille ??
                                 // Comment avoir la valeur du Stepper affichée en direct (et sauvegardée)
                                 // Honte sur moi, je ne trouve pas le mecanisme élegant pour réamiser cela
-                                groupeParent.integration.toggle()
+//                                groupeParent.integration.toggle()
+                                // 5 Avril
+                                groupeParent.objectWillChange.send()
                                 
                                 }
                       
@@ -146,9 +158,20 @@ struct VueModifItemSimple: View {
 //                    }
             HStack {
                 Text("Message : ") //\(item.leMessage)")
-                TextField("Message", text: $item.leMessage)
-                    .onSubmit(of: .text) { Logger.interfaceUtilisateur.debug("Soumission du message \(item.leMessage)") }
-//                    .onChange(of: item.leMessage) { message in // item.leMessage
+                TextField("Message", text: $item.leMessage) {
+                        Logger.interfaceUtilisateur.debug("DIRECT Soumission du message \(item.leMessage)")
+                        saisieMessageTerminée = true
+                        }
+                    .onSubmit(of: .text) {
+                        Logger.interfaceUtilisateur.debug("Soumission du message \(item.leMessage)")
+                        saisieMessageTerminée = true
+                      }
+                    .onChange(of: item.leMessage) { message in // item.leMessage
+                        Logger.interfaceUtilisateur.debug("Évolution du message \(message) \(item.leMessage)")
+                        saisieMessageTerminée = false
+                        }
+                
+                    .foregroundColor(saisieMessageTerminée ? .accentColor : .gray)
 //                        print("FLASH", message)
 ////                        groupeParent.integration.toggle()
 ////                        item.principal?.objectWillChange.send()
@@ -157,7 +180,7 @@ struct VueModifItemSimple: View {
 ////                        Array(item.lesGroupes).forEach {
 //////                            $0.objectWillChange.send()
 ////                            $0.integration.toggle()
-////                            }
+//                            }
 //                        // Signaler aux groupes qui m'utilisent que quelque chose à changé
 //                        item.lesGroupes.forEach { $0.integration.toggle() }
 //                        persistance.sauverContexte()
@@ -168,8 +191,11 @@ struct VueModifItemSimple: View {
                     // Faire des choses plus pertinentes (cf les modes de validation individuelle ou globale)
                     // pourait éviter un flux à chaque nouvelle lettre saisie
                     Logger.interfaceUtilisateur.info("Message à envoyer : '\(item.leMessage)'")
+                    //FIXME: Danger !
+                    item.principal!.objectWillChange.send()
+                    saisieMessageTerminée = true
                     }) {
-                        Label("Envoyer", systemImage: "chevron.forward.circle.fill")
+                        Label("OK", systemImage: "chevron.forward.circle.fill")
                         }
                 
                 Spacer()
@@ -178,7 +204,21 @@ struct VueModifItemSimple: View {
             
             Text("Signature : \(item.signature)")
             
-            
+            Form {
+                TextField("Message", text: $item.leMessage) {
+                    print("DIRECT")
+                    saisieMessageTerminée = true
+                } .foregroundColor(saisieMessageTerminée ? .accentColor : .gray)
+                    .focused($champAvecFocus, equals: .message)
+//                TextField("Signature", text: $signature)
+//                    .focused($champAvecFocus, equals: .signature)
+                }
+//                .toolbar {
+//                    ToolbarItem(placement: .keyboard) {
+//                        Button("OK") {}
+//                        }
+//                    }
+//                                 }
             
             /// Définir le lieu de l'item sur la carte, l'utilisateur peut déplacer la région pour désigner une  autre position
             VueCarteEditionItem(item, uneRégion: $laRégion)
@@ -195,7 +235,9 @@ struct VueModifItemSimple: View {
                     // item = f( nouvelleRégion )
                     item.centrerSur(nouvelleRégion)   // non !! ///////////////: 21 mars
                     ////persistance.sauverContexte("Item", depuis:"ModifItem.CarteEditionItem") //"#function) // centraliser ?
-                    groupeParent.integration.toggle()
+//                    groupeParent.integration.toggle()
+                    // 5 avril
+                    groupeParent.objectWillChange.send()
                     }
             
                 .onChange(of: laRégion) { nouvelleRégion in
@@ -208,15 +250,25 @@ struct VueModifItemSimple: View {
         }
         .isHidden(item.isDeleted || item.isFault ? true : false)
         .opacity(item.valide ? 1.0 : 0.1)
-        
+//        } // Nav
         
         
         
         
         .toolbar {
+            
+//            ToolbarItemGroup(placement: .keyboard) {
+//                Button("OK") {
+//                    champAvecFocus = nil
+//                    print("DIRECT OK")
+//                }
+//                }
+            
             ToolbarItemGroup(placement: .navigationBarLeading) {
                 Button(action: {
                     Logger.interfaceUtilisateur.debug("Abandonner les modifs de l'Item (A ENRICHIR ?)")
+                    //FIXME: Danger !
+                    item.principal!.objectWillChange.send()
                     /// Dire à ma vue mère que rien n'a changé
                     reponseAmaMère(false, item)
                 }) {
@@ -243,6 +295,9 @@ struct VueModifItemSimple: View {
 
                     /// Validation globale, modifier la position de l'item avec le centre de la région actuellement affichée
                     item.centrerSur(laRégion)
+                    // Rafraichir le Groupe
+                    //FIXME: Danger !
+                    item.principal!.objectWillChange.send()
                     reponseAmaMère(true, item)
                 }) {
                     VStack {
@@ -294,7 +349,13 @@ struct VueModifItemSimple: View {
 
     private func rafraichirLesGroupes() {
         Logger.interfaceUtilisateur.debug("♻️ Rafraichir les groupes")
-        item.lesGroupes.forEach { $0.integration.toggle() }
+        //FIXME: le !  5 Avril
+//        item.principal!.objectWillChange.send()
+        item.lesGroupes.forEach {
+//            $0.integration.toggle()
+            // 5 Avril
+            $0.objectWillChange.send()
+        }
         }
     
     private func rallierGroupes(_ groupes: Set<Groupe>) {

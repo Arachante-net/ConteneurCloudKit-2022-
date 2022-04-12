@@ -595,6 +595,9 @@ extension Groupe {
 //    override public var debugDescription: String {
 //        ""
 //       }
+     func identifiant() -> NSManagedObjectID {
+         self.objectID
+    }
     
     
     }

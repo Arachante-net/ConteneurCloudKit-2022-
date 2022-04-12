@@ -17,9 +17,11 @@ struct VuePrincipale: View {
 //  @EnvironmentObject private var persistance: ControleurPersistance
     
   @EnvironmentObject private var utilisateur: Utilisateur
+  @EnvironmentObject private var nuage: Nuage
+
 //  @EnvironmentObject private var causeur: Causeur
 
-    
+//TODO: Pas utilisé ?
   @EnvironmentObject private var persistance: ControleurPersistance
 //    let controleurDePersistance = ControleurPersistance.shared
 

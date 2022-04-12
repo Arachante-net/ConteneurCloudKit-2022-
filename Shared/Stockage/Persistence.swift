@@ -124,7 +124,30 @@ class ControleurPersistance : ObservableObject {
             let identifiantConteneur = storeDescription.cloudKitContainerOptions!.containerIdentifier
             self.l.info("Identifiant du conteneur \(identifiantConteneur)")
             let lesOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: identifiantConteneur)
-            self.l.info("Options \(lesOptions.debugDescription)")
+            //MARK: Base de données partagée, publique ou privée
+             // Seulement moi
+//            lesOptions.databaseScope = .private
+//            storeDescription.configuration = "privée"
+//           // Eventuellement creer une/des zone(s)
+            
+//            //  Tous les utilisateurs de l'application
+//            lesOptions.databaseScope = .public
+//            storeDescription.configuration = "publique"
+            
+//            lesOptions.databaseScope = .shared
+//            storeDescription.configuration = "partagée"
+            
+            self.l.info("\nOptions: \(storeDescription.configuration ?? "...") \(lesOptions.databaseScope.rawValue)") //\(lesOptions.debugDescription)")
+
+            
+            
+            
+            
+            
+            
+            // cloudKitContainerOptions   databaseScope .private .public .shared
+            // shareDescOption.databaseScope = .shared
+            // par défaut : privée
 //            storeDescription.cloudKitContainerOptions?.databaseScope = .public
 
 //            let scope:CKDatabase.Scope = .shared
@@ -133,6 +156,27 @@ class ControleurPersistance : ObservableObject {
 //
 //            storeDescription.configuration = lesOptions
 ////            sharedStoreDescription.cloudKitContainerOptions = lesOptions
+///
+///
+///
+/*
+ let dbURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+  
+         let privateDesc = NSPersistentStoreDescription(url: dbURL.appendingPathComponent("model.sqlite"))
+         privateDesc.configuration = "Private"
+         privateDesc.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: ckContainerID)
+         privateDesc.cloudKitContainerOptions?.databaseScope = .private
+  
+         guard let shareDesc = privateDesc.copy() as? NSPersistentStoreDescription else {
+             fatalError("Create shareDesc error")
+            }
+  
+ shareDesc.url = dbURL.appendingPathComponent("share.sqlite")
+  
+         let shareDescOption = NSPersistentCloudKitContainerOptions(containerIdentifier: ckContainerID)
+         shareDescOption.databaseScope = .shared
+         shareDesc.cloudKitContainerOptions = shareDescOption
+ */
             
         })
         
@@ -201,6 +245,14 @@ class ControleurPersistance : ObservableObject {
         historien.consulterMaPositionDansHistorique()
         
 //        return conteneur
+///  Decommenter  pour charger le schema vers ClouKit
+//        do {
+//            try container.initializeCloudKitSchema(options: NSPersistentCloudKitContainerSchemaInitializationOptions())
+//        } catch {
+//            print(error)
+//        }
+// // Ou alors : publierSchema()
+
         
     } // init ControleurPersistance conteneur ?
 
@@ -208,6 +260,7 @@ class ControleurPersistance : ObservableObject {
         
         
     /// Publication du schéma du conteneur vers CloudKit.
+    /// A faire uniquement si le schéma a évolué
     func publierSchema() {
         //FIXME: A FAIRE SEULEMENT UNE FOIS ?
         do {
@@ -220,6 +273,13 @@ class ControleurPersistance : ObservableObject {
 //        appError = ErrorType(error: .trucQuiVaPas(num: 666))
         catch {l.error("\nERREUR À LA PUBLICATION DU SCHEMA\n")}
         }
+    ///  Decommenter  pour charger le schema vers ClouKit
+    //        do {
+    //            try container.initializeCloudKitSchema(options: NSPersistentCloudKitContainerSchemaInitializationOptions())
+    //        } catch {
+    //            print(error)
+    //        }
+
     
     /// recevoir (GET) des notifications
     //FIXME: à mettre dans historien

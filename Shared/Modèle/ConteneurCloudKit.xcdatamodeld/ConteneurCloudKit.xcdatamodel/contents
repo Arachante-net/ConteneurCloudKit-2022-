@@ -32,6 +32,7 @@
         <relationship name="groupes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Groupe" inverseName="items" inverseEntity="Groupe"/>
         <relationship name="principal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Groupe" inverseName="principal" inverseEntity="Groupe"/>
     </entity>
+    <configuration name="TestConfig"/>
     <elements>
         <element name="Groupe" positionX="0" positionY="0" width="128" height="209"/>
         <element name="Item" positionX="0" positionY="0" width="128" height="269"/>

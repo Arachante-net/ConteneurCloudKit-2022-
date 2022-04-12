@@ -35,6 +35,10 @@
 		D02A228C27DCCC170047FE8C /* Logger+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02A228A27DCCC170047FE8C /* Logger+.swift */; };
 		D0345A4627F065C000B1A953 /* Cellule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A4527F065C000B1A953 /* Cellule.swift */; };
 		D0345A4727F065C000B1A953 /* Cellule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A4527F065C000B1A953 /* Cellule.swift */; };
+		D0345A7027F46E6400B1A953 /* CelluleGabarit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A6F27F46E6400B1A953 /* CelluleGabarit.swift */; };
+		D0345A7127F46E6400B1A953 /* CelluleGabarit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A6F27F46E6400B1A953 /* CelluleGabarit.swift */; };
+		D0345A7327F7508400B1A953 /* Edition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A7227F7508400B1A953 /* Edition.swift */; };
+		D0345A7427F7508400B1A953 /* Edition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0345A7227F7508400B1A953 /* Edition.swift */; };
 		D034CC4B27A97DE60067FB04 /* Bienvenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D034CC4A27A97DE60067FB04 /* Bienvenue.swift */; };
 		D034CC4C27A97DE60067FB04 /* Bienvenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D034CC4A27A97DE60067FB04 /* Bienvenue.swift */; };
 		D0385A242771BEF10063E926 /* Vues+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0385A232771BEF10063E926 /* Vues+.swift */; };
@@ -110,6 +114,8 @@
 		D0E897282789957B00A82214 /* Etat.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E897262789957B00A82214 /* Etat.swift */; };
 		D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
+		D0F071082804157B0036F739 /* Nuage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F071072804157B0036F739 /* Nuage.swift */; };
+		D0F071092804157B0036F739 /* Nuage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F071072804157B0036F739 /* Nuage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +136,8 @@
 		D02A228A27DCCC170047FE8C /* Logger+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+.swift"; sourceTree = "<group>"; };
 		D0345A4527F065C000B1A953 /* Cellule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cellule.swift; sourceTree = "<group>"; };
 		D0345A4827F07A0700B1A953 /* VueEditionCarte.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueEditionCarte.swift; sourceTree = "<group>"; };
+		D0345A6F27F46E6400B1A953 /* CelluleGabarit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CelluleGabarit.swift; sourceTree = "<group>"; };
+		D0345A7227F7508400B1A953 /* Edition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edition.swift; sourceTree = "<group>"; };
 		D034CC4727A851690067FB04 /* VueDetailGroupeOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueDetailGroupeOld.swift; sourceTree = "<group>"; };
 		D034CC4A27A97DE60067FB04 /* Bienvenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Bienvenue.swift; path = Shared/Bienvenue.swift; sourceTree = SOURCE_ROOT; };
 		D0385A232771BEF10063E926 /* Vues+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Vues+.swift"; path = "Vues/Vues+.swift"; sourceTree = "<group>"; };
@@ -187,6 +195,7 @@
 		D0E8972327877D7000A82214 /* Erreurs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erreurs.swift; sourceTree = "<group>"; };
 		D0E897262789957B00A82214 /* Etat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Etat.swift; path = Shared/Etat.swift; sourceTree = SOURCE_ROOT; };
 		D0E8974D278ACD0600A82214 /* Binding+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Binding+.swift"; path = "Shared/Binding+.swift"; sourceTree = SOURCE_ROOT; };
+		D0F071072804157B0036F739 /* Nuage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nuage.swift; sourceTree = "<group>"; };
 		D0F1879F27969C3C00FF9EAB /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		D0F187A22796EA8600FF9EAB /* BarreOutilsIGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarreOutilsIGroupe.swift; path = "Shared/Vues/OLD et TEST/BarreOutilsIGroupe.swift"; sourceTree = SOURCE_ROOT; };
 		D0F187A527995FD500FF9EAB /* ScriptMarques.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ScriptMarques.sh; sourceTree = "<group>"; };
@@ -238,6 +247,7 @@
 				D055CA4827C24EDB008628C9 /* Icones.swift */,
 				D0BA74C227CB8C79000A9EEA /* Blason.swift */,
 				D0E8972327877D7000A82214 /* Erreurs.swift */,
+				D0345A7227F7508400B1A953 /* Edition.swift */,
 				D06D875827567DDA0038C955 /* Utilisateur.swift */,
 				D0D110E927D4BC9B002C45D3 /* Causeur.swift */,
 				D0C9D9B6274E452600388059 /* Horloge.swift */,
@@ -297,6 +307,7 @@
 			children = (
 				D04A0D552732DF2900EFDCAC /* Historien.swift */,
 				D04EDA84273137F5009BB455 /* Persistence.swift */,
+				D0F071072804157B0036F739 /* Nuage.swift */,
 			);
 			path = Stockage;
 			sourceTree = "<group>";
@@ -383,6 +394,7 @@
 				D0203D0D2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift */,
 				D01830822746446E000889E2 /* VueCelluleAffectationGroupe.swift */,
 				D0345A4527F065C000B1A953 /* Cellule.swift */,
+				D0345A6F27F46E6400B1A953 /* CelluleGabarit.swift */,
 			);
 			name = Groupe;
 			sourceTree = "<group>";
@@ -513,6 +525,7 @@
 				D02A228B27DCCC170047FE8C /* Logger+.swift in Sources */,
 				D0A232AF27746649006A3320 /* Etiquette.swift in Sources */,
 				D025375427EB197400568933 /* Reglages.swift in Sources */,
+				D0F071082804157B0036F739 /* Nuage.swift in Sources */,
 				D01830832746446E000889E2 /* VueCelluleAffectationGroupe.swift in Sources */,
 				D0203D0E2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
 				D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */,
@@ -542,6 +555,7 @@
 				D0BA74BA27C3E2EC000A9EEA /* VueModifItemSimple.swift in Sources */,
 				D023489427B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
 				D0DFCA572791CC6600914ECF /* VueCarteItem.swift in Sources */,
+				D0345A7327F7508400B1A953 /* Edition.swift in Sources */,
 				D0345A4627F065C000B1A953 /* Cellule.swift in Sources */,
 				D0DFCA51278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */,
 				D0C9D9B7274E452600388059 /* Horloge.swift in Sources */,
@@ -549,6 +563,7 @@
 				D0BA74C327CB8C79000A9EEA /* Blason.swift in Sources */,
 				D0BA74C927CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4627C161F4008628C9 /* Bool+.swift in Sources */,
+				D0345A7027F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
 				D055CA4327BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E95275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
@@ -570,6 +585,7 @@
 				D02A228C27DCCC170047FE8C /* Logger+.swift in Sources */,
 				D0A232B027746649006A3320 /* Etiquette.swift in Sources */,
 				D025375527EB197500568933 /* Reglages.swift in Sources */,
+				D0F071092804157B0036F739 /* Nuage.swift in Sources */,
 				D01830842746446E000889E2 /* VueCelluleAffectationGroupe.swift in Sources */,
 				D0203D0F2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
 				D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */,
@@ -599,6 +615,7 @@
 				D0BA74BB27C3E2EC000A9EEA /* VueModifItemSimple.swift in Sources */,
 				D023489527B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
 				D0DFCA582791CC6600914ECF /* VueCarteItem.swift in Sources */,
+				D0345A7427F7508400B1A953 /* Edition.swift in Sources */,
 				D0345A4727F065C000B1A953 /* Cellule.swift in Sources */,
 				D0DFCA52278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */,
 				D0C9D9B8274E452600388059 /* Horloge.swift in Sources */,
@@ -606,6 +623,7 @@
 				D0BA74C427CB8C79000A9EEA /* Blason.swift in Sources */,
 				D0BA74CA27CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4727C161F4008628C9 /* Bool+.swift in Sources */,
+				D0345A7127F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
 				D055CA4427BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,

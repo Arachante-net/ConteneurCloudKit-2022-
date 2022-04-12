@@ -37,7 +37,9 @@ struct VueValeurItemPrincipal: View {
                 //FIXME: !! Y-a vraiment besoin de cette bidouille ??
                 // Comment avoir la valeur du Stepper affichée en direct (et sauvegardée)
                 // Honte sur moi, je ne trouve pas le mecanisme élegant pour réamiser cela
-                groupe.integration.toggle() 
+//                groupe.integration.toggle()
+                // 5 Avril
+                groupe.objectWillChange.send()
                 
 //              ////////  persistance.sauverContexte("Item")
                 }

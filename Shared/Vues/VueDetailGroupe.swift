@@ -19,7 +19,8 @@ struct VueDetailGroupe: View {
 
     @EnvironmentObject private var persistance       : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
-    
+    @EnvironmentObject private var nuage             : Nuage
+
     
     //MARK: - ♔ Source de veritée, c'est cette Vue qui est proprietaire et créatrive de `groupe`
     // Rq: avec @State l'etat n'est pas MàJ immediatement
@@ -185,7 +186,8 @@ struct VueDetailGroupe: View {
                 .border( .red, width: 0.3)
                 .ignoresSafeArea()
                 .environment(\.managedObjectContext, persistance.conteneur.viewContext)
-                .onDisappear() {groupe.integration.toggle()}
+            // 5 avril  // .objectWillChange.send()
+//                .onDisappear() {groupe.integration.toggle()}
             }
 //            .transition(.opacity) //.move(edge: .top))
         .navigationBarTitleDisplayMode(.inline)

@@ -1,14 +1,12 @@
 # ``ConteneurCloudKit``
 
-Résumé de la situation
+Programme de consignation d'événements
 
 ## Overview
 
-Vue d'ensemble
-
+Permet à l'utilisateur d'enregistrer, de qualifier et de partager toutes sortes d'événements
+<doc:Evenement>
 ## Sujets
-
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
 
 - ``Item``
 - ``Groupe``
