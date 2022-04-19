@@ -108,20 +108,41 @@ struct Reglages: View {
                     Spacer()
                     Section(header: Text("Maintenance").font(.title)) {
                     Text("\(orphelins.count) Orphelins (qui ne participent à aucun groupe)").bold()
-                    List {
-                        ForEach(orphelins) {orphelin in
+//                    Text("1er \(orphelins.first?.titre ?? ".") ")
+                        
+                        ForEach(orphelins, id: \.self) { (orphelin:Item) in
+//                            let _ = print("🌀°°°°°", orphelin.titre ?? ".")
                             Text("° \(orphelin.titre ?? ".") ")
                             }
-                        }
+                   
+//                    Text("Der \(orphelins.last?.titre ?? ".") ")
+
+                        
+//                        let _ = orphelins.forEach() {print("🌀°°°°°", $0.titre ?? ".")}
+//
+//                        ForEach(orphelins) {_ in
+//                            let _ = print("🌀🌀🌀°°°°°")
+////                            Text("° \(orphelin.titre ?? ".") ")
+//                            }
+//
+//                        ForEach(orphelins) {orphelin in
+//                            let _ = print("🌀°°°°°", orphelin.titre ?? ".")
+//                            Text("° \(orphelin.titre ?? ".") ")
+//                            }
+//                        }
                     Button("Enlever les items orphelins") {
                         orphelins.forEach() { orphelin in
                           supprimer(contexte: contexte, objet: orphelin as Item)
                           }
                         }
-    ////////
+                    Spacer()
                     Text("!!! \(isolés.count) isolés (non associé à un évenement prinipal)").bold()
                     List {
-                        ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
+//                        ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
+                        ForEach(isolés, id: \.self) { (isolés:Item) in
+//                            let _ = print("🌀°°°°°", isolés.titre ?? ".")
+                            Text("° \(isolés.titre ?? ".") ")
+                            }
                         }
                     Button("Enlever les items isolés") {
                         isolés.forEach() { isolé in

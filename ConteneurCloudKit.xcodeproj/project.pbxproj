@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D009D6622806AEFC00AA5C32 /* Synthetisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009D6612806AEFC00AA5C32 /* Synthetisable.swift */; };
+		D009D6632806AEFC00AA5C32 /* Synthetisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009D6612806AEFC00AA5C32 /* Synthetisable.swift */; };
 		D018306B2742E567000889E2 /* ListeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306A2742E567000889E2 /* ListeItem.swift */; };
 		D018306C2742E567000889E2 /* ListeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306A2742E567000889E2 /* ListeItem.swift */; };
 		D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe.swift */; };
@@ -94,6 +96,8 @@
 		D0BD19C327317A6500E01EF5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BD19C227317A6500E01EF5 /* CloudKit.framework */; };
 		D0C9D9B7274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
 		D0C9D9B8274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
+		D0CF9B91280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */; };
+		D0CF9B92280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */; };
 		D0D76BA927A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */; };
 		D0D76BAA27A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */; };
 		D0DFCA51278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */; };
@@ -119,6 +123,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D009D6612806AEFC00AA5C32 /* Synthetisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synthetisable.swift; sourceTree = "<group>"; };
 		D018306A2742E567000889E2 /* ListeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeItem.swift; sourceTree = "<group>"; };
 		D018306D2743BB1C000889E2 /* ListeGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeGroupe.swift; sourceTree = "<group>"; };
 		D01830702743BEEC000889E2 /* VueDetailGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueDetailGroupe.swift; sourceTree = "<group>"; };
@@ -179,6 +184,7 @@
 		D0BD19C227317A6500E01EF5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		D0BD19C427317A7500E01EF5 /* ConteneurCloudKit--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ConteneurCloudKit--iOS--Info.plist"; sourceTree = "<group>"; };
 		D0C9D9B6274E452600388059 /* Horloge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Horloge.swift; sourceTree = "<group>"; };
+		D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleguePartageCloudKit.swift; sourceTree = "<group>"; };
 		D0D110E927D4BC9B002C45D3 /* Causeur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Causeur.swift; sourceTree = "<group>"; };
 		D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueAffectationGroupe.swift; sourceTree = "<group>"; };
 		D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VuePrincipale-ViewModel.swift"; sourceTree = "<group>"; };
@@ -262,6 +268,7 @@
 				D0A7BB7C274978B900E2073D /* Stockage */,
 				D0A7BB7B274977DD00E2073D /* Modèle */,
 				D04EDA85273137F6009BB455 /* Assets.xcassets */,
+				D009D6612806AEFC00AA5C32 /* Synthetisable.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -308,6 +315,7 @@
 				D04A0D552732DF2900EFDCAC /* Historien.swift */,
 				D04EDA84273137F5009BB455 /* Persistence.swift */,
 				D0F071072804157B0036F739 /* Nuage.swift */,
+				D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */,
 			);
 			path = Stockage;
 			sourceTree = "<group>";
@@ -547,6 +555,7 @@
 				D0BA74C627CB8E35000A9EEA /* CGRect+.swift in Sources */,
 				D04B25D32779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
 				D0E8972427877D7000A82214 /* Erreurs.swift in Sources */,
+				D009D6622806AEFC00AA5C32 /* Synthetisable.swift in Sources */,
 				D04B25CD2779C44E00AD171D /* Lieu.swift in Sources */,
 				D0E893C727561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAB27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
@@ -564,6 +573,7 @@
 				D0BA74C927CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4627C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7027F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
+				D0CF9B91280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */,
 				D055CA4327BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E95275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
@@ -607,6 +617,7 @@
 				D0BA74C727CB8E35000A9EEA /* CGRect+.swift in Sources */,
 				D04B25D42779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
 				D0E8972527877D7000A82214 /* Erreurs.swift in Sources */,
+				D009D6632806AEFC00AA5C32 /* Synthetisable.swift in Sources */,
 				D04B25CE2779C44E00AD171D /* Lieu.swift in Sources */,
 				D0E893C827561FBB0054951E /* Item+CoreDataClass.swift in Sources */,
 				D05AFAAC27561DF8001CCA52 /* Groupe+CoreDataClass.swift in Sources */,
@@ -624,6 +635,7 @@
 				D0BA74CA27CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4727C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7127F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
+				D0CF9B92280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */,
 				D055CA4427BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,

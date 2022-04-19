@@ -12,6 +12,7 @@ import SwiftUI
 struct ConteneurCloudKitApp: App {
     @Environment(\.scenePhase) private var scenePhase
     let controleurDePersistance = ControleurPersistance.shared
+    let partageur = DeleguePartageCloudKit()
     let utilisateur = Utilisateur()
     let nuage = Nuage()
 //    let causeur = Causeur()
@@ -26,6 +27,8 @@ struct ConteneurCloudKitApp: App {
                 .environmentObject(controleurDePersistance)
                 .environmentObject(utilisateur)
                 .environmentObject(nuage)
+                .environmentObject(partageur)
+
 
 //                .environmentObject(causeur)
 //                .environmentObject(appError)

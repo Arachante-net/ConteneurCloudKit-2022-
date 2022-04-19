@@ -107,7 +107,17 @@ struct ListeGroupe: View {
           let _ = l.info("ListeGroupe LIST ######")
 //          ForEach(recherche == "" ? Array(groupes) : groupesFiltrés) { groupe in
           ForEach(groupes) { groupe in
-              let _ = l.info("ListeGroupe ForEach ###### \(groupe.leNom)")
+              let _ = l.info("ListeGroupe ForEach ###### \(groupe.leNom) \(groupe.message) ")
+              let _ = groupe.identifiant()
+//              let t = groupe.nom.userInfo["test"]
+              
+              let tg = groupe as NSManagedObject
+////              let _ = dump(tg, name:"key")
+              let e = NSManagedObject.entity()
+              let i = e.attributesByName
+              let _ = print("attributesByName", i.count, i.keys)
+//              let ttg = tg.primitiveValue(forKey: ".")
+//              let _ = print("key", ttg ?? "bof")
 
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
               ZStack {
@@ -120,6 +130,7 @@ struct ListeGroupe: View {
                              tag: groupe.leNom,
                              selection: $courant) {
                   EmptyView()
+                      let _ = print("⚙️", groupe.leNom)
 
                       }
                   
@@ -142,17 +153,32 @@ struct ListeGroupe: View {
               }//.background(ignoresSafeAreaEdges : .all)
 //              .onTapGesture { groupeSelectioné = groupe }
 //                  .listRowBackground(courant == groupe.leNom ? Color.yellow : Color(UIColor.systemGroupedBackground))
-                  .opacity(courant == groupe.leNom ? 1.0 : 0.75)
+              .opacity(courant == groupe.leNom ? 1.0 : 0.75)
               .padding(.vertical, 5)
               .shadow(color: courant == groupe.leNom ? Color.primary : Color(UIColor.systemGroupedBackground), radius: 2)
+//              .swipeActions(edge: .leading,  allowsFullSwipe: true) {Button {} label: {Label("\(groupe.leNom) \(courant ?? "...")", systemImage: "0.circle")}.tint(.indigo).saturation(0.5).opacity(0.4)}//.padding()
+//              .swipeActions(edge: .trailing, allowsFullSwipe: true) {Button(role:.destructive) {print(" SUPPRIMER \(groupe.leNom)")} label: {Label("Supprimer \(groupe.leNom)", systemImage: "trash")}}//.padding()
+
 
         }
-        .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
-       
+//        .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Text("oui")
+            Button {} label: {Label("!", systemImage: "1.circle")}.tint(.indigo).saturation(0.5).opacity(0.4).clipped().cornerRadius(20).border(.yellow, width:5).padding()
+            Spacer()
+            Button {} label: {Label("!", systemImage: "3.circle")}.tint(.pink).saturation(0.5).opacity(0.4).clipped().border(.yellow).padding()
+            Text("Non")
+            }
+//        .swipeActions(edge: .leading, allowsFullSwipe: true) {Button {} label: {Label("?", systemImage: "2.circle")}.tint(.indigo).saturation(0.7).opacity(0.5).padding()}//.padding()
+//        .swipeActions(edge: .trailing, allowsFullSwipe: true) {Button(role:.destructive) {} label: {Label("Supprimer", systemImage: "trash")}}
 
       }
 //      .environment(\.defaultMinListRowHeight, 10)
       .listStyle(SidebarListStyle())
+      .refreshable {
+          // MàJ de la liste
+          rafraichir()
+      }
 
         
       .sheet(isPresented: $presenterCréationGroupe) {

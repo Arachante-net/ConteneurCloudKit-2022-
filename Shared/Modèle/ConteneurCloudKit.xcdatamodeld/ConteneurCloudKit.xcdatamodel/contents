@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Groupe" representedClassName="Groupe" syncable="YES">
         <attribute name="collaboratif" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="createur" optional="YES" attributeType="String"/>
         <attribute name="icone" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="integration" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="nom" optional="YES" attributeType="String"/>
+        <attribute name="nom" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="test" value="CECIESTUNNOM"/>
+            </userInfo>
+        </attribute>
         <attribute name="nombre" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="items.@count" usesScalarValueType="YES"/>
         <attribute name="objectif" optional="YES" attributeType="String"/>
         <attribute name="ordre" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="valide" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Item" inverseName="groupes" inverseEntity="Item"/>
         <relationship name="principal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Item" inverseName="principal" inverseEntity="Item"/>
+        <userInfo>
+            <entry key="test" value="BOF"/>
+        </userInfo>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES">
         <attribute name="caracteristique" optional="YES" attributeType="String"/>
@@ -22,7 +29,11 @@
         <attribute name="integration" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="message" optional="YES" attributeType="String"/>
+        <attribute name="message" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="frequence" value="haute"/>
+            </userInfo>
+        </attribute>
         <attribute name="modeBin" optional="YES" attributeType="String"/>
         <attribute name="ordre" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -31,8 +42,15 @@
         <attribute name="valide" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="groupes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Groupe" inverseName="items" inverseEntity="Groupe"/>
         <relationship name="principal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Groupe" inverseName="principal" inverseEntity="Groupe"/>
+        <userInfo>
+            <entry key="frequence" value="haute"/>
+        </userInfo>
     </entity>
-    <configuration name="TestConfig"/>
+    <configuration name="Configuration"/>
+    <configuration name="TestConfig" usedWithCloudKit="YES">
+        <memberEntity name="Item"/>
+        <memberEntity name="Groupe"/>
+    </configuration>
     <elements>
         <element name="Groupe" positionX="0" positionY="0" width="128" height="209"/>
         <element name="Item" positionX="0" positionY="0" width="128" height="269"/>

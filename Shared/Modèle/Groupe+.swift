@@ -308,6 +308,31 @@ extension Groupe {
         (items as? Set<Item>)? .reduce(principal?.valeur ?? 0) {$0 + $1.valeur} ?? 0)
         }
     
+//    /// Le message d'un groupe, c'est le dernier message de ses participants
+//    var message:String { String(
+//        (items as? Set<Item>)? .reduce(principal?.leMessage) {$0.timestamp >  $1.timestamp  ? $0.leMessage : $1.leMessage}
+//        ) }
+    
+/// Le message d'un groupe, c'est le dernier message de ses participants
+/// pour l'intant c'est plutot ,le message du dernier créé (c'est pas pareil)
+var message:String {
+//    print("📶")
+    var messagesTriés = items?.allObjects as? Array<Item> ?? []
+    
+    messagesTriés.append(lePrincipal)
+//    print("📶", messagesTriés.map{"\($0.leTitre) \($0.horodatage)"})
+    messagesTriés.sort { (gauche:Item, droite:Item) in
+//        return gauche.timestamp?.timeIntervalSince1970 ?? 0 < droite.timestamp?.timeIntervalSince1970 ?? 0
+//        return
+        gauche.horodatage < droite.horodatage
+        }
+//    print("📶")
+//    print("📶", messagesTriés.map{"\($0.leTitre) \($0.horodatage)"} , "      ", messagesTriés.last?.horodatage ?? "...")
+    return messagesTriés.last?.leMessage ?? "..."
+    }
+    
+    
+    
     /// La valeur de l'Item Principal de ce groupe
     var valeurPrincipale: Int {
         get { Int(principal?.valeur ?? 0) }
@@ -596,10 +621,15 @@ extension Groupe {
 //        ""
 //       }
      func identifiant() -> NSManagedObjectID {
-         self.objectID
-    }
-    
-    
+         print("objectID", self.value(forKey: "nom") ,
+               self.primitiveValue(forKey: "modifiedAt"),
+               "----",
+               self.primitiveValue(forKey: "entityName"), //createdAt"),
+               self.primitiveValue(forKey: "entitiNom"),
+               "----",
+               self.objectID.persistentStore?.url, self.entity)
+         return  self.objectID
+         }
     }
 
 

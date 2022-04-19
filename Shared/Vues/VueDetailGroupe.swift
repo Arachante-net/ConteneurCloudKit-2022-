@@ -9,6 +9,7 @@
 import SwiftUI
 import MapKit
 import CoreData
+import CloudKit
 import os.log
 
   
@@ -20,6 +21,8 @@ struct VueDetailGroupe: View {
     @EnvironmentObject private var persistance       : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
     @EnvironmentObject private var nuage             : Nuage
+    @EnvironmentObject private var partageur         : DeleguePartageCloudKit
+
 
     
     //MARK: - ♔ Source de veritée, c'est cette Vue qui est proprietaire et créatrive de `groupe`
@@ -87,13 +90,13 @@ struct VueDetailGroupe: View {
         
     if let lePrincipal = groupe.principal {
     // Si ce n'est pas un groupe isolé de son principal on présente la fiche
-        Text("Indicateur : \(groupe.integration.voyant)")
+//        Text("Indicateur : \(groupe.integration.voyant)")
     VStack {
     Form { //}(alignment: .leading, spacing: 2) {
         Section { //}(alignment: .leading, spacing: 2)  {
             Etiquette( "Item principal", valeur: (thePrincipal.titre)) //groupe.principal != nil) ? thePrincipal.titre ?? "␀" : "❌")
             Etiquette( "Valeur locale" , valeur: Int(thePrincipal.valeur))
-            Etiquette( "Message"       , valeur: thePrincipal.leMessage)
+            Etiquette( "Message"       , valeur: groupe.message) //thePrincipal.leMessage)
             Etiquette( "Créateur"      , valeur: groupe.createur)
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
 //            Etiquette( "Valide"        , valeur: groupe.valide)
@@ -227,6 +230,16 @@ struct VueDetailGroupe: View {
             
             
             
+            Button(action: {
+                shareNoteAction(groupe)
+            }) {
+                VStack {
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Partager").font(.caption)
+                    }
+              } .buttonStyle(.borderedProminent)
+                .help("bouton")
+            
             Button(action: { feuilleModificationPresentée.toggle()  }) {
                 VStack {
                     Image(systemName: "square.and.pencil")
@@ -274,6 +287,48 @@ struct VueDetailGroupe: View {
 //        groupe.principal?.valeur = Int64(valeurLocale)
 //        persistance.sauverContexte("Item")
        }
+    
+    
+//    func shareNoteAction(_ sender: Any) {
+    func shareNoteAction(_ grp: Groupe?) {
+
+
+      guard  let grp =  grp else {
+        fatalError("Rien à partager")
+        }
+        print("Demande de partage de", grp.leNom)
+//      let container = AppDelegate.sharedAppDelegate.coreDataStack.persistentContainer
+        let  container = persistance.conteneur
+        print("Demande de partage : conteneur", container.debugDescription)
+        let cloudSharingController = UICloudSharingController {
+        (controller, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+        print("Demande de partage : recue pour", grp.leNom)
+        container.share([grp], to: nil) { objectIDs, share, container, error in
+            print("Demande de partage recue pour", objectIDs?.first, share?.debugDescription, container.debugDescription, error)
+                if let actualShare = share {
+                    grp.managedObjectContext?.performAndWait {
+                        actualShare[CKShare.SystemFieldKey.title] = grp.leNom
+                    }
+                }
+            print("partage en cours de", grp)
+                completion(share, container, error)
+            }
+            print("Demande de partage : à l'étude")
+      }
+        print("Controleur de partage", cloudSharingController.debugDescription)
+        
+      cloudSharingController.delegate = partageur
+        print("partage ..", cloudSharingController.delegate?.description ?? "...")
+        print("partage ur", partageur.description, partageur.maDescription() )
+
+
+      if let popover = cloudSharingController.popoverPresentationController {
+//        popover.barButtonItem = barButtonItem
+          print("partage UIKit popover", popover.debugDescription)
+      }
+//      present(cloudSharingController, animated: true) {}
+    print("Demande de partage : terminée")
+    }
     
 }
 

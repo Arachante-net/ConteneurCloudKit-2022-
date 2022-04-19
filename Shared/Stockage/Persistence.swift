@@ -69,18 +69,33 @@ class ControleurPersistance : ObservableObject {
             conteneur.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
         
+        // Autoriser le suivi de l'historique
         historien = Historien(conteneur: conteneur)
         
-        // Autoriser le suivi de l'historique
-        // (permet à un NSPersistentCloudKitContainer d'etre chargé en tant que NSPersistentContainer)
+        // Rq à dépacer ou supprimer
+        // (permet à un conteneur NSPersistentCloudKitContainer d'etre chargé en tant que NSPersistentContainer)
         // (donc inutile si on utilise uniquement un NSPersistentCloudKitContainer ??)
-        guard let description = conteneur.persistentStoreDescriptions.first else {
+        
+        
+        guard let descriptionMagasinPrivé = conteneur.persistentStoreDescriptions.first else {
             appError = ErrorType( .erreurInterne)
             fatalError("PAS TROUVÉ DE DESCRIPTION")
             }
         
+//        // 17 avril // certainement à deplacer plus loin
+//        // Ajouter un magasin partagé au conteneur, avec les mêmes options que le magasin privé (sauf la portée)
+//        let urlsMagasins = descriptionMagasinPrivé.url!.deletingLastPathComponent()
+//        let urlMagasinPartagé = urlsMagasins.appendingPathComponent("partage.sqlite")
+//        let descriptionMagasinPartagé = descriptionMagasinPrivé.copy() as! NSPersistentStoreDescription
+//        descriptionMagasinPartagé.url = urlMagasinPartagé
+//        let identifiantConteneurPartagé = descriptionMagasinPartagé.cloudKitContainerOptions!.containerIdentifier
+//        let optionsMagasinPartagé = NSPersistentCloudKitContainerOptions(containerIdentifier: identifiantConteneurPartagé)
+//        optionsMagasinPartagé.databaseScope = .shared
+//        descriptionMagasinPartagé.cloudKitContainerOptions = optionsMagasinPartagé
+//        conteneur.persistentStoreDescriptions.append(descriptionMagasinPartagé)
+        
         // 🟣 Demander une notification pour chaque écriture dans le magasin (y compris celles d'autres processus)
-        description.setOption(true as NSObject, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+        descriptionMagasinPrivé.setOption(true as NSObject, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
         
         // 🔴 Demander les notifications de modifications distantes (en double avec au-dessus)
 //        let remoteChangeKey = "NSPersistentStoreRemoteChangeNotificationOptionKey"
@@ -88,7 +103,7 @@ class ControleurPersistance : ObservableObject {
         
         // Activer le suivi de l'historique persistant.
         // Conserver l'historique des transactions avec le magasin
-        description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        descriptionMagasinPrivé.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
         
         
 
@@ -234,6 +249,23 @@ class ControleurPersistance : ObservableObject {
         conteneur.viewContext.transactionAuthor = ControleurPersistance.auteurTransactions
         conteneur.viewContext.name = ControleurPersistance.nomContexte
 
+        
+        //MARK: - Ajouter la description d'un magasin partagé au conteneur
+        // 17 avril
+        // Par defaut la portée d'un magasin est privée
+        // Ajouter un magasin partagé au conteneur, avec les mêmes options que le magasin privé (sauf la portée)
+        let urlsMagasins = descriptionMagasinPrivé.url!.deletingLastPathComponent()
+        let urlMagasinPartagé = urlsMagasins.appendingPathComponent("partage.sqlite")
+        let descriptionMagasinPartagé = descriptionMagasinPrivé.copy() as! NSPersistentStoreDescription
+        descriptionMagasinPartagé.url = urlMagasinPartagé
+        let identifiantConteneurPartagé = descriptionMagasinPartagé.cloudKitContainerOptions!.containerIdentifier
+        let optionsMagasinPartagé = NSPersistentCloudKitContainerOptions(containerIdentifier: identifiantConteneurPartagé)
+        optionsMagasinPartagé.databaseScope = .shared
+        descriptionMagasinPartagé.cloudKitContainerOptions = optionsMagasinPartagé
+        conteneur.persistentStoreDescriptions.append(descriptionMagasinPartagé)
+
+        
+        
         //MARK: - Une fois seulement
 //        publierSchema()
         
@@ -380,6 +412,8 @@ class ControleurPersistance : ObservableObject {
                   case "Item" :
                       let O = $0 as! Item
                       l.debug("💰 -> [Item] : \(O.leTitre) V:\(O.valeur), M:\(O.leMessage), long:\(O.longitude) lat:\(O.latitude)")
+                      /// Si Item évolue mettre à jour son horodatage
+                      O.timestamp = Date()
                   case "Groupe" :
                       let O = $0 as! Groupe
                       l.debug("💰 -> [Groupe] \(O.leNom) ")
