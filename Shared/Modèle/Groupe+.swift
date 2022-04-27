@@ -17,6 +17,29 @@ import os.log
 //MARK: - Requêtes -
 /// Coin, coin
 extension Groupe {
+    static var signature:String { "Arachante" }
+    
+    /// Fournir un groupe prérempli sans contexte
+    /// - Parameters:
+    ///   - nom: du groupe
+    /// - Returns: un Groupe
+//    static func fournir(nom:String="␀") -> Groupe {
+//        let contexteDeTest = NSManagedObjectContext(.mainQueue)
+//
+//        let    nouveauGroupe = Groupe(context: contexteDeTest)
+//        print("OOO XXX")
+//               nouveauGroupe.id = UUID()
+//               nouveauGroupe.nom = nom
+//        print("OOO XXX", nouveauGroupe.nom ?? "...")
+//               nouveauGroupe.createur = "testeur"
+//               nouveauGroupe.collaboratif = false
+//               nouveauGroupe.valide = true
+////        let t = nouveauGroupe.managedObjectContext // NSManagedObjectContext?
+//        return nouveauGroupe
+//       }
+    }
+
+extension Groupe {
     
     //MARK: Critères d'extraction depuis le stockage permanent -
 
@@ -32,6 +55,17 @@ extension Groupe {
             requette.predicate = NSPredicate(format: "collaboratif == true")
         return requette
         }
+    
+    static public func obtenirGroupes(contexte:NSManagedObjectContext) -> [Groupe]? {
+      let requête: NSFetchRequest<Groupe> = Groupe.fetchRequest()
+      do {
+          let results = try contexte.fetch(requête) //managedObjectContext?.fetch(requête)
+        return results
+      } catch let error as NSError {
+        print("Fetch error: \(error) description: \(error.userInfo)")
+      }
+      return nil
+    }
 }
 
 
@@ -75,7 +109,8 @@ extension Groupe {
     /// - Parameters:
     ///   - titre: du groupe et du premier Item
     ///   - collaboratif: ou individuel par défaut
-    static func creer(contexte:NSManagedObjectContext , titre:String="⚡︎⚡︎⚡︎", collaboratif:Bool=false) {
+    @discardableResult
+    static func creer(contexte:NSManagedObjectContext , titre:String="⚡︎⚡︎⚡︎", collaboratif:Bool=false) -> Groupe {
         // Créer un Groupe
         let nouveauGroupe = fournirNouveau(contexte: contexte, nom:titre)
             nouveauGroupe.collaboratif = collaboratif
@@ -106,8 +141,15 @@ extension Groupe {
         catch {
             //TODO: Peut mieux faire
             let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            if nsError.code == 0,
+                  nsError.domain == "Foundation._GenericObjCError" {
+                  print("Erreur invalide depuis Objective-C ?")
+              }
+              else {
+                  fatalError("Erreur lors du '.save' du contexte \(nsError),\t \(nsError.userInfo) ! \(contexte.debugDescription) !!")
+                }
             }
+        return nouveauGroupe
         }
 
 
@@ -235,7 +277,33 @@ extension Groupe {
         Logger.modélisationDonnées.info("🔘 Suppresion imminente du groupe \(self.leNom), maitre de l'item principal \(self.lePrincipal.leTitre) et de \(self.lesItems.count) autres items.")
         }
 
+    static public func supprimer(contexte:NSManagedObjectContext , _ groupe: Groupe) {
+        contexte.delete(groupe)
+//      coreDataStack.saveContext(managedObjectContext)
+//        persistance.sauverContexte(nom:"Groupe")
 
+        do {
+            contexte.name = "Groupe"
+            try contexte.save()
+            contexte.name = nil
+
+//            try persistance.sauverContexte()
+//            contexte.transactionAuthor = nil
+            }
+        catch {
+            //TODO: Peut mieux faire
+            let nsError = error as NSError
+            if nsError.code == 0,
+                  nsError.domain == "Foundation._GenericObjCError" {
+                  print("Erreur invalide depuis Objective-C ?")
+              }
+              else {
+                  fatalError("Erreur lors du '.save' du contexte apres une suppression \(nsError),\t \(nsError.userInfo) ! \(contexte.debugDescription) !!")
+                }
+            }
+        
+        
+    }
     
    }
 
@@ -636,4 +704,16 @@ extension Groupe {
 
 
 
-
+//extension Groupe {
+//
+//    static public func obtenirGroupes(contexte:NSManagedObjectContext) -> [Groupe]? {
+//      let requête: NSFetchRequest<Groupe> = Groupe.fetchRequest()
+//      do {
+//          let results = try contexte.fetch(requête) //managedObjectContext?.fetch(requête)
+//        return results
+//      } catch let error as NSError {
+//        print("Fetch error: \(error) description: \(error.userInfo)")
+//      }
+//      return nil
+//    }
+//}

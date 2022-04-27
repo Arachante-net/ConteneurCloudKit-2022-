@@ -111,14 +111,29 @@ struct ListeGroupe: View {
               let _ = groupe.identifiant()
 //              let t = groupe.nom.userInfo["test"]
               
-              let tg = groupe as NSManagedObject
-////              let _ = dump(tg, name:"key")
-              let e = NSManagedObject.entity()
-              let i = e.attributesByName
-              let _ = print("attributesByName", i.count, i.keys)
+//              let tg = groupe as NSManagedObject
+//////              let _ = dump(tg, name:"key")
+//              let e = tg.entity()
+//              let i = e.attributesByName
+//              let _ = print("attributesByName", i.count, i.keys)
+//              let x = e.userInfo
+//              let _ = print("forKey NOM", e == nil)
 //              let ttg = tg.primitiveValue(forKey: ".")
-//              let _ = print("key", ttg ?? "bof")
 
+              
+//              let objet:NSManagedObject = groupe
+//              let entité:NSEntityDescription = objet.entity
+//              let attribut:NSAttributeDescription = entité.attributesByName["nom"]!;
+//              let val = attribut.userInfo!["test"]
+//
+//
+//              let val = annotation(objet:groupe , attribut:"nom", note:"test")
+              let _ = print("user info", annotation(objet:groupe , attribut:"nom", note:"test") ?? "...")
+
+              
+              
+              
+              
 //            NavigationLink(destination: VueDetailGroupe(groupe: groupe, item: groupe.principal ?? Item()),
               ZStack {
                   Cellule(groupe, config: [.entête,.description, .informations, .indicateurs]) //, .description, .indicateurs]) //, .description, .informations, .indicateurs])

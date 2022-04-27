@@ -17,13 +17,13 @@ import os.log
 /// Fourni :
 /// - un conteneur qui encapsule la pile Core Data et qui met en miroir les magasins persistants sélectionnés dans une base de données privée CloudKit.
 /// - ainsi qu'une gestion de l'historique des transactions.
-class ControleurPersistance : ObservableObject {
+open class ControleurPersistance : ObservableObject {
     @Published var appError: ErrorType? = nil
     // Singleton
     static let shared = ControleurPersistance()
 
 
-     let conteneur: NSPersistentCloudKitContainer
+     public let conteneur: NSPersistentCloudKitContainer
 //     var abonnements: Set<AnyCancellable> = []
     
 //    private lazy var historyRequestQueue = DispatchQueue(label: "historique")
@@ -57,15 +57,17 @@ class ControleurPersistance : ObservableObject {
 
     let  l = Logger.persistance //subsystem: Identificateur du bundle, category: "persistance"
 
-    init(inMemory: Bool = false) {
-//        print("\nInitialisation (ControleurPersistance) d'un conteneur.\n")
+    public init(inMemory: Bool = false) {
+        l.debug("OOO \(inMemory)")
+        if inMemory { l.debug("OOO UUU") }
         l.error("\nInitialisation (ControleurPersistance) d'un conteneur.\n")
         conteneur = NSPersistentCloudKitContainer(name: nomConteneur)
         //            managedObjectModel:model)
         
         //MARK: - Description -
         if inMemory {
-            // utilisé par les previsualisations SwiftUI
+            l.debug("OOO UUU")
+            // utilisé par les previsualisations SwiftUI (et les tests ?)
             conteneur.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
             }
         
@@ -276,8 +278,22 @@ class ControleurPersistance : ObservableObject {
 //         chargerHistorique()
         historien.consulterMaPositionDansHistorique()
         
+        
+        //MARK: - Les configurations du modèle
+        conteneur.managedObjectModel.configurations.forEach() {configuration in
+            print("CONF Configuration :", configuration)
+            }
+        
+        let ent = conteneur.managedObjectModel.entities(forConfigurationName: "TestConfig")
+        
+        print("CONF Première entité de la configuration TestConfig :", ent?.first?.name)
+            
+        let confsGroupe = Groupe.entity().managedObjectModel.configurations
+        print("CONF Dernière configuration (/", confsGroupe.count , ") de Groupe :", confsGroupe.last ?? "...")
+
+
 //        return conteneur
-///  Decommenter  pour charger le schema vers ClouKit
+///  Decommenter  pour charger le schema vers ClouKitn
 //        do {
 //            try container.initializeCloudKitSchema(options: NSPersistentCloudKitContainerSchemaInitializationOptions())
 //        } catch {
@@ -459,4 +475,13 @@ class ControleurPersistance : ObservableObject {
     
     
     } // Controleur Persistance
+
+
+/// Les user info d'un attribut, définis dans le modèle
+func annotation(objet:NSManagedObject, attribut:String, note:String) -> Any? {
+    let entité:NSEntityDescription = objet.entity
+    let attribut_:NSAttributeDescription = entité.attributesByName[attribut]!;
+    let val = attribut_.userInfo![note]
+    return val
+}
 

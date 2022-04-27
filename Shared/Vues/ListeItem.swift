@@ -69,6 +69,8 @@ struct ListeItem: View {
 //          { Text("Causons")}
         List {
         ForEach(items) { item in
+            let _ = print("user info", annotation(objet:item , attribut:"message", note:"frequence") ?? "...")
+
             NavigationLink( destination: VueDetailItem (
                 item: item //,
 //                laRégion: item.région
