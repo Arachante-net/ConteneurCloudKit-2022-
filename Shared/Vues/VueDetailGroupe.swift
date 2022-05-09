@@ -21,7 +21,7 @@ struct VueDetailGroupe: View {
     @EnvironmentObject private var persistance       : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
     @EnvironmentObject private var nuage             : Nuage
-    @EnvironmentObject private var partageur         : DeleguePartageCloudKit
+//    @EnvironmentObject private var partageur         : DeleguePartageCloudKit
 
 
     
@@ -231,7 +231,7 @@ struct VueDetailGroupe: View {
             
             
             Button(action: {
-                shareNoteAction(groupe)
+                //shareNoteAction(groupe)
             }) {
                 VStack {
                     Image(systemName: "square.and.arrow.up")
@@ -290,45 +290,45 @@ struct VueDetailGroupe: View {
     
     
 //    func shareNoteAction(_ sender: Any) {
-    func shareNoteAction(_ grp: Groupe?) {
-
-
-      guard  let grp =  grp else {
-        fatalError("Rien à partager")
-        }
-        print("Demande de partage de", grp.leNom)
-//      let container = AppDelegate.sharedAppDelegate.coreDataStack.persistentContainer
-        let  container = persistance.conteneur
-        print("Demande de partage : conteneur", container.debugDescription)
-        let cloudSharingController = UICloudSharingController {
-        (controller, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-        print("Demande de partage : recue pour", grp.leNom)
-        container.share([grp], to: nil) { objectIDs, share, container, error in
-            print("Demande de partage recue pour", objectIDs?.first, share?.debugDescription, container.debugDescription, error)
-                if let actualShare = share {
-                    grp.managedObjectContext?.performAndWait {
-                        actualShare[CKShare.SystemFieldKey.title] = grp.leNom
-                    }
-                }
-            print("partage en cours de", grp)
-                completion(share, container, error)
-            }
-            print("Demande de partage : à l'étude")
-      }
-        print("Controleur de partage", cloudSharingController.debugDescription)
-        
-      cloudSharingController.delegate = partageur
-        print("partage ..", cloudSharingController.delegate?.description ?? "...")
-        print("partage ur", partageur.description, partageur.maDescription() )
-
-
-      if let popover = cloudSharingController.popoverPresentationController {
-//        popover.barButtonItem = barButtonItem
-          print("partage UIKit popover", popover.debugDescription)
-      }
-//      present(cloudSharingController, animated: true) {}
-    print("Demande de partage : terminée")
-    }
+//    func shareNoteAction(_ grp: Groupe?) {
+//
+//
+//      guard  let grp =  grp else {
+//        fatalError("Rien à partager")
+//        }
+//        print("Demande de partage de", grp.leNom)
+////      let container = AppDelegate.sharedAppDelegate.coreDataStack.persistentContainer
+//        let  container = persistance.conteneur
+//        print("Demande de partage : conteneur", container.debugDescription)
+//        let cloudSharingController = UICloudSharingController {
+//        (controller, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+//        print("Demande de partage : recue pour", grp.leNom)
+//        container.share([grp], to: nil) { objectIDs, share, container, error in
+//            print("Demande de partage recue pour", objectIDs?.first, share?.debugDescription, container.debugDescription, error)
+//                if let actualShare = share {
+//                    grp.managedObjectContext?.performAndWait {
+//                        actualShare[CKShare.SystemFieldKey.title] = grp.leNom
+//                    }
+//                }
+//            print("partage en cours de", grp)
+//                completion(share, container, error)
+//            }
+//            print("Demande de partage : à l'étude")
+//      }
+//        print("Controleur de partage", cloudSharingController.debugDescription)
+//
+//      cloudSharingController.delegate = partageur
+//        print("partage ..", cloudSharingController.delegate?.description ?? "...")
+//        print("partage ur", partageur.description, partageur.maDescription() )
+//
+//
+//      if let popover = cloudSharingController.popoverPresentationController {
+////        popover.barButtonItem = barButtonItem
+//          print("partage UIKit popover", popover.debugDescription)
+//      }
+////      present(cloudSharingController, animated: true) {}
+//    print("Demande de partage : terminée")
+//    }
     
 }
 

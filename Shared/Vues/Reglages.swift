@@ -73,7 +73,7 @@ struct Reglages: View {
                         let idG = Groupe().objectID
     //                    let partages = try persistance.conteneur.fetchShares(matching: [idG])
 
-                        let _ = testPartage(conteneur: persistance.conteneur)
+//                        let _ = testPartage(conteneur: persistance.conteneur)
                         
                         let options = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.Arachante.Espoir")
                         
@@ -224,22 +224,22 @@ struct Reglages: View {
 
 
 
-/// Test le partage des composants du conteneur
-func testPartage(conteneur:NSPersistentCloudKitContainer) {
-//    let idG = Groupe().objectID
-//    print("🌀 idG", idG.debugDescription)
-//    let conteneurCloudKit = CKContainer(identifier: "iCloud.Arachante.Espoir")
-
-    let partages = try? conteneur.fetchShares(matching: [Groupe().objectID, Item().objectID]) //  [NSManagedObjectID : CKShare]?
-    print("🌀 partage",[Groupe().objectID, Item().objectID],  partages ?? "", partages?.count ?? 0)
-    let premier = partages?.first // Dictionary<NSManagedObjectID, CKShare>.Element?
-    let partage = premier?.value
-    print("🌀 partage", partage ?? "...")
-    let proprio = partage?.owner
-    let participant = partage?.participants
-    let participants = partage?.currentUserParticipant
-    print("🌀 partage, proprio", proprio ?? "", "participant(s)", participant ?? "", participants)
-} // test Partage
+///// Test le partage des composants du conteneur
+//func testPartage(conteneur:NSPersistentCloudKitContainer) {
+////    let idG = Groupe().objectID
+////    print("🌀 idG", idG.debugDescription)
+////    let conteneurCloudKit = CKContainer(identifier: "iCloud.Arachante.Espoir")
+//
+//    let partages = try? conteneur.fetchShares(matching: [Groupe().objectID, Item().objectID]) //  [NSManagedObjectID : CKShare]?
+//    print("🌀 partage",[Groupe().objectID, Item().objectID],  partages ?? "", partages?.count ?? 0)
+//    let premier = partages?.first // Dictionary<NSManagedObjectID, CKShare>.Element?
+//    let partage = premier?.value
+//    print("🌀 partage", partage ?? "...")
+//    let proprio = partage?.owner
+//    let participant = partage?.participants
+//    let participants = partage?.currentUserParticipant
+//    print("🌀 partage, proprio", proprio ?? "", "participant(s)", participant ?? "", participants)
+//} // test Partage
 
 //func isShared(objectID: NSManagedObjectID) -> Bool {
 //        var isShared = false
@@ -274,7 +274,7 @@ func testPartage(conteneur:NSPersistentCloudKitContainer) {
 //     }
 //     return false
 // }
-    
+
 func supprimer(contexte:NSManagedObjectContext, objet:NSManagedObject) {
     contexte.delete(objet)
     }

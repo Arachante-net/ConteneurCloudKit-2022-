@@ -69,7 +69,7 @@ struct ListeItem: View {
 //          { Text("Causons")}
         List {
         ForEach(items) { item in
-            let _ = print("user info", annotation(objet:item , attribut:"message", note:"frequence") ?? "...")
+            let _ = print("user info", persistance.annotation(objet:item , attribut:"message", note:"frequence") ?? "...")
 
             NavigationLink( destination: VueDetailItem (
                 item: item //,
@@ -79,6 +79,12 @@ struct ListeItem: View {
                 Text(item.leTitre)//.frame(alignment: .leading)
                 Text(item.leMessage)//.frame(alignment: .leading)
                 Spacer()
+                if persistance.estPartagé(objet: item) {
+                  Image(systemName: "person.3.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30)
+                }
             }}.padding()
 //            .listRowSeparatorTint(.red)
             .badge(String(item.valeur))

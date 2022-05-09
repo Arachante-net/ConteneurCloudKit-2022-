@@ -132,15 +132,19 @@ extension MKCoordinateRegion : Equatable {
     static func englobante(lesCoordonnées : [CLLocationCoordinate2D]) -> MKCoordinateRegion {
 #warning("Attention ...    ")
 //#error("Erreur ! ")
-        
+        print("régionEnglobante CALCUL sur \(lesCoordonnées.count) points")
+        print("régionEnglobante CALCUL avec les coordonnées \(lesCoordonnées)")
         let lesLongitudes = lesCoordonnées.map {$0.longitude}
         let lesLatitudes  = lesCoordonnées.map {$0.latitude}
-        
+        print("régionEnglobante CALCUL avec les latitudes \(lesLatitudes)")
+        print("régionEnglobante CALCUL avec les longitudes \(lesLongitudes)")
+
+
         let P1 = CLLocationCoordinate2D(latitude: lesLatitudes.min()!, longitude: lesLongitudes.min()!)
         let P2 = CLLocationCoordinate2D(latitude: lesLatitudes.max()!, longitude: lesLongitudes.max()!)
         
-        Logger.modélisationDonnées.info("🏁 Min Min \(P1.longitude) \(P1.latitude)")
-        Logger.modélisationDonnées.info("🏁 Max Max \(P2.longitude) \(P2.latitude)")
+        Logger.modélisationDonnées.info("🏁 Long : Min Min \(P1.longitude) \(P1.latitude)")
+        Logger.modélisationDonnées.info("🏁 Lat : Max Max \(P2.longitude) \(P2.latitude)")
 
         let   π = Double.pi
         let _2π = 2 * π
@@ -174,6 +178,7 @@ extension MKCoordinateRegion : Equatable {
 // convertir en degrees and then use (θ+360) % 360 ( % <=> truncatingRemainder(dividingBy) )
         
 //        For final bearing, simply take the initial bearing from the end point to the start point and reverse it (using θ = (θ+180) % 360).
+// et aussi https://les-mathematiques.net/vanilla/index.php?p=discussion/662153#Comment_662153
         
         let Bx = cos(φ2) * cos(Δλ)
         let By = cos(φ2) * sin(Δλ)

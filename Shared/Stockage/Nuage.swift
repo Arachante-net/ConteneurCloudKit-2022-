@@ -32,15 +32,18 @@ class Nuage : ObservableObject {
     public  var prenom=""
     public  var nom=""
     public  var aUnCompte=false
+    
+    var lesObjets : [NSManagedObjectID]
 
 
     
-init () {
+init (_ lesObjets : [NSManagedObjectID] = []) {
     print("🌀🌀 INIT NUAGE")
-    let idG = Groupe().objectID
-    let idI = Item().objectID
+//    let idG = Groupe().objectID
+//    let idI = Item().objectID
+    self.lesObjets = lesObjets
 
-    print("🌀 idG&T", idG.debugDescription, idI.debugDescription, "?")
+    print("🌀 idG&T", lesObjets.debugDescription ) //idG.debugDescription, idI.debugDescription, "?")
     
     Nuage.conteneur.accountStatus { [self] (accountStatus, error) in
         switch accountStatus {
@@ -57,7 +60,7 @@ init () {
             print("🌀 ERREUR", error ?? "!")
             return
             }
-        enregistrement  = idRecord.recordName
+        enregistrement  = idRecord.recordName // Item, Groupe
         zone            = idRecord.zoneID.zoneName
         proprietaire    = idRecord.zoneID.ownerName
         
@@ -72,6 +75,7 @@ init () {
             }
 
         }
+    
     
 
     

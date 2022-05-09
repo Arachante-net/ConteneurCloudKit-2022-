@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CloudKit
 import MapKit
 import os.log
 
@@ -39,6 +40,10 @@ struct VueDetailItem: View {
     
     let longitudeInitiale : Double
     let latitudeInitiale  : Double
+    
+    @State private var partage: CKShare?
+    @State private var showShareSheet = false
+    @State private var showEditSheet  = false
     
     
     init (item:Item) { //}, laRégion:MKCoordinateRegion) {
@@ -81,63 +86,86 @@ struct VueDetailItem: View {
             
                 .isHidden( (item.isDeleted || item.isFault) ? true : false  )
                 .opacity(item.valide ? 1.0 : 0.1)
+                        
             
-                .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
-//                    Text("VueDetailItem $laRegion \(laRegion.center.longitude), \(laRegion.center.latitude)")
-//                    VueModifItem( item: $item, laRegion: $laRégion) { infoEnRetour in
-                    NavigationView {
-                    VueModifItemSimple(item) { aSauver, itemEnRetour in
-                        Logger.interfaceUtilisateur.info("🌐 retour de VueModifItemSimple(item) depuis VueDetailItem : \(aSauver ? "SAUVER" : "ABANDONNER") \(itemEnRetour.leTitre) déplacement de \(item.longitude) \(item.latitude) \(longitudeInitiale) \(latitudeInitiale) vers \(itemEnRetour.longitude) \(itemEnRetour.latitude)")
-                        Ξ.feuilleModificationItemPresentée = false
-                        if aSauver {
-                            // Mettre à jour les coordonnées de l'item avec le centre de la région cartographique affichée
-                            withAnimation(.easeInOut(duration: 20)) {
-                                laRégion.centrerSur(itemEnRetour)
-                                //itemEnRetour.centrerSur(laRégion)
-                                }
-                            persistance.sauverContexte(depuis: "Retour VueModifItemSimple") //#function)
-                            }
-                        else {
-                            persistance.retourArriereContexte()
-                            }
-//}
+            Section {
+              if let _share = partage {
+                ForEach(_share.participants, id: \.self) { participant in
+                  VStack(alignment: .leading) {
+                    Text(participant.userIdentity.nameComponents?.formatted(.name(style: .long)) ?? "")
+                      .font(.headline)
+                    Text("Accréditation: \(string(for: participant.acceptanceStatus))")
+                      .font(.subheadline)
+                    Text("Rôle: \(string(for: participant.role))")
+                      .font(.subheadline)
+                    Text("Permissions: \(string(for: participant.permission))")
+                      .font(.subheadline)
+                  }
+                  .padding(.bottom, 8)
+                }
+              }
+            } header: { Text("Participants") }
+            // Section Header
+            
+        } // VStack
+        
+        .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
+            NavigationView {
+            VueModifItemSimple(item) { aSauver, itemEnRetour in
+                Logger.interfaceUtilisateur.info("🌐 retour de VueModifItemSimple(item) depuis VueDetailItem : \(aSauver ? "SAUVER" : "ABANDONNER") \(itemEnRetour.leTitre) déplacement de \(item.longitude) \(item.latitude) \(longitudeInitiale) \(latitudeInitiale) vers \(itemEnRetour.longitude) \(itemEnRetour.latitude)")
+                Ξ.feuilleModificationItemPresentée = false
+                if aSauver {
+                    // Mettre à jour les coordonnées de l'item avec le centre de la région cartographique affichée
+                    withAnimation(.easeInOut(duration: 20)) {
+                        laRégion.centrerSur(itemEnRetour)
+                        //itemEnRetour.centrerSur(laRégion)
                         }
-//                    .toolbar {
-//                        // Barre d'outils pour VueModifItemSimple ??
-//                        ToolbarItemGroup(placement: .navigationBarTrailing)
-//                        {  Button(action: { print("A ECRIRE")  }) {
-//                            VStack {
-//                                Icones.valider.imageSystéme
-//                                Text("? Valider ?").font(.caption)
-//                                }
-//                          }.buttonStyle(.borderedProminent)  }
-//                        }
-                    } // NavigationView
-                
-                    
-                    .border( .red, width: 0.3)
-                    .ignoresSafeArea()
+                    persistance.sauverContexte(depuis: "Retour VueModifItemSimple") //#function)
+                    }
+                else {
+                    persistance.retourArriereContexte()
+                    }
+                }
+            } // NavigationView
+        
+            .border( .red, width: 0.3)
+            .ignoresSafeArea()
 
-                    } //Sheet
+            } //Sheet modif
 
+        
+        .sheet(isPresented: $showShareSheet) { //}, content: {
+          if let __share = partage {
+              VuePartageCloudKit(
+                // CloudSharingView(share: share, container: stack.ckContainer, destination: destination)
+                partage: __share,
+                conteneurCK: persistance.ckContainer, //  . stack.ckContainer,
+                item: item)
+              .border( .red, width: 0.3)
+              .ignoresSafeArea()
+          }
+        }  // Sheet partage // )
 
+        
         .toolbar {
             // Barre d'outils pour VuDetailItem
             ToolbarItemGroup(placement: .navigationBarTrailing)
             { barreMenu }
             }
-
         
-
-        .onAppear(perform: {
-            Logger.interfaceUtilisateur.info("onAppear VueDetailItem \(item.leMessage) \(item.valeur) ")
-            let _ = item.verifierCohérence(depuis: #file) })
-        
-        } // VStack
-        .onAppear() {
-            Logger.interfaceUtilisateur.info("onAppear VueDetailItem")
+        .onAppear() { //perform: {
+//            let image = UIImage(named: "Soucoupe")
+//            let donnéesImage = image?.pngData()
+//            print("❗️❗️❗️❗️make image largeur :", image?.size.width ?? 0, "x hauteur :", image?.size.height ?? 0,  ", données:" , donnéesImage?.count, "octets")//   isEmpty ?.debugDescription)
+            // 4032 × 3024     // 14 747 097
             apparaitre()
-            }
+            Logger.interfaceUtilisateur.info("onAppear VueDetailItem \(item.leMessage) \(item.valeur) ")
+            let _ = item.verifierCohérence(depuis: #file)
+            Logger.interfaceUtilisateur.info("make onAppear VueDetailItem")
+            self.partage = persistance.getShare(item)
+        } //)
+        
+       // .onAppear() {}
     } // Body
     
     
@@ -227,6 +255,23 @@ struct VueDetailItem: View {
                     Text("Supprimer").font(.caption)
                     }
               }.buttonStyle(.borderedProminent)
+            
+              Button {  //stack
+                let _ = print("〽️ make bouton")
+                let _ = print("〽️ make partage", persistance.estPartagé(objet: item).voyant)
+//                 !persistance.isShared(object: item)
+                if !persistance.estPartagé(objet: item) {
+                  let _ = print("❗️make n'est pas partagé")
+                  Task { await createShare(item) }
+                  }
+                showShareSheet = true
+              } label: {
+                Image(systemName: "square.and.arrow.up")
+              }
+            
+            
+            
+            
 
             Spacer()
             }
@@ -235,3 +280,64 @@ struct VueDetailItem: View {
     func apparaitre() {}
 }
 
+// MARK: Aides au Partage : participant permission, methodes and proprietés ...
+extension VueDetailItem {
+  private func createShare(_ item: Item) async {
+    print("❗️make un partage")
+    do {
+        // Associer item à un (nouveau ou existant) partage
+        let (_, _share, _) = try await persistance.conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
+      _share[CKShare.SystemFieldKey.title] = item.titre
+      self.partage = _share
+      }
+    catch { print("❗️Impossible de creer un partage") }
+    }
+
+  private func string(for permission: CKShare.ParticipantPermission) -> String {
+    switch permission {
+        case .unknown:
+          return "Inconnu" //"Unknown"
+        case .none:
+          return "Sans" //"None"
+        case .readOnly:
+          return "Lecture seule" //"Read-Only"
+        case .readWrite:
+          return "Lecture/Écriture" //"Read-Write"
+        @unknown default:
+          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.Permission")
+        }
+    }
+
+  private func string(for role: CKShare.ParticipantRole) -> String {
+    switch role {
+        case .owner:
+          return "Propriétaire" //"Owner"
+        case .privateUser:
+          return "Utilisateur Privé" // participant ? //"Private User"
+        case .publicUser:
+          return "Utilisateur Publique" // "Public User"
+        case .unknown:
+          return "Inconnu" //Unknown"
+        @unknown default:
+          fatalError("Une nouvelle valeur inconnue pour  CKShare.Participant.Role")
+        }
+    }
+
+  private func string(for acceptanceStatus: CKShare.ParticipantAcceptanceStatus) -> String {
+    switch acceptanceStatus {
+        case .accepted:
+          return "Accepté" //"Accepted"
+        case .removed:
+          return "Révoqué" //Enlevé, Révoqué "Removed"
+        case .pending:
+          return "Invité" //"Invited"
+        case .unknown:
+          return "Inconnu" //"Unknown"
+        @unknown default:
+          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.AcceptanceStatus")
+        }
+    }
+
+  private var canEdit: Bool { persistance.canEdit(object: item) }
+    
+}

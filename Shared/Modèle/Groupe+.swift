@@ -460,8 +460,9 @@ var message:String {
     
     var groupesAuxquelsJeParticipe: Set<Groupe> {
         // Garantir que j'ai des maîtres sinon retourner un ensemble vide
-//        guard groupes?.count ?? 0 > 0 else { return Set<Groupe>() }
-        let mesChefs = principal!.groupes!
+        guard (principal != nil) else { return Set<Groupe>() }
+        guard principal!.groupes?.count ?? 0 > 0 else { return Set<Groupe>() }
+        let mesChefs = principal?.groupes
         let set = mesChefs as! Set<Groupe>
         Logger.modélisationDonnées.info("Mes \(set.count) chefs : \(set.map() {$0.leNom})")
         return set
@@ -561,11 +562,14 @@ var message:String {
             Logger.modélisationDonnées.info("régionEnglobante ###### GET")
             var toutesLesCoordonnées = lesCoordonnées
             if let lePrincipal = principal?.coordonnées {
+                Logger.modélisationDonnées.info("régionEnglobante (\(toutesLesCoordonnées.count)), on ajoute les coordonnées du Principal")
                 toutesLesCoordonnées.append(lePrincipal)
+                Logger.modélisationDonnées.info("régionEnglobante (\(toutesLesCoordonnées.count))")
                 }
                     
             // Aucun point : on affiche le monde
             if toutesLesCoordonnées.isEmpty {
+                Logger.modélisationDonnées.info("régionEnglobante (vide : \(toutesLesCoordonnées.count)) retourne (0,0)")
                 return  MKCoordinateRegion(
                         center: CLLocationCoordinate2D(
                             latitude:  0,
@@ -576,6 +580,7 @@ var message:String {
             
             // Un seul point (normalement le Principal)
             if toutesLesCoordonnées.count == 1 {
+                Logger.modélisationDonnées.info("régionEnglobante (un seul point : \(toutesLesCoordonnées.count)) retourne ce point ou (0,0)")
                 return  MKCoordinateRegion(
                     center: CLLocationCoordinate2D(
                         latitude:  toutesLesCoordonnées.first?.latitude  ?? 0,
@@ -585,6 +590,7 @@ var message:String {
                 }
             
             // Sinon on fait un peu de trigonométrie
+            Logger.modélisationDonnées.info("régionEnglobante on calcule sur \(toutesLesCoordonnées.count) points ==")
             return MKCoordinateRegion.englobante(lesCoordonnées: toutesLesCoordonnées)
             }
         set {

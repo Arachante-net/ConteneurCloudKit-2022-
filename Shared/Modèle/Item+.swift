@@ -152,6 +152,15 @@ extension Item {
          return nouvelItem
         }
 
+    //FIXME: A AMELIORER COMPLETER
+    func delete(contexte:NSManagedObjectContext, _ item: Item) {
+        contexte.delete(item)
+
+        contexte.perform {
+            contexte.delete(item)
+//            contexte.save()
+            }
+        }
     
     /// Cet `Item`rejoint l'ensemble`lesItems` du  Groupe  `patron`
     func rallier(groupeLeader:Groupe) {

@@ -61,8 +61,8 @@
 		D04B25D42779C4BC00AD171D /* VueEditionLieu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B25D22779C4BC00AD171D /* VueEditionLieu.swift */; };
 		D04EDA95273137F6009BB455 /* ConteneurCloudKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */; };
 		D04EDA96273137F6009BB455 /* ConteneurCloudKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */; };
-		D04EDA99273137F6009BB455 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA84273137F5009BB455 /* Persistence.swift */; };
-		D04EDA9A273137F6009BB455 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA84273137F5009BB455 /* Persistence.swift */; };
+		D04EDA99273137F6009BB455 /* Persistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA84273137F5009BB455 /* Persistance.swift */; };
+		D04EDA9A273137F6009BB455 /* Persistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04EDA84273137F5009BB455 /* Persistance.swift */; };
 		D04EDA9B273137F6009BB455 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D04EDA85273137F6009BB455 /* Assets.xcassets */; };
 		D04EDA9C273137F6009BB455 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D04EDA85273137F6009BB455 /* Assets.xcassets */; };
 		D055CA4327BD049C008628C9 /* Modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CA4227BD049C008628C9 /* Modes.swift */; };
@@ -98,8 +98,7 @@
 		D0BD19C327317A6500E01EF5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BD19C227317A6500E01EF5 /* CloudKit.framework */; };
 		D0C9D9B7274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
 		D0C9D9B8274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
-		D0CF9B91280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */; };
-		D0CF9B92280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */; };
+		D0D493DC2819212B0047AF0D /* TestGéographie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D493DB2819212B0047AF0D /* TestGéographie.swift */; };
 		D0D76BA927A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */; };
 		D0D76BAA27A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */; };
 		D0DFCA51278EDC4300914ECF /* VuePrincipale-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */; };
@@ -122,6 +121,10 @@
 		D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E8974D278ACD0600A82214 /* Binding+.swift */; };
 		D0F071082804157B0036F739 /* Nuage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F071072804157B0036F739 /* Nuage.swift */; };
 		D0F071092804157B0036F739 /* Nuage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F071072804157B0036F739 /* Nuage.swift */; };
+		D0FFA913281BD21400C44E5C /* ControleurPartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FFA912281BD21400C44E5C /* ControleurPartageCloudKit.swift */; };
+		D0FFA914281BD21400C44E5C /* ControleurPartageCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FFA912281BD21400C44E5C /* ControleurPartageCloudKit.swift */; };
+		D0FFA916281D895700C44E5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FFA915281D895700C44E5C /* AppDelegate.swift */; };
+		D0FFA917281D895700C44E5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FFA915281D895700C44E5C /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,7 +175,7 @@
 		D04B25CF2779C48F00AD171D /* VueEditionCarte.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueEditionCarte.swift; sourceTree = "<group>"; };
 		D04B25D22779C4BC00AD171D /* VueEditionLieu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueEditionLieu.swift; sourceTree = "<group>"; };
 		D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConteneurCloudKitApp.swift; sourceTree = "<group>"; };
-		D04EDA84273137F5009BB455 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		D04EDA84273137F5009BB455 /* Persistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistance.swift; sourceTree = "<group>"; };
 		D04EDA85273137F6009BB455 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D04EDA8A273137F6009BB455 /* ConteneurCloudKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConteneurCloudKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D04EDA90273137F6009BB455 /* ConteneurCloudKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConteneurCloudKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,6 +205,7 @@
 		D0C9D9B6274E452600388059 /* Horloge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Horloge.swift; sourceTree = "<group>"; };
 		D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleguePartageCloudKit.swift; sourceTree = "<group>"; };
 		D0D110E927D4BC9B002C45D3 /* Causeur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Causeur.swift; sourceTree = "<group>"; };
+		D0D493DB2819212B0047AF0D /* TestGéographie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TestGéographie.swift"; sourceTree = "<group>"; };
 		D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueAffectationGroupe.swift; sourceTree = "<group>"; };
 		D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VuePrincipale-ViewModel.swift"; sourceTree = "<group>"; };
 		D0DFCA532791BDF200914ECF /* VueDetailItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueDetailItem.swift; sourceTree = "<group>"; };
@@ -223,6 +227,8 @@
 		D0F187A527995FD500FF9EAB /* ScriptMarques.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ScriptMarques.sh; sourceTree = "<group>"; };
 		D0F187AA279AFB7700FF9EAB /* VueValeurItemPrincipal_2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueValeurItemPrincipal_2.swift; sourceTree = "<group>"; };
 		D0FF9C2B277A4C0D00902CF2 /* VueModifItemOLD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifItemOLD.swift; sourceTree = "<group>"; };
+		D0FFA912281BD21400C44E5C /* ControleurPartageCloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControleurPartageCloudKit.swift; sourceTree = "<group>"; };
+		D0FFA915281D895700C44E5C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				D026DE78281468A3008BE982 /* TestCoreData.swift */,
+				D0D493DB2819212B0047AF0D /* TestGéographie.swift */,
 				D026DE742812C515008BE982 /* _CoreDataDeTest.swift */,
 			);
 			path = TestsServicesCoreData;
@@ -280,6 +287,7 @@
 			children = (
 				D085AA2E276DC6A500535552 /* NOTES.md */,
 				D04EDA82273137F5009BB455 /* ConteneurCloudKitApp.swift */,
+				D0FFA915281D895700C44E5C /* AppDelegate.swift */,
 				D0DFCA50278EDC4300914ECF /* VuePrincipale-ViewModel.swift */,
 				D01830762743DDE4000889E2 /* VuePrincipale.swift */,
 				D034CC4A27A97DE60067FB04 /* Bienvenue.swift */,
@@ -348,9 +356,10 @@
 			isa = PBXGroup;
 			children = (
 				D04A0D552732DF2900EFDCAC /* Historien.swift */,
-				D04EDA84273137F5009BB455 /* Persistence.swift */,
-				D0F071072804157B0036F739 /* Nuage.swift */,
+				D0FFA912281BD21400C44E5C /* ControleurPartageCloudKit.swift */,
 				D0CF9B90280D805B00465BEC /* DeleguePartageCloudKit.swift */,
+				D04EDA84273137F5009BB455 /* Persistance.swift */,
+				D0F071072804157B0036F739 /* Nuage.swift */,
 			);
 			path = Stockage;
 			sourceTree = "<group>";
@@ -591,6 +600,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0D493DC2819212B0047AF0D /* TestGéographie.swift in Sources */,
 				D026DE7728146792008BE982 /* Context+.swift in Sources */,
 				D026DE79281468A3008BE982 /* TestCoreData.swift in Sources */,
 			);
@@ -601,11 +611,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D04EDA95273137F6009BB455 /* ConteneurCloudKitApp.swift in Sources */,
-				D04EDA99273137F6009BB455 /* Persistence.swift in Sources */,
+				D04EDA99273137F6009BB455 /* Persistance.swift in Sources */,
 				D061AEE427805B8E00B19ED6 /* ConteneurCloudKit.xcdatamodel in Sources */,
 				D025375A27EF3E8D00568933 /* Documentation.docc in Sources */,
 				D02A228B27DCCC170047FE8C /* Logger+.swift in Sources */,
 				D0A232AF27746649006A3320 /* Etiquette.swift in Sources */,
+				D0FFA913281BD21400C44E5C /* ControleurPartageCloudKit.swift in Sources */,
 				D025375427EB197400568933 /* Reglages.swift in Sources */,
 				D0F071082804157B0036F739 /* Nuage.swift in Sources */,
 				D01830832746446E000889E2 /* VueCelluleAffectationGroupe.swift in Sources */,
@@ -620,6 +631,7 @@
 				D0D76BA927A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */,
 				D018306B2742E567000889E2 /* ListeItem.swift in Sources */,
 				D0385A242771BEF10063E926 /* Vues+.swift in Sources */,
+				D0FFA916281D895700C44E5C /* AppDelegate.swift in Sources */,
 				D04A0D562732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0BA74D227CD0479000A9EEA /* Item+CoreDataProperties.swift in Sources */,
@@ -647,7 +659,6 @@
 				D0BA74C927CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4627C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7027F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
-				D0CF9B91280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */,
 				D055CA4327BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E95275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
@@ -663,11 +674,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D04EDA96273137F6009BB455 /* ConteneurCloudKitApp.swift in Sources */,
-				D04EDA9A273137F6009BB455 /* Persistence.swift in Sources */,
+				D04EDA9A273137F6009BB455 /* Persistance.swift in Sources */,
 				D061AEE527805B8E00B19ED6 /* ConteneurCloudKit.xcdatamodel in Sources */,
 				D025375B27EF3E8D00568933 /* Documentation.docc in Sources */,
 				D02A228C27DCCC170047FE8C /* Logger+.swift in Sources */,
 				D0A232B027746649006A3320 /* Etiquette.swift in Sources */,
+				D0FFA914281BD21400C44E5C /* ControleurPartageCloudKit.swift in Sources */,
 				D025375527EB197500568933 /* Reglages.swift in Sources */,
 				D0F071092804157B0036F739 /* Nuage.swift in Sources */,
 				D01830842746446E000889E2 /* VueCelluleAffectationGroupe.swift in Sources */,
@@ -682,6 +694,7 @@
 				D0D76BAA27A19B0A00898B6B /* VueAffectationGroupe.swift in Sources */,
 				D018306C2742E567000889E2 /* ListeItem.swift in Sources */,
 				D0385A252771BEF10063E926 /* Vues+.swift in Sources */,
+				D0FFA917281D895700C44E5C /* AppDelegate.swift in Sources */,
 				D04A0D572732DF2900EFDCAC /* Historien.swift in Sources */,
 				D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
 				D0BA74D327CD0479000A9EEA /* Item+CoreDataProperties.swift in Sources */,
@@ -709,7 +722,6 @@
 				D0BA74CA27CBA634000A9EEA /* UIColor+.swift in Sources */,
 				D055CA4727C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7127F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
-				D0CF9B92280D805B00465BEC /* DeleguePartageCloudKit.swift in Sources */,
 				D055CA4427BD049C008628C9 /* Modes.swift in Sources */,
 				D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,

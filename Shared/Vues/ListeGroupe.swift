@@ -128,7 +128,7 @@ struct ListeGroupe: View {
 //
 //
 //              let val = annotation(objet:groupe , attribut:"nom", note:"test")
-              let _ = print("user info", annotation(objet:groupe , attribut:"nom", note:"test") ?? "...")
+              let _ = print("user info", persistance.annotation(objet:groupe , attribut:"nom", note:"test") ?? "...")
 
               
               
