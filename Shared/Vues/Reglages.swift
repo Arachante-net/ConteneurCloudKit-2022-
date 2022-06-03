@@ -29,7 +29,7 @@ struct Reglages: View {
     @State private var transacs : [NSPersistentHistoryTransaction] = []
        
     @EnvironmentObject private var persistance: ControleurPersistance
-    @EnvironmentObject private var nuage: Nuage
+//    @EnvironmentObject private var nuage: Nuage
     @EnvironmentObject private var utilisateur: Utilisateur
     
   
@@ -46,7 +46,7 @@ struct Reglages: View {
                         Text("Compte : ") .bold().foregroundColor(.secondary)
                         + Text("\(utilisateur.nomComplet)")
                         Text("Statut : ") .bold().foregroundColor(.secondary)
-                        + Text("\(nuage.leStatut)")
+                        + Text("\(persistance.statut)")
                         Text("Système : ") .bold().foregroundColor(.secondary)
                         + Text("\(utilisateur.systeme)")
                         Text("Hôte : ") .bold().foregroundColor(.secondary)
@@ -78,18 +78,18 @@ struct Reglages: View {
                         let options = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.Arachante.Espoir")
                         
                         Text("Portée : ").bold().foregroundColor(.secondary)
-                        + Text(nuage.portée)
+                        + Text(persistance.portée)
     //                    + Text(nuage.enregistrement)
                         Text("Zone : ").bold().foregroundColor(.secondary)
-                        + Text(nuage.zone)
+                        + Text(persistance.zone)
                         Text("Abonnement : ").bold().foregroundColor(.secondary)
-                        + Text(nuage.abonnement)
+                        + Text(persistance.abonnement)
                         Text("Autorisation : ").bold().foregroundColor(.secondary)
-                        + Text(nuage.permissions)
+                        + Text(persistance.permissions)
                         Text("Proprietaire : ").bold().foregroundColor(.secondary)
-                        + Text(nuage.proprietaire)
+                        + Text(persistance.proprietaire)
                         Text("Nom : ").bold().foregroundColor(.secondary)
-                        + Text("\(nuage.prenom) \(nuage.nom) \(nuage.aUnCompte.voyant)")
+                        + Text("\(persistance.prenom) \(persistance.nom) \(persistance.aUnCompte.voyant)")
                     }.padding(.horizontal)
                     Spacer()
                         //MARK: - CoreData

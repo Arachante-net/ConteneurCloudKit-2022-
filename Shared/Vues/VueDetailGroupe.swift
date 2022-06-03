@@ -20,7 +20,7 @@ struct VueDetailGroupe: View {
 
     @EnvironmentObject private var persistance       : ControleurPersistance
     @EnvironmentObject private var configUtilisateur : Utilisateur
-    @EnvironmentObject private var nuage             : Nuage
+//    @EnvironmentObject private var nuage             : Nuage
 //    @EnvironmentObject private var partageur         : DeleguePartageCloudKit
 
 

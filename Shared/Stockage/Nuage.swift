@@ -33,7 +33,7 @@ class Nuage : ObservableObject {
     public  var nom=""
     public  var aUnCompte=false
     
-    var lesObjets : [NSManagedObjectID]
+//    var lesObjets : [NSManagedObjectID]
 
 
     
@@ -41,9 +41,11 @@ init (_ lesObjets : [NSManagedObjectID] = []) {
     print("🌀🌀 INIT NUAGE")
 //    let idG = Groupe().objectID
 //    let idI = Item().objectID
-    self.lesObjets = lesObjets
+//    self.lesObjets = lesObjets
 
     print("🌀 idG&T", lesObjets.debugDescription ) //idG.debugDescription, idI.debugDescription, "?")
+  
+    
     
     Nuage.conteneur.accountStatus { [self] (accountStatus, error) in
         switch accountStatus {
@@ -125,9 +127,10 @@ init (_ lesObjets : [NSManagedObjectID] = []) {
         }
     }
 
-    let P1 = Nuage.conteneur.publicCloudDatabase.databaseScope.rawValue
-    let P2 = Nuage.conteneur.privateCloudDatabase.databaseScope.rawValue
-    let P3 = Nuage.conteneur.sharedCloudDatabase.databaseScope.rawValue
+    let P1 = ConteneurCloudKit.Nuage.conteneur.publicCloudDatabase.databaseScope.rawValue
+    let P2 = ConteneurCloudKit.Nuage.conteneur.privateCloudDatabase.databaseScope.rawValue
+    let P3 = ConteneurCloudKit.Nuage.conteneur.sharedCloudDatabase.databaseScope.rawValue
+    
     print("🌀 1,2,3  : ", P1, P2, P3)
     
     switch (Nuage.options.databaseScope) {
@@ -137,7 +140,7 @@ init (_ lesObjets : [NSManagedObjectID] = []) {
         @unknown default: portée = "ERREUR"
         }
     
-    } // init
+   } // init
 
     
     

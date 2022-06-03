@@ -11,13 +11,15 @@ import SwiftUI
 
 @main
 struct ConteneurCloudKitApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    // Créer un délégué d'application pour UIKit.
+    @UIApplicationDelegateAdaptor(DéléguéApplication.self) var delegate
+    
     @Environment(\.scenePhase)              private var scenePhase
     
     let leControleurDePersistance = ControleurPersistance.shared
 //    let partageur = DeleguePartageCloudKit()
     let utilisateur = Utilisateur()
-    let nuage = Nuage()
+//    let nuage = Nuage()
 //    let causeur = Causeur()
     var appError: ErrorType? = nil
 
@@ -25,7 +27,7 @@ struct ConteneurCloudKitApp: App {
     var body: some Scene {
         WindowGroup {
             VuePrincipale()
-            //  .environment(\.managedObjectContext, CoreDataStack.shared.context)                  // NSManagedObjectContext
+            //  .environment(\.managedObjectContext, CoreDataStack.shared.context)                    // NSManagedObjectContext
                 .environment(\.managedObjectContext, leControleurDePersistance.conteneur.viewContext) // NSManagedObjectContext
 /**
  ## Integorations personelles
@@ -44,7 +46,7 @@ struct ConteneurCloudKitApp: App {
                 // Les objets sont lus par n'importe quel enfant en utilisant EnvironmentObject.
                 .environmentObject(leControleurDePersistance)
                 .environmentObject(utilisateur)
-                .environmentObject(nuage)
+//                .environmentObject(nuage)
 //                .environmentObject(partageur)
 
 

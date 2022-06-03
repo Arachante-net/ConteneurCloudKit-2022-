@@ -41,10 +41,12 @@ struct VueDetailItem: View {
     let longitudeInitiale : Double
     let latitudeInitiale  : Double
     
-    @State private var partage: CKShare?
+    @State private var partage: CKShare? // initialisé on Appear
     @State private var showShareSheet = false
     @State private var showEditSheet  = false
     
+    let coordinateurPartage : DéléguéDuControleurDePartageChargéDeLaCoordination
+
     
     init (item:Item) { //}, laRégion:MKCoordinateRegion) {
 //        _item_    = State(wrappedValue: item)
@@ -55,6 +57,10 @@ struct VueDetailItem: View {
         Logger.interfaceUtilisateur.debug("Init de VueDetailItem \(item.leTitre) \(item.longitude) \(item.latitude) (avant déplacement)")
         longitudeInitiale = item.longitude
         latitudeInitiale  = item.latitude
+        
+        coordinateurPartage = DéléguéDuControleurDePartageChargéDeLaCoordination(item: item)
+        coordinateurPartage.tester()
+
     }
     
 
@@ -87,9 +93,12 @@ struct VueDetailItem: View {
                 .isHidden( (item.isDeleted || item.isFault) ? true : false  )
                 .opacity(item.valide ? 1.0 : 0.1)
                         
-            
+
+            if let _share = partage {
+
             Section {
-              if let _share = partage {
+//              if let _share = partage {
+                List {
                 ForEach(_share.participants, id: \.self) { participant in
                   VStack(alignment: .leading) {
                     Text(participant.userIdentity.nameComponents?.formatted(.name(style: .long)) ?? "")
@@ -102,11 +111,11 @@ struct VueDetailItem: View {
                       .font(.subheadline)
                   }
                   .padding(.bottom, 8)
+                } // for each
                 }
-              }
-            } header: { Text("Participants") }
-            // Section Header
-            
+              } // section
+            header: { Text("Participants") }
+            } // si partage
         } // VStack
         
         .sheet(isPresented: $Ξ.feuilleModificationItemPresentée) {
@@ -135,12 +144,18 @@ struct VueDetailItem: View {
 
         
         .sheet(isPresented: $showShareSheet) { //}, content: {
+          let _ = print("〽️〽️ - Appel de VuePartageCloudKit depuis VueDetailItem")
           if let __share = partage {
+//              let _ = print("〽️〽️ Création du coordinateur de partage de", item.leTitre)
+//              let coord = CoordinateurDePartageCloudKit(item: item)
+              let _ = print("〽️〽️ Le coordianateur", coordinateurPartage, "est utilisé pour", item.leTitre)
+              
               VuePartageCloudKit(
                 // CloudSharingView(share: share, container: stack.ckContainer, destination: destination)
                 partage: __share,
-                conteneurCK: persistance.ckContainer, //  . stack.ckContainer,
-                item: item)
+                conteneurCK: persistance.conteneurCK, //  . stack.ckContainer,
+                itemAPartager: item,
+                coordinateur: coordinateurPartage) //CoordinateurDePartageCloudKit(item: item))
               .border( .red, width: 0.3)
               .ignoresSafeArea()
           }
@@ -161,8 +176,8 @@ struct VueDetailItem: View {
             apparaitre()
             Logger.interfaceUtilisateur.info("onAppear VueDetailItem \(item.leMessage) \(item.valeur) ")
             let _ = item.verifierCohérence(depuis: #file)
-            Logger.interfaceUtilisateur.info("make onAppear VueDetailItem")
-            self.partage = persistance.getShare(item)
+            Logger.interfaceUtilisateur.info("〽️ onAppear VueDetailItem")
+            self.partage = persistance.obtenirPartage(item)
         } //)
         
        // .onAppear() {}
@@ -218,6 +233,7 @@ struct VueDetailItem: View {
     var descriptionCollaboration: some View {
         
         VStack(alignment: .leading) {
+            Etiquette("Partage", valeur: partage != nil)
             Etiquette("Principal", valeur: item.principal?.nom ?? "❌")
 
             Text("Membre de")
@@ -257,12 +273,11 @@ struct VueDetailItem: View {
               }.buttonStyle(.borderedProminent)
             
               Button {  //stack
-                let _ = print("〽️ make bouton")
-                let _ = print("〽️ make partage", persistance.estPartagé(objet: item).voyant)
+                let _ = print("〽️ Bouton partage", persistance.estPartagé(objet: item).voyant)
 //                 !persistance.isShared(object: item)
                 if !persistance.estPartagé(objet: item) {
-                  let _ = print("❗️make n'est pas partagé")
-                  Task { await createShare(item) }
+                    let _ = print("〽️ \(item.leTitre) n'est pas déjà partagé")
+                  Task { await creerUnPartageCK(item) }
                   }
                 showShareSheet = true
               } label: {
@@ -282,12 +297,26 @@ struct VueDetailItem: View {
 
 // MARK: Aides au Partage : participant permission, methodes and proprietés ...
 extension VueDetailItem {
-  private func createShare(_ item: Item) async {
-    print("❗️make un partage")
+  private func creerUnPartageCK(_ item: Item) async {
     do {
-        // Associer item à un (nouveau ou existant) partage
+        // Associer un item à un (nouveau ou existant) partage
+        print("〽️ 🔆 Création d'un partage")
         let (_, _share, _) = try await persistance.conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
-      _share[CKShare.SystemFieldKey.title] = item.titre
+        _share[CKShare.SystemFieldKey.title] = "Participer à \(item.titre ?? "...")"
+        
+//        if let cover = album["cover"] as? UIImage, let data = cover.pngData() {
+//            _share[CKShare.SystemFieldKey.thumbnailImageData] = data
+//        }
+//        itemThumbnailData(for: UICloudSharingController) -> Data? {
+           let image = UIImage(named: "Partage")
+           let donnéesImage = image?.pngData()
+        _share[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
+
+        // Type UTI qui decrit le contenu partagé
+        _share[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
+        
+        
+        
       self.partage = _share
       }
     catch { print("❗️Impossible de creer un partage") }
@@ -338,6 +367,6 @@ extension VueDetailItem {
         }
     }
 
-  private var canEdit: Bool { persistance.canEdit(object: item) }
+  private var canEdit: Bool { persistance.jePeuxEditer(objet: item) }
     
 }
