@@ -62,6 +62,13 @@ struct VueDetailGroupe: View {
     
     @State private var voirDétailsCollaboration = false
     
+    @State private var partageEnCours: CKShare? // initialisé on Appear
+    @State private var feuillePartageAffichée = false
+    @State private var showEditSheet  = false
+    
+    let coordinateurPartage : DéléguéDuControleurDePartageChargéDeLaCoordination
+
+    
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
         _groupe       = StateObject<Groupe>(wrappedValue: leGroupe)
@@ -70,6 +77,9 @@ struct VueDetailGroupe: View {
         _régionEnglobante = State(wrappedValue: leGroupe.régionEnglobante)
 //      _lesAnnotations   = State(wrappedValue: lesAnnotations ?? [])
         _lesAnnotations   = State(wrappedValue: leGroupe.lesAnnotations )
+        
+        coordinateurPartage = DéléguéDuControleurDePartageChargéDeLaCoordination(item: leGroupe.lePrincipal)
+        coordinateurPartage.tester()
 
         }
     
@@ -123,9 +133,30 @@ struct VueDetailGroupe: View {
      //                ForEach(Array(groupe.lesItems).sorted()    ) { item in
                      ForEach(Array(groupe.tableauItemsTrié) ) { item in
                          Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre)   \(item.leMessage)" , valeur : Int(item.valeur))//.equatable()
+                         Etiquette("   . \(item.leTitre) CK " , valeur : persistance.estPartagé(objet: item) )
+                         
+                         if let _partageTmp = persistance.obtenirPartage(item) {
+                             ForEach(_partageTmp.participants, id: \.self) { participant in
+                               VStack(alignment: .leading) {
+                                    Text(" * \(item.leTitre) |\(participant.userIdentity.nameComponents?.formatted(.name(style: .short)) ?? "anonyme")| ")
+                                    }
+                               .padding(.bottom, 8)
+                              } // for each partage
+                            } // partage existe
+                         else {Text(" * \(item.leTitre) non partagé CK.") }
+                         
+                         
                          }
                      }
                  Etiquette( "Valeur globale", valeur: groupe.valeur)
+                 
+//                 ForEach(Array(groupe.tableauItemsTrié) ) { item in
+//                     Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre)   \(item.leMessage)" , valeur : true    )
+//                     }
+                 
+//                 }
+                
+                 
                  Section(header: Etiquette( "Chefs", valeur: Int(groupe.nombre)) ) {
 
                      }
@@ -167,6 +198,8 @@ struct VueDetailGroupe: View {
             estFavoris       = configUtilisateur.estFavoris(groupe)
             estCoherent      = groupe.estCoherent
             coherenceGroupe  = Coherence( err: groupe.verifierCohérence(depuis: "OnAppear de vueDetailGroupe") )
+            
+            partageEnCours = persistance.obtenirPartage(groupe.lePrincipal)
             }
 
         .sheet(isPresented: $feuilleModificationPresentée) {
@@ -193,6 +226,28 @@ struct VueDetailGroupe: View {
 //                .onDisappear() {groupe.integration.toggle()}
             }
 //            .transition(.opacity) //.move(edge: .top))
+        
+        .sheet(isPresented: $feuillePartageAffichée) { //}, content: {
+          let _ = print("〽️〽️ - Appel de VuePartageCloudKit depuis VueDetailGroupe")
+          if let __share = partageEnCours {
+//              let _ = print("〽️〽️ Création du coordinateur de partage de", item.leTitre)
+//              let coord = CoordinateurDePartageCloudKit(item: item)
+              let _ = print("〽️〽️ Controleur de vue et son coordianateur", coordinateurPartage, "sont utilisés pour le groupe", groupe.leNom, "item:", groupe.lePrincipal.leTitre)
+              
+              //MARK: Controleur de vue de partage   et    son délégué à la coordination
+              VuePartageCloudKit(
+                // CloudSharingView(share: share, container: stack.ckContainer, destination: destination)
+                partage: __share,
+                conteneurCK: persistance.conteneurCK, //  . stack.ckContainer,
+                itemAPartager: groupe.lePrincipal,
+                coordinateur: coordinateurPartage) //CoordinateurDePartageCloudKit(item: item))
+              .border( .red, width: 0.3)
+              .ignoresSafeArea()
+          }
+            else {let _ = print("〽️〽️ - PAS DE PARTAGE EN COURS") }
+        }  // Sheet partage // )
+
+        
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup() //placement: .navigationBarTrailing)
@@ -231,7 +286,7 @@ struct VueDetailGroupe: View {
             
             
             Button(action: {
-                //shareNoteAction(groupe)
+                Recruter(pourLe : groupe)
             }) {
                 VStack {
                     Image(systemName: "square.and.arrow.up")
@@ -239,6 +294,26 @@ struct VueDetailGroupe: View {
                     }
               } .buttonStyle(.borderedProminent)
                 .help("bouton")
+            
+            
+            
+//            Button {
+//                let _ = print("〽️ Bouton partage événement", persistance.estPartagé(objet: groupe.lePrincipal).voyant)
+////                 !persistance.isShared(object: item)
+//              if !persistance.estPartagé(objet: groupe.lePrincipal) {
+//                  let _ = print("〽️ \(groupe.leNom) n'est pas déjà partagé, donc création du partage.")
+//                  //MARK: Création du partage
+////                    Task { await creerUnPartageCK(item) } //////// 9/6/22
+//                  Task { await self.partageEnCours = persistance.creerUnPartageCK(groupe.lePrincipal)  }
+//
+//                  }
+//              feuillePartageAffichée = true
+//            } label: {
+//              Image(systemName: "square.and.arrow.up")
+//            }.buttonStyle(.borderedProminent)
+            
+            
+            
             
             Button(action: { feuilleModificationPresentée.toggle()  }) {
                 VStack {
@@ -334,4 +409,34 @@ struct VueDetailGroupe: View {
 
 
 
+extension VueDetailGroupe {
+    
+    func Recruter(pourLe groupe : Groupe) {
+        let referenceRecrue = "\(groupe.id?.uuidString ?? "...")_\(UUID().uuidString)"
+        print("🔱 REFERENCE A RECRUTER :", referenceRecrue, "pour le groupe" , groupe.leNom)
+        print("🔱 LES ITEMS avant :" , groupe.lesItems.count)
+//        let nouvelleRecrue:Item = creer(contexte: contexte, titre: "\(referenceRecrue)")
+        let nouvelleRecrue = Item.fournirNouveau(contexte:contexte , titre: "\(referenceRecrue)")
 
+//        groupe.enrôler(contexte: contexte, titre: "\(referenceRecrue)")
+//        nouvelleRecrue.principal=groupe // NON
+        nouvelleRecrue.titre = "TMP \(groupe.leNom) \(Date())"
+        nouvelleRecrue.addToGroupes(groupe)
+        groupe.addToItems(nouvelleRecrue)
+        persistance.sauverContexte()
+        print("🔱 LES ITEMS apres :" , groupe.lesItems.count)
+//        Task { await self.partageEnCours = persistance.creerUnPartageCK(nouvelleRecrue)  }
+        let _ = print("🔱 Elaboration du partage", persistance.estPartagé(objet: nouvelleRecrue).voyant)
+//                 !persistance.isShared(object: item)
+        if !persistance.estPartagé(objet: nouvelleRecrue) {
+            let _ = print("🔱 \(nouvelleRecrue.leTitre) n'est (EVIDEMENT) pas déjà partagé, donc création du partage.")
+            //MARK: Création du partage
+            let message = "Participation à l'évenement\n \(groupe.leNom) \n \(groupe.lesItems.count)"
+            Task { await self.partageEnCours = persistance.creerUnPartageCK(nouvelleRecrue, message: message)  }
+
+            }
+        feuillePartageAffichée = true
+
+    }
+
+}

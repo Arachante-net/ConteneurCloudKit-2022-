@@ -431,8 +431,9 @@ extension Item {
         
         if (id == nil )
             { lesErreurs.append(ErrorType(.itemSansID )) }
-        if principal == nil
-        { lesErreurs.append(ErrorType(.itemSansPrincipal(item: leTitre)  ))}
+        //FIXME: EST-CE UNE ERREUR, si partage Cloud Kit ?
+//        if principal == nil
+//        { lesErreurs.append(ErrorType(.itemSansPrincipal(item: leTitre)  ))}
         
         if lesErreurs.isEmpty {print(" ✅")}
         else {

@@ -167,6 +167,8 @@ extension Groupe {
             contexte: contexte ,
             titre: "\(self.nom!) \(items?.count ?? 0) \(titre)"   )
         
+        //nouvelItem.principal=self   /////////////////////// 13 juin 2022
+        
         nouvelItem.addToGroupes(self)
         self.addToItems(nouvelItem)
 

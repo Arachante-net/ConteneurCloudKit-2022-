@@ -192,7 +192,7 @@ struct VueModifItemSimple: View {
                     // pourait éviter un flux à chaque nouvelle lettre saisie
                     Logger.interfaceUtilisateur.info("Message à envoyer : '\(item.leMessage)'")
                     //FIXME: Danger !
-                    item.principal!.objectWillChange.send()
+                    item.principal?.objectWillChange.send()
                     saisieMessageTerminée = true
                     }) {
                         Label("OK", systemImage: "chevron.forward.circle.fill")
@@ -268,7 +268,7 @@ struct VueModifItemSimple: View {
                 Button(action: {
                     Logger.interfaceUtilisateur.debug("Abandonner les modifs de l'Item (A ENRICHIR ?)")
                     //FIXME: Danger !
-                    item.principal!.objectWillChange.send()
+                    item.principal?.objectWillChange.send()
                     /// Dire à ma vue mère que rien n'a changé
                     reponseAmaMère(false, item)
                 }) {
@@ -297,7 +297,7 @@ struct VueModifItemSimple: View {
                     item.centrerSur(laRégion)
                     // Rafraichir le Groupe
                     //FIXME: Danger !
-                    item.principal!.objectWillChange.send()
+                    item.principal?.objectWillChange.send()
                     reponseAmaMère(true, item)
                 }) {
                     VStack {

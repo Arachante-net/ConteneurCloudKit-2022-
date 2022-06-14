@@ -8,6 +8,7 @@
 
 import CoreData
 import CloudKit
+import UIKit
 
 //import Combine
 import os.log
@@ -461,14 +462,16 @@ func supprimerObjets(_ objects: [NSManagedObject], mode:Suppression = .défaut) 
 } // fin extension contexte
     
 
+
+
 //MARK: - Fonctions de Partage CloudKit -
+//MARK: Aides au Partage : participant permission, methodes and proprietés ...
 extension ControleurPersistance {
     /*
         Cette extension contient le code relatif au partage. La méthode vérifie le persistentStore du NSManagedObjectID qui a été transmis pour voir s'il s'agit du sharedPersistentStore.
         Si c'est le cas, alors cet objet est déjà partagé.
-        Sinon, utilisez fetchShares(matching:) pour voir si vous avez des objets correspondant à l'objectID en question.
-        Si une correspondance revient, cet objet est déjà partagé.
-        De manière générale, vous travaillerez avec un NSManagedObject de votre point de vue.
+        Sinon, on utilise fetchShares(matching:) pour voir s'il existe des objets correspondant à l'objectID en question.
+        Si on a une correspondance, alors c'est que l'objet est déjà partagé.
         */
 
 func estPartagé(objet: NSManagedObject) -> Bool {
@@ -512,18 +515,54 @@ private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
     return _estPartagé
 }
 
-/// Si l'obet est déja partagé, retourner les informations relatives au partage
+    
+/// Si l'objet est déja partagé, fournir les informations relatives au partage
 func obtenirPartage(_ item: Item) -> CKShare? {
     guard estPartagé(objet: item) else { return nil }
     guard let dicoDesPartages = try? conteneur.fetchShares(matching: [item.objectID]),
     let partage = dicoDesPartages[item.objectID] else {
-    print("❗️make Impossible d'obtenir un partage CloudKit")
-    return nil
-    }
-    partage[CKShare.SystemFieldKey.title] = "⏺\(item.titre ?? "...") obtenir un partage existant" //caption
-    print("〽️ 🌀 Obtention du partage CloudKit pour", item.titre ?? "...")
+        print(" Impossible d'obtenir un partage CloudKit pour", item.leTitre)
+        return nil
+        }
+    let nbParticipants = partage.participants.count
+    partage[CKShare.SystemFieldKey.title] = "\(nbParticipants) Inviter à participer à l'événement \n \"\(item.titre ?? "...")\" "
+    partage[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.obtenir"
+
+    let image = UIImage(named: "RejoindrePartage") //Rouge16") //RejoindrePartage")
+    let donnéesImage = image?.pngData()
+    let test = partage[CKShare.SystemFieldKey.thumbnailImageData]//.debugDescription
+    print("〽️ 🌀 image déjà en cache :" , test ?? "bof", image?.imageRendererFormat, image?.size)
+    partage[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage! as CKRecordValue
+//     if coordinateurPartage.DonnéesMiniature() == donnéesImage {
+//         print("〽️〽️〽️〽️〽️〽️ Mêmes données ! ")
+//         }
+    print("〽️...", nbParticipants , "🌀 Obtention du partage CloudKit pour", item.titre ?? "...")
     return partage
 }
+    
+    func creerUnPartageCK(_ item: Item, message:String = "Création d'un partage") async -> CKShare? {
+    var _partage : CKShare?
+  do {
+      // Associer un item à un (nouveau ou existant) partage
+      print("〽️ 🔆 NEW Création d'un partage CK pour", item.leTitre)
+      let (_, _partageTmp, _) = try await conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
+      let nbParticipants = _partageTmp.participants.count
+      _partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) \(message)" //"Participer à l'événement\n\"\(item.titre ?? "...")\"\n(Création de la collaboration)"
+         let image = UIImage(named: "CreationPartage")
+         let donnéesImage = image?.pngData()
+      _partageTmp[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
+//      if coordinateurPartage.DonnéesMiniature() == donnéesImage {
+//          print("〽️〽️〽️〽️〽️〽️ Mêmes données ! ")
+//          }
+      // Type UTI qui decrit le contenu partagé
+      _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.creer"
+      print("〽️..." , nbParticipants)
+    _partage = _partageTmp
+    }
+  catch { print("❗️Impossible de creer un partage") }
+  return _partage
+  }
+
 
 func jePeuxEditer(objet: NSManagedObject) -> Bool {
     conteneur.canUpdateRecord(forManagedObjectWith: objet.objectID)
@@ -548,6 +587,7 @@ func jeSuisPropriétaire(objet: NSManagedObject) -> Bool {
 }
 } // Fin extension partage Cloud kit Controleur Persistance
    
+// MARK: Aides au Partage : participant permission, methodes and proprietés ...
 extension ControleurPersistance {
         
     func statuerConteneurCK() {
@@ -645,9 +685,60 @@ extension ControleurPersistance {
         
         } // fin statuerConteneurCK
     
+    func libellé(de permission: CKShare.ParticipantPermission) -> String {
+      switch permission {
+          case .unknown:
+            return "Inconnu" //"Unknown"
+          case .none:
+            return "Sans" //"None"
+          case .readOnly:
+            return "Lecture seule" //"Read-Only"
+          case .readWrite:
+            return "Lecture/Écriture" //"Read-Write"
+          @unknown default:
+            fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.Permission")
+          }
+      }
+
+    func libellé(de role: CKShare.ParticipantRole) -> String {
+      switch role {
+          case .owner:
+            return "Propriétaire" //"Owner"
+          case .privateUser:
+            return "Utilisateur Privé" // participant ? //"Private User"
+          case .publicUser:
+            return "Utilisateur Publique" // "Public User"
+          case .unknown:
+            return "Inconnu" //Unknown"
+          @unknown default:
+            fatalError("Une nouvelle valeur inconnue pour  CKShare.Participant.Role")
+          }
+      }
+
+    func libellé(de acceptanceStatus: CKShare.ParticipantAcceptanceStatus) -> String {
+      switch acceptanceStatus {
+          case .accepted:
+            return "Accepté" //"Accepted"
+          case .removed:
+            return "Révoqué" //Enlevé, Révoqué "Removed"
+          case .pending:
+            return "Invité" //"Invited"
+          case .unknown:
+            return "Inconnu" //"Unknown"
+          @unknown default:
+            fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.AcceptanceStatus")
+          }
+      }
+
     
 
-} // Fin nuage
+} // Fin de nuage (Aides au Partage : participant permission, methodes and proprietés ...)
+
+
+
+
+
+
 
 //MARK: - Gestion du modéle de données
 extension ControleurPersistance {

@@ -41,8 +41,8 @@ struct VueDetailItem: View {
     let longitudeInitiale : Double
     let latitudeInitiale  : Double
     
-    @State private var partage: CKShare? // initialisé on Appear
-    @State private var showShareSheet = false
+    @State private var partageEnCours: CKShare? // initialisé on Appear
+    @State private var feuillePartageAffichée = false
     @State private var showEditSheet  = false
     
     let coordinateurPartage : DéléguéDuControleurDePartageChargéDeLaCoordination
@@ -94,7 +94,7 @@ struct VueDetailItem: View {
                 .opacity(item.valide ? 1.0 : 0.1)
                         
 
-            if let _share = partage {
+            if let _share = partageEnCours {
 
             Section {
 //              if let _share = partage {
@@ -103,11 +103,11 @@ struct VueDetailItem: View {
                   VStack(alignment: .leading) {
                     Text(participant.userIdentity.nameComponents?.formatted(.name(style: .long)) ?? "")
                       .font(.headline)
-                    Text("Accréditation: \(string(for: participant.acceptanceStatus))")
+                      Text("Accréditation: \(persistance.libellé(de: participant.acceptanceStatus))")
                       .font(.subheadline)
-                    Text("Rôle: \(string(for: participant.role))")
+                      Text("Rôle: \(persistance.libellé(de: participant.role))")
                       .font(.subheadline)
-                    Text("Permissions: \(string(for: participant.permission))")
+                      Text("Permissions: \(persistance.libellé(de: participant.permission))")
                       .font(.subheadline)
                   }
                   .padding(.bottom, 8)
@@ -143,13 +143,14 @@ struct VueDetailItem: View {
             } //Sheet modif
 
         
-        .sheet(isPresented: $showShareSheet) { //}, content: {
+        .sheet(isPresented: $feuillePartageAffichée) { //}, content: {
           let _ = print("〽️〽️ - Appel de VuePartageCloudKit depuis VueDetailItem")
-          if let __share = partage {
+          if let __share = partageEnCours {
 //              let _ = print("〽️〽️ Création du coordinateur de partage de", item.leTitre)
 //              let coord = CoordinateurDePartageCloudKit(item: item)
-              let _ = print("〽️〽️ Le coordianateur", coordinateurPartage, "est utilisé pour", item.leTitre)
+              let _ = print("〽️〽️ Controleur de vue et son coordianateur", coordinateurPartage, "sont utilisés pour", item.leTitre)
               
+              //MARK: Controleur de vue de partage   et    son délégué à la coordination
               VuePartageCloudKit(
                 // CloudSharingView(share: share, container: stack.ckContainer, destination: destination)
                 partage: __share,
@@ -176,8 +177,9 @@ struct VueDetailItem: View {
             apparaitre()
             Logger.interfaceUtilisateur.info("onAppear VueDetailItem \(item.leMessage) \(item.valeur) ")
             let _ = item.verifierCohérence(depuis: #file)
-            Logger.interfaceUtilisateur.info("〽️ onAppear VueDetailItem")
-            self.partage = persistance.obtenirPartage(item)
+            //MARK: S'il existe, obtenir le partage à rejoindre.
+            //self. /////////
+            partageEnCours = persistance.obtenirPartage(item)
         } //)
         
        // .onAppear() {}
@@ -233,7 +235,7 @@ struct VueDetailItem: View {
     var descriptionCollaboration: some View {
         
         VStack(alignment: .leading) {
-            Etiquette("Partage", valeur: partage != nil)
+            Etiquette("Partage", valeur: partageEnCours != nil)
             Etiquette("Principal", valeur: item.principal?.nom ?? "❌")
 
             Text("Membre de")
@@ -272,14 +274,17 @@ struct VueDetailItem: View {
                     }
               }.buttonStyle(.borderedProminent)
             
-              Button {  //stack
+              Button {
                 let _ = print("〽️ Bouton partage", persistance.estPartagé(objet: item).voyant)
 //                 !persistance.isShared(object: item)
                 if !persistance.estPartagé(objet: item) {
-                    let _ = print("〽️ \(item.leTitre) n'est pas déjà partagé")
-                  Task { await creerUnPartageCK(item) }
-                  }
-                showShareSheet = true
+                    let _ = print("〽️ \(item.leTitre) n'est pas déjà partagé, donc création du partage.")
+                    //MARK: Création du partage
+//                    Task { await creerUnPartageCK(item) } //////// 9/6/22
+                    Task { await self.partageEnCours = persistance.creerUnPartageCK(item)  }
+
+                    }
+                feuillePartageAffichée = true
               } label: {
                 Image(systemName: "square.and.arrow.up")
               }
@@ -295,78 +300,81 @@ struct VueDetailItem: View {
     func apparaitre() {}
 }
 
+
+
+
+
+
 // MARK: Aides au Partage : participant permission, methodes and proprietés ...
-extension VueDetailItem {
-  private func creerUnPartageCK(_ item: Item) async {
-    do {
-        // Associer un item à un (nouveau ou existant) partage
-        print("〽️ 🔆 Création d'un partage")
-        let (_, _share, _) = try await persistance.conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
-        _share[CKShare.SystemFieldKey.title] = "Participer à \(item.titre ?? "...")"
-        
-//        if let cover = album["cover"] as? UIImage, let data = cover.pngData() {
-//            _share[CKShare.SystemFieldKey.thumbnailImageData] = data
-//        }
-//        itemThumbnailData(for: UICloudSharingController) -> Data? {
-           let image = UIImage(named: "Partage")
-           let donnéesImage = image?.pngData()
-        _share[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
-
-        // Type UTI qui decrit le contenu partagé
-        _share[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
-        
-        
-        
-      self.partage = _share
-      }
-    catch { print("❗️Impossible de creer un partage") }
-    }
-
-  private func string(for permission: CKShare.ParticipantPermission) -> String {
-    switch permission {
-        case .unknown:
-          return "Inconnu" //"Unknown"
-        case .none:
-          return "Sans" //"None"
-        case .readOnly:
-          return "Lecture seule" //"Read-Only"
-        case .readWrite:
-          return "Lecture/Écriture" //"Read-Write"
-        @unknown default:
-          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.Permission")
-        }
-    }
-
-  private func string(for role: CKShare.ParticipantRole) -> String {
-    switch role {
-        case .owner:
-          return "Propriétaire" //"Owner"
-        case .privateUser:
-          return "Utilisateur Privé" // participant ? //"Private User"
-        case .publicUser:
-          return "Utilisateur Publique" // "Public User"
-        case .unknown:
-          return "Inconnu" //Unknown"
-        @unknown default:
-          fatalError("Une nouvelle valeur inconnue pour  CKShare.Participant.Role")
-        }
-    }
-
-  private func string(for acceptanceStatus: CKShare.ParticipantAcceptanceStatus) -> String {
-    switch acceptanceStatus {
-        case .accepted:
-          return "Accepté" //"Accepted"
-        case .removed:
-          return "Révoqué" //Enlevé, Révoqué "Removed"
-        case .pending:
-          return "Invité" //"Invited"
-        case .unknown:
-          return "Inconnu" //"Unknown"
-        @unknown default:
-          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.AcceptanceStatus")
-        }
-    }
-
-  private var canEdit: Bool { persistance.jePeuxEditer(objet: item) }
-    
-}
+// ne pas supprimer tout de suite
+//extension VueDetailItem {
+//
+//// 9/6/22 remplacé par  self.partage = persistance.creerUnPartageCK(item)
+////  private func creerUnPartageCK(_ item: Item) async {
+////    do {
+////        // Associer un item à un (nouveau ou existant) partage
+////        print("〽️ 🔆 Création d'un partage pour", item.leTitre)
+////        let (_, _partageTmp, _) = try await persistance.conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
+////        _partageTmp[CKShare.SystemFieldKey.title] = "Participer à l'événement\n\"\(item.titre ?? "...")\"\n(Création de la collaboration)"
+////           let image = UIImage(named: "CreationPartage")
+////           let donnéesImage = image?.pngData()
+////        _partageTmp[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
+////        if coordinateurPartage.DonnéesMiniature() == donnéesImage {
+////            print("〽️〽️〽️〽️〽️〽️ Mêmes données ! ")
+////            }
+////        // Type UTI qui decrit le contenu partagé
+////        _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
+////
+////      self.partage = _partageTmp
+////      }
+////    catch { print("❗️Impossible de creer un partage") }
+////    }
+////
+////  private func string(for permission: CKShare.ParticipantPermission) -> String {
+////    switch permission {
+////        case .unknown:
+////          return "Inconnu" //"Unknown"
+////        case .none:
+////          return "Sans" //"None"
+////        case .readOnly:
+////          return "Lecture seule" //"Read-Only"
+////        case .readWrite:
+////          return "Lecture/Écriture" //"Read-Write"
+////        @unknown default:
+////          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.Permission")
+////        }
+////    }
+////
+////  private func string(for role: CKShare.ParticipantRole) -> String {
+////    switch role {
+////        case .owner:
+////          return "Propriétaire" //"Owner"
+////        case .privateUser:
+////          return "Utilisateur Privé" // participant ? //"Private User"
+////        case .publicUser:
+////          return "Utilisateur Publique" // "Public User"
+////        case .unknown:
+////          return "Inconnu" //Unknown"
+////        @unknown default:
+////          fatalError("Une nouvelle valeur inconnue pour  CKShare.Participant.Role")
+////        }
+////    }
+////
+////  private func string(for acceptanceStatus: CKShare.ParticipantAcceptanceStatus) -> String {
+////    switch acceptanceStatus {
+////        case .accepted:
+////          return "Accepté" //"Accepted"
+////        case .removed:
+////          return "Révoqué" //Enlevé, Révoqué "Removed"
+////        case .pending:
+////          return "Invité" //"Invited"
+////        case .unknown:
+////          return "Inconnu" //"Unknown"
+////        @unknown default:
+////          fatalError("Une nouvelle valeur inconnue pour CKShare.Participant.AcceptanceStatus")
+////        }
+////    }
+////
+////  private var canEdit: Bool { persistance.jePeuxEditer(objet: item) }
+//
+//}

@@ -13,7 +13,8 @@ import Foundation
         case trucQuiVaPas(num : Int)
         case erreurInterne
         
-        case itemSansPrincipal(item:String)
+        //FIXME: EST-CE UNE ERREUR, si partage Cloud Kit ?
+//        case itemSansPrincipal(item:String)
         case itemSansTitre
         case itemSansID
         
@@ -32,8 +33,8 @@ import Foundation
                 case .caractereInvalide:          return NSLocalizedString("C'est quoi ce caractere ?"            , comment: "")
                 case .erreurInterne:              return NSLocalizedString("Erreur interne, reinstallez l'appli !", comment: "")
                 case .trucQuiVaPas(num: let num): return NSLocalizedString("Y-a le truc \(num) qui cloche ..."    , comment: "")
-                
-                case .itemSansPrincipal(item: let item):          return NSLocalizedString("Item \(item) sans Groupe référent (Principal)", comment: "Pourquoi pas")
+ //FIXME: EST-CE UNE ERREUR, si partage Cloud Kit ?
+//                case .itemSansPrincipal(item: let item):          return NSLocalizedString("Item \(item) sans Groupe référent (Principal)", comment: "Pourquoi pas")
                 case .itemSansTitre:              return NSLocalizedString("Item sans Titre"                      , comment: "")
                 case .itemSansID:                 return NSLocalizedString("Item sans Identifiant"                         , comment: "")
 
