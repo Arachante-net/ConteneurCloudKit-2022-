@@ -527,6 +527,12 @@ func obtenirPartage(_ item: Item) -> CKShare? {
     let nbParticipants = partage.participants.count
     partage[CKShare.SystemFieldKey.title] = "\(nbParticipants) Inviter à participer à l'événement \n \"\(item.titre ?? "...")\" "
     partage[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.obtenir"
+    partage.setValue("OBTENIR", forKey: "NIMBUS_PARTAGE_ORIGINE")
+//    partage.setValue(item.id,   forKey: "ID")
+    partage.setValue(item.id?.uuidString,   forKey: "NIMBUS_PARTAGE_ITEM_ID")
+
+
+
 
     let image = UIImage(named: "RejoindrePartage") //Rouge16") //RejoindrePartage")
     let donnéesImage = image?.pngData()
@@ -540,7 +546,9 @@ func obtenirPartage(_ item: Item) -> CKShare? {
     return partage
 }
     
-    func creerUnPartageCK(_ item: Item, message:String = "Création d'un partage") async -> CKShare? {
+    
+/// Création d'un partage CloudKit relatif à l''iem (NSManagedObject) fournis en paramêtre
+func creerUnPartageCK(_ item: Item, message:String = "Création d'un partage") async -> CKShare? {
     var _partage : CKShare?
   do {
       // Associer un item à un (nouveau ou existant) partage
@@ -556,6 +564,12 @@ func obtenirPartage(_ item: Item) -> CKShare? {
 //          }
       // Type UTI qui decrit le contenu partagé
       _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.creer"
+      _partageTmp.setValue("CREER", forKey: "NIMBUS_PARTAGE_ORIGINE")
+//      _partageTmp.setValue(item.id,   forKey: "ID")
+      _partageTmp.setValue(item.id?.uuidString,   forKey: "NIMBUS_PARTAGE_ITEM_ID")
+
+
+
       print("〽️..." , nbParticipants)
     _partage = _partageTmp
     }

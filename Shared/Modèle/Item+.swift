@@ -162,6 +162,20 @@ extension Item {
             }
         }
     
+    ///  Creer son propre parent s'il n'existe pas
+    func élaborerParent() -> Groupe? {
+        // Je n'ai pas déjà un parent
+        guard principal == nil else { return nil} 
+
+                
+        let parent = Groupe()
+        
+        parent.nom = "papa de \(leTitre)"
+        parent.principal = self
+        principal = parent
+        return parent
+    }
+    
     /// Cet `Item`rejoint l'ensemble`lesItems` du  Groupe  `patron`
     func rallier(groupeLeader:Groupe) {
         if Groupe.tousCollaboratifs(self.lesGroupes) {print("OK")}

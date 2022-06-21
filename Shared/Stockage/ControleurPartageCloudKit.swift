@@ -34,10 +34,10 @@ struct VuePartageCloudKit: UIViewControllerRepresentable {
       /// Définir le controleur de partage CK et lui associer son délégué à la coordination (défini dans  VueDetailItem)
       let contrôleurDePartage = UICloudSharingController(share: partage, container: conteneurCK)
 //        controller.toolbarItems = [] //DEVIL
-        contrôleurDePartage.modalPresentationStyle = .popover  //FIXME: .formSheet cf. iPad
+        contrôleurDePartage.modalPresentationStyle = .popover  //FIXME: .formSheet cf. plantage iPad
       let _ = print("〽️〽️ Délégation au coordinateur", coordinateur, "du contrôle de partage.")
         contrôleurDePartage.delegate = coordinateur //makeCoordinator()  //  CoordinateurDePartageCloudKit(item: itemAPartager) //context.coordinator // UICloudSharingControllerDelegate? //DEVIL
-        contrôleurDePartage.availablePermissions = [.allowPrivate, .allowReadOnly] // allowReadWrite   //DEVIL
+      contrôleurDePartage.availablePermissions = [.allowPrivate, .allowReadWrite] //.allowReadOnly] // allowReadWrite   //DEVIL
     let _ = print("〽️〽️ coordinateur délégué du controleur", contrôleurDePartage.delegate) //context.coordinator)
     return contrôleurDePartage
     } // makeUIViewController
@@ -67,17 +67,17 @@ final class DéléguéDuControleurDePartageChargéDeLaCoordination: NSObject, UI
         print("〽️ Initialisation du coordinateur/délégué du partage (CloudSharingCoordinator)", "pour",  item.titre ?? "...")
         self.item = item }
 
+    
+  /// Fournir un titre par defaut à la fenêtre de réalisation  du partage
   func itemTitle(for csc: UICloudSharingController) -> String? {
       print("〽️〽️〽️ ❓ Définition du titre du partage (", item.titre ?? "...", ")")
       return "✅\(String(describing: item.titre) ) délégué" }
 
     
-  // Fournir la vue miniature de l'invitation de partage.
+  /// Fournir la vue miniature (par défaut ?) de l'invitation de partage.
     // itemThumbnailData(for:) n'est appelé que lors de la création d'un nouveau partage.
     // Pour un partage existant, l'image miniature est récupérée à partir du partage à l'aide de la clé CKShare_SystemFieldKey_imageData.
   func itemThumbnailData(for: UICloudSharingController) -> Data? {
-//      let image = UIImage(named: "Soucoupe")
-//      let donnéesImage = image?.pngData()
       print("〽️〽️〽️ ❓ création de la vue miniature de l'invitation de partage")
       return DonnéesMiniature()     // .pngRepresentationData
       }
@@ -143,9 +143,11 @@ private func fournirUnPartageCK(_ item: Item, conteneur: NSPersistentCloudKitCon
 //          print("〽️〽️〽️〽️〽️〽️ Mêmes données ! ")
 //          }
       // Type UTI qui decrit le contenu partagé
-      _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
+//      _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
       print("〽️...", nbParticipants, "participants")
       _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.fournir"
+      _partageTmp.setValue("FOURNIR", forKey: "NIMBUS_PARTAGE_ORIGINE")
+      _partageTmp.setValue(item.id?.uuidString,   forKey: "NIMBUS_PARTAGE_ITEM_ID")
 
       _partage = _partageTmp
       }
