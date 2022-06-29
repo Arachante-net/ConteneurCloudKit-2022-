@@ -30,13 +30,14 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
     
     /// Indique au délégué l'accès aux informations de partage CloudKit.
     /// repondre à une invitation  de partage CK
+    /// Recuperer un item d'un groupe auquel on a accepté de participer
     func windowScene(_ windowScene: UIWindowScene,
                    userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         
         @Environment(\.managedObjectContext) var viewContext  // Utile ??
 
       let id = cloudKitShareMetadata.share.recordID
-      print("〽️⚜️ Délégué de Scene, fenêtre accepter les invitations de partage de" , cloudKitShareMetadata.share.owner.userIdentity.nameComponents?.givenName ?? "...") // PHILIPPE
+      print("🔱 ⇢ 〽️⚜️ Délégué de Scène, fenêtre d'acceptation des invitations de partage de" , cloudKitShareMetadata.share.owner.userIdentity.nameComponents?.givenName ?? "...") // PHILIPPE
       print("〽️⚜️ type :" , cloudKitShareMetadata.share.recordType ) // cloudkit.share
       print("〽️⚜️ nom zone :" , cloudKitShareMetadata.share.recordID.zoneID.zoneName )
       print("〽️⚜️ proprio  :" , cloudKitShareMetadata.share.recordID.zoneID.ownerName )
@@ -57,8 +58,10 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
       print("〽️⚜️ clefs      :" , cloudKitShareMetadata.share.allKeys() ) // ["cloudkit.title", ...]
       print("〽️⚜️  ° titre   :" , cloudKitShareMetadata.share.value(forKey: "cloudkit.title"        ) ?? "...")
       print("〽️⚜️  ° origine :" , cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ORIGINE") ?? "...") // nimbus.fournir .creer .obtenir
-      print("〽️⚜️  ° id item :" , cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID"        ) ?? "...") //
-        
+      let idItem = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID"        )  //
+      print("〽️⚜️  ° id item :" , idItem ?? "...") //
+      let nomGroupe = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM"        )  //
+      print("〽️⚜️  ° groupe :" , nomGroupe ?? "...") //
         
         
       print("〽️⚜️ nom     :" , cloudKitShareMetadata.ownerIdentity.nameComponents?.givenName ?? "..." ) // PHILIPPE
@@ -78,7 +81,7 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
       let baseDeDonnéesCK = CKContainer.default().privateCloudDatabase
      //   fetch(withRecordID:completionHandler:) method of the CKDatabase class.
       baseDeDonnéesCK.fetch(withRecordID: id) { enregistrement, erreur in
-          print("〽️⚜️ eeeee ", enregistrement.debugDescription)
+          print("〽️⚜️ enregistrement ", enregistrement.debugDescription)
 //          print("〽️⚜️", enregistrement! as Item)
 
         }
@@ -106,13 +109,20 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
         
         
       print("〽️⚜️ ID à rechercher :", cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID") ?? "...")
-//      let itemUUID:UUID
-      if let _itemID = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID") {
-//          itemUUID = _itemID  as! UUID
-//          let itemEnPartage  = recupererItem(identifié:  _itemID  as! String, contexte: viewContext)
+      let objectif = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF")
+        if let _itemID = idItem { //cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID") {
           let itemEnPartage_ = recupererItem(identifié:  _itemID  as! String, contexte: _contexte)
-          print("〽️⚜️ Récupération effective de" , itemEnPartage_?.leTitre ?? "...")
-          itemEnPartage_?.message = "A ADOPTER"
+          print("〽️⚜️ Récupération effective de" , itemEnPartage_?.leTitre ?? "•••")
+          // Création du Groupe Parent local qui aura comme principal l'item que l'on récupére
+          itemEnPartage_?.message = "… Je suis prêt"
+          let parent = Groupe.fournirNouveau(contexte: _contexte)
+              parent.nom = "…\(nomGroupe ?? "•••")" //itemEnPartage_?.leTitre ?? "•••")"
+              parent.collaboratif = true
+              parent.objectif     = "…\(objectif ?? "•••")"
+              parent.principal    = itemEnPartage_
+          itemEnPartage_?.principal = parent
+          controleurDePersistance.sauverContexte(depuis:"Acceptation du partage")
+          //sauver(  _contexte)
           }
       else {
           print("〽️⚜️ ERREUR RECUPERATION IMPOSIBLE DE L'ITEM PARTAGÉ")

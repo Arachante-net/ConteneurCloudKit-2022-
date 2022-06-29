@@ -56,6 +56,14 @@ extension Groupe {
         return requette
         }
     
+    /// Groupes sans principal
+//    static var extractionSteriles: NSFetchRequest<Groupe> {
+//        let requette: NSFetchRequest<Groupe> = Groupe.fetchRequest()
+//            requette.sortDescriptors = [NSSortDescriptor(keyPath: \Groupe.nom, ascending: true)]
+//            requette.predicate = NSPredicate(format: "principal.@count == 0")
+//        return requette
+//        }
+    
     static public func obtenirGroupes(contexte:NSManagedObjectContext) -> [Groupe]? {
       let requête: NSFetchRequest<Groupe> = Groupe.fetchRequest()
       do {
@@ -120,7 +128,7 @@ extension Groupe {
         // Créer l'Item principal
         let nouvelItem    = Item.fournirNouveau(
             contexte: contexte ,
-            titre: "\(titre)_\(nouveauGroupe.items?.count ?? 0)"   )
+            titre: "\(titre)_∆") //\(nouveauGroupe.items?.count ?? 0)"   )
             
         nouvelItem.principal    = nouveauGroupe
         nouveauGroupe.principal = nouvelItem
@@ -128,7 +136,7 @@ extension Groupe {
         // sauver le contexte
         // persistance
 //        persistance.sauverContexte(nom:"Groupe")
-//        print("♻️")
+        print("♻️")
         Logger.modélisationDonnées.info("💰")
         do {
             contexte.name = "Groupe"
@@ -234,7 +242,11 @@ extension Groupe {
         }
     
     func supprimerAdhérences(mode: Suppression = .simulation) {
-        
+        print("🔘🔘 supprimerAdhérences de ", leNom, " ", lePrincipal.leTitre )
+        collaborateurs.forEach() {print("🔘 collaborateur" ,$0.leNom)}
+        lePrincipal.lesGroupes.forEach() {print("🔘 groupes" ,$0.leNom)}
+
+
         switch mode {
             case .brut:
                 // Enlever de son item principal la reference a ce groupe
@@ -243,13 +255,13 @@ extension Groupe {
                 if items != nil {removeFromItems(items!)}
 //                persistance.supprimerObjets(self)  // NON CAR UNIQUEMENT LES ADHERENCES
             case .avecPrincipal, .défaut:
-                Logger.modélisationDonnées.info("P: \(self.lePrincipal)")
+                Logger.modélisationDonnées.info("🔘P: \(self.lePrincipal)")
                 lePrincipal.notifierDemission(self, mode: mode)
             case .informer:
-                Logger.modélisationDonnées.info("? \(self.collaborateurs)")
+                Logger.modélisationDonnées.info("🔘? \(self.collaborateurs)")
                 collaborateurs.forEach() {$0.demanderAccordSuppression()}
             case .forcer:
-                Logger.modélisationDonnées.info("! \(self.collaborateurs)")
+                Logger.modélisationDonnées.info("🔘! \(self.collaborateurs)")
                 collaborateurs.forEach() {$0.demanderAccordSuppression()}
             case .simulation:
 //                print("🔘Les colaborateurs de", leNom, "sont :", collaborateurs.map {$0.leNom}.joined(separator: ", ") )
@@ -264,10 +276,10 @@ extension Groupe {
 
     
     static func supprimerAdhérences(groupes: [Groupe], mode: Suppression = .simulation) {
-        Logger.modélisationDonnées.info("🔘 Suppression adhérences (\(mode.hashValue)) de : \(groupes.map {$0.leNom}) ") //positions.map { groupes[$0].leNom} )
+        Logger.modélisationDonnées.info("🔘 Suppression des adhérences (\(mode.hashValue)) de : \(groupes.map {$0.leNom}) ") //positions.map { groupes[$0].leNom} )
         
         groupes.forEach { leGroupe in
-            Logger.modélisationDonnées.info("\t🔘 Suppression (\(mode.hashValue)) des adhérences du groupe : \(leGroupe.leNom)") //groupes[$0].leNom )
+            Logger.modélisationDonnées.info("\t🔘🔘 Suppression (\(mode.hashValue)) des adhérences du groupe : \(leGroupe.leNom)") //groupes[$0].leNom )
             leGroupe.supprimerAdhérences(mode: mode) //mode: .brut)
     //        persistance.sauverContexte()
             }
@@ -276,7 +288,7 @@ extension Groupe {
     
     override public func prepareForDeletion() {
         super.prepareForDeletion()
-        Logger.modélisationDonnées.info("🔘 Suppresion imminente du groupe \(self.leNom), maitre de l'item principal \(self.lePrincipal.leTitre) et de \(self.lesItems.count) autres items.")
+        Logger.modélisationDonnées.info("🔘 Suppresion imminente du groupe \(self.leNom) ( maitre de l'item principal \(self.lePrincipal.leTitre) et de \(self.lesItems.count) autres items).")
         }
 
     static public func supprimer(contexte:NSManagedObjectContext , _ groupe: Groupe) {
@@ -423,7 +435,7 @@ var message:String {
     /// L'ensemble des groupes  principaux des Items liés à ce Groupe
     var collaborateurs : Set<Groupe> {
         guard items?.count ?? 0 > 0 else { return Set<Groupe>() }
-        return Set( ((items as? Set<Item>)?.map {$0.principal!})! )
+        return Set( (((items as? Set<Item>)?.compactMap {$0.principal})!) )
         }
     
     var collaborateursSansLePrincipal__ : Set<Groupe> {
@@ -690,7 +702,8 @@ extension Groupe {
     
     
     public override var description: String {
-        "\(leNom), valeur: \(valeur), collaborateurs : \(lesItems.map {$0.principal?.leNom as! String}.joined(separator: ", "))."
+//        "\(leNom), valeur: \(valeur), collaborateurs : \(lesItems.map {$0.principal?.leNom}.joined(separator: ", "))."
+        "\(leNom), valeur: \(valeur)"
       }
     
 //    override public var debugDescription: String {

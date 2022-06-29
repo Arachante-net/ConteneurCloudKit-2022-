@@ -176,14 +176,15 @@ struct ListeGroupe: View {
 
 
         }
-//        .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
-        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-            Text("oui")
-            Button {} label: {Label("!", systemImage: "1.circle")}.tint(.indigo).saturation(0.5).opacity(0.4).clipped().cornerRadius(20).border(.yellow, width:5).padding()
-            Spacer()
-            Button {} label: {Label("!", systemImage: "3.circle")}.tint(.pink).saturation(0.5).opacity(0.4).clipped().border(.yellow).padding()
-            Text("Non")
-            }
+        .onDelete(perform: proposerSuppressionGroupes) //supprimerGroupes)
+//        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+//            Text("oui")
+//            Button {} label: {Label("!", systemImage: "1.circle")}.tint(.indigo).saturation(0.5).opacity(0.4).clipped().cornerRadius(20).border(.yellow, width:5).padding()
+//            Spacer()
+//            Button {} label: {Label("!", systemImage: "3.circle")}.tint(.pink).saturation(0.5).opacity(0.4).clipped().border(.yellow).padding()
+//            Text("Non")
+//            }
+          // C'EST SWIPE OU DELETE !?
 //        .swipeActions(edge: .leading, allowsFullSwipe: true) {Button {} label: {Label("?", systemImage: "2.circle")}.tint(.indigo).saturation(0.7).opacity(0.5).padding()}//.padding()
 //        .swipeActions(edge: .trailing, allowsFullSwipe: true) {Button(role:.destructive) {} label: {Label("Supprimer", systemImage: "trash")}}
 
@@ -208,14 +209,24 @@ struct ListeGroupe: View {
       .toolbar {
           ToolbarItem(placement: .navigationBarTrailing)
             {EditButton().help("Editer") }
+          
           ToolbarItem(placement: .principal)
             {Image(systemName: "ellipsis.circle")}
+          
           ToolbarItem(placement: .navigationBarTrailing)
             { HStack {
                 Button(action: { presenterCréationGroupe.toggle() })
                     { Image(systemName: "plus") }
                 }
             }
+          
+//          ToolbarItem(placement: .navigationBarLeading)
+//            { HStack {
+//                Button(action: { supprimer() })
+//                    { Image(systemName: "minus") }
+//                }
+//            }
+          
           ToolbarItem(placement: .navigationBarLeading)
             { HStack {
 //              Button(action: { let _ = Item.extractionItems })
@@ -332,11 +343,11 @@ struct ListeGroupe: View {
     private func supprimerVraimentGroupes(positions: IndexSet, mode: Suppression = .simulation) {
         let lesGroupes = positions.map { groupes[$0] }
         let lesNoms    = lesGroupes.map {$0.leNom}
-        l.info("🔘 Suppression confirmée (  \(mode.hashValue) de : \(lesNoms) ")
+        l.info("🔘 Suppression confirmée (\(mode.hashValue)) de : \(lesNoms) ")
         Groupe.supprimerAdhérences(groupes: lesGroupes, mode:mode)
         withAnimation {
             l.info("\t🔘 Suppression (\(mode.hashValue) ) du(des) groupe(s) : \(lesNoms)") //groupes[$0].leNom )
-            persistance.supprimerObjets(lesGroupes, mode: mode) //positions.map { groupes[$0] })
+            persistance.supprimerObjets(lesGroupes, mode: .brut) //mode) //positions.map { groupes[$0] })
             }
         }
     
@@ -367,6 +378,8 @@ struct ListeGroupe: View {
         Groupe.creer(contexte:viewContext, titre:nom, collaboratif:collaboratif)
     }
   }
+    func supprimer(positions: IndexSet) {
+       }
     
     func rafraichir() {
         l.info("Rafraichir la vue liste groupe")

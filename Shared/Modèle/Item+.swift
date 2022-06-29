@@ -461,8 +461,8 @@ extension Item {
      override public func prepareForDeletion() {
  //        super.prepareForDeletion()
          print("🔘 Suppresion imminente de l'item ", titre ?? "␀",
-               "délégué du groupe", principal?.nom ?? "␀",
-               "membre de", groupes?.count ?? 0, "autres groupes")
+               "( délégué du groupe", principal?.nom ?? "␀",
+               "membre de", groupes?.count ?? 0, "autres groupes)")
          }
     
     public override var description: String {

@@ -155,9 +155,10 @@ struct VueDetailItem: View {
                 // CloudSharingView(share: share, container: stack.ckContainer, destination: destination)
                 partage: __share,
                 conteneurCK: persistance.conteneurCK, //  . stack.ckContainer,
-                itemAPartager: item,
+//                itemAPartager: item,
                 coordinateur: coordinateurPartage) //CoordinateurDePartageCloudKit(item: item))
-              .border( .red, width: 0.3)
+              .border( .red, width: 0.5)
+              .background(Color(.blue))
               .ignoresSafeArea()
           }
         }  // Sheet partage // )
@@ -179,7 +180,7 @@ struct VueDetailItem: View {
             let _ = item.verifierCohérence(depuis: #file)
             //MARK: S'il existe, obtenir le partage à rejoindre.
             //self. /////////
-            partageEnCours = persistance.obtenirPartage(item)
+            partageEnCours = persistance.obtenirUnPartageCK(item)
         } //)
         
        // .onAppear() {}
@@ -281,7 +282,7 @@ struct VueDetailItem: View {
                     let _ = print("〽️ \(item.leTitre) n'est pas déjà partagé, donc création du partage.")
                     //MARK: Création du partage
 //                    Task { await creerUnPartageCK(item) } //////// 9/6/22
-                    Task { await self.partageEnCours = persistance.creerUnPartageCK(item)  }
+                    Task { await self.partageEnCours = persistance.associerUnPartageCK(item)  }
 
                     }
                 feuillePartageAffichée = true

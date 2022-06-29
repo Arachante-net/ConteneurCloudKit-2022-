@@ -12,11 +12,26 @@ import CloudKit
 //import UIKit
 
 struct Reglages: View {
+    
+    @FetchRequest(
+      fetchRequest: Item.extractionItems,
+      animation: .default)
+    var items: FetchedResults<Item>
+    
+    @FetchRequest(
+      fetchRequest: Groupe.extractionGroupes,
+      animation: .default)
+    var groupes: FetchedResults<Groupe>
 
     @FetchRequest(
         fetchRequest: Item.extractionOrphelins,
         animation: .default)
     var orphelins: FetchedResults<Item>
+    
+//    @FetchRequest(
+//        fetchRequest: Groupe.extractionSteriles,
+//        animation: .default)
+//    var stériles: FetchedResults<Groupe>
     
     @FetchRequest(
         fetchRequest: Item.extractionIsolés,
@@ -105,9 +120,47 @@ struct Reglages: View {
 
 
                     Divider()
-                    Spacer()
+//                    Spacer()
                     Section(header: Text("Maintenance").font(.title)) {
-                    Text("\(orphelins.count) Orphelins (qui ne participent à aucun groupe)").bold()
+                        
+
+                    ForEach(groupes, id: \.self) { (groupe:Groupe) in
+                        // trouver les items dont le groupe courant est le principal
+                        let liés  = items.filter { $0.principal == groupe }
+                        // trouver les items qui sont les principaux du groupe courant
+                        let liés2 = items.filter { groupe.principal == $0 }
+
+                        Text("G | \(groupe.leNom) : \(liés.count) & \(liés2.count) ")
+                        }
+                        
+                    ForEach(items, id: \.self) { (item:Item) in
+                        // trouver les groupes dont le principal est l'item courant
+                        let liés  = groupes.filter { $0.principal   == item } .count
+                        // trouver les groupes qui sont les principaux de l'item courant
+                        let liés2 = groupes.filter { item.principal == $0 } .count
+                        let indicateur = liés * liés2
+                        Text("I | \(item.leTitre) :  \(liés) & \(liés2) ") .foregroundColor(indicateur == 0 ? .red : .gray)
+                        }
+                        
+//                    ForEach(items, id: \.self) { (item:Item) in
+//                        Text(" \(item.leTitre) ") //\(groupes.filter( {groupe in item.principal == groupe} ).count) ")
+//                        }
+                        
+//                    Text("\(stériles.count) Groupes stériles (sans principal)").bold()
+
+//                    ForEach(stériles, id: \.self) { (sterile:Groupe) in
+//                        Text("○ \(sterile.leNom) ")
+//                        }
+//
+//                    Button("Enlever les groupes stériles (qui n'ont pas de principal)") {
+//                        stériles.forEach() { stérile in
+//                          supprimer(contexte: contexte, objet: stérile as Groupe)
+//                          persistance.sauverContexte( depuis: "Réglages")
+//                          }
+//                        }
+//                    Spacer()
+                        
+                    Text("\(orphelins.count) Items Orphelins (items qui ne participent à aucun groupe)").bold()
 //                    Text("1er \(orphelins.first?.titre ?? ".") ")
                         
                         ForEach(orphelins, id: \.self) { (orphelin:Item) in
@@ -135,15 +188,13 @@ struct Reglages: View {
                           supprimer(contexte: contexte, objet: orphelin as Item)
                           }
                         }
-                    Spacer()
+//                    Spacer()
                     Text("!!! \(isolés.count) isolés (non associé à un évenement prinipal)").bold()
-                    List {
-//                        ForEach(isolés) { Text("° \($0.titre ?? ".") ") }
-                        ForEach(isolés, id: \.self) { (isolés:Item) in
-//                            let _ = print("🌀°°°°°", isolés.titre ?? ".")
-                            Text("° \(isolés.titre ?? ".") ")
+//                    List {
+                        ForEach(isolés, id: \.self) { (isolé:Item) in
+                            Text("° \(isolé.leTitre) ")
                             }
-                        }
+//                        }
                     Button("Enlever les items isolés") {
                         isolés.forEach() { isolé in
                           supprimer(contexte: contexte, objet: isolé as Item)

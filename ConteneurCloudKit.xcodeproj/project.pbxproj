@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D002996D28644D8C005BF2AB /* CKShare+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D002996C28644D8C005BF2AB /* CKShare+.swift */; };
+		D002996E28644D8C005BF2AB /* CKShare+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D002996C28644D8C005BF2AB /* CKShare+.swift */; };
 		D009D6622806AEFC00AA5C32 /* Synthetisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009D6612806AEFC00AA5C32 /* Synthetisable.swift */; };
 		D009D6632806AEFC00AA5C32 /* Synthetisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009D6612806AEFC00AA5C32 /* Synthetisable.swift */; };
 		D018306B2742E567000889E2 /* ListeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306A2742E567000889E2 /* ListeItem.swift */; };
@@ -138,6 +140,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D002996C28644D8C005BF2AB /* CKShare+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CKShare+.swift"; sourceTree = "<group>"; };
 		D009D6612806AEFC00AA5C32 /* Synthetisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synthetisable.swift; sourceTree = "<group>"; };
 		D018306A2742E567000889E2 /* ListeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeItem.swift; sourceTree = "<group>"; };
 		D018306D2743BB1C000889E2 /* ListeGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeGroupe.swift; sourceTree = "<group>"; };
@@ -305,6 +308,7 @@
 				D0BA74C527CB8E35000A9EEA /* CGRect+.swift */,
 				D0BA74C827CBA634000A9EEA /* UIColor+.swift */,
 				D055CA4527C161F4008628C9 /* Bool+.swift */,
+				D002996C28644D8C005BF2AB /* CKShare+.swift */,
 				D0385A232771BEF10063E926 /* Vues+.swift */,
 				D02A228A27DCCC170047FE8C /* Logger+.swift */,
 				D026DE7628146792008BE982 /* Context+.swift */,
@@ -627,6 +631,7 @@
 				D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA427510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
 				D06D875927567DDA0038C955 /* Utilisateur.swift in Sources */,
+				D002996D28644D8C005BF2AB /* CKShare+.swift in Sources */,
 				D04B259127747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
 				D034CC4B27A97DE60067FB04 /* Bienvenue.swift in Sources */,
 				D0E22A2C278058D700F4F89C /* ConteneurCloudKit.xcdatamodeld in Sources */,
@@ -689,6 +694,7 @@
 				D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA527510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
 				D06D875A27567DDA0038C955 /* Utilisateur.swift in Sources */,
+				D002996E28644D8C005BF2AB /* CKShare+.swift in Sources */,
 				D04B259227747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
 				D034CC4C27A97DE60067FB04 /* Bienvenue.swift in Sources */,
 				D0E22A2D278058D700F4F89C /* ConteneurCloudKit.xcdatamodeld in Sources */,

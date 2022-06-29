@@ -6,6 +6,7 @@ import CloudKit
 
 
 /// Présenter des écrans pour ajouter et supprimer des participants au partage CloudKit
+///  On partage uniquement des ITEMS (pas des GROUPES)
 struct VuePartageCloudKit: UIViewControllerRepresentable {
     
 // VuePartageCloudKit est conforme au protocole UIViewControllerRepresentable
@@ -14,7 +15,7 @@ struct VuePartageCloudKit: UIViewControllerRepresentable {
   let partage:     CKShare     // Un enregistrement qui gère une collection de documents partagés.
   let conteneurCK: CKContainer // le conteneur Cloud Kit qui contient les bases de données privées, partagées ou publiques.
   
-  let itemAPartager: Item // l'objet (l'entité) à partager (qui contient les données à partager)
+//  let itemAPartager: Item // l'objet (l'entité) à partager (qui contient les données à partager)
   let coordinateur : DéléguéDuControleurDePartageChargéDeLaCoordination // défini dans VueDetailItem
 
 
@@ -33,10 +34,13 @@ struct VuePartageCloudKit: UIViewControllerRepresentable {
     
       /// Définir le controleur de partage CK et lui associer son délégué à la coordination (défini dans  VueDetailItem)
       let contrôleurDePartage = UICloudSharingController(share: partage, container: conteneurCK)
-//        controller.toolbarItems = [] //DEVIL
-        contrôleurDePartage.modalPresentationStyle = .popover  //FIXME: .formSheet cf. plantage iPad
+//        contrôleurDePartage.modalPresentationStyle = .automatic //  popover  //FIXME: .formSheet cf. plantage iPad
+        contrôleurDePartage.modalPresentationStyle = .none
+
+//        contrôleurDePartage.modalTransitionStyle =  .coverVertical// UIModalTransitionStyleCoverVertical
+
       let _ = print("〽️〽️ Délégation au coordinateur", coordinateur, "du contrôle de partage.")
-        contrôleurDePartage.delegate = coordinateur //makeCoordinator()  //  CoordinateurDePartageCloudKit(item: itemAPartager) //context.coordinator // UICloudSharingControllerDelegate? //DEVIL
+      contrôleurDePartage.delegate = coordinateur //makeCoordinator()  //  CoordinateurDePartageCloudKit(item: itemAPartager) //context.coordinator // UICloudSharingControllerDelegate? //DEVIL
       contrôleurDePartage.availablePermissions = [.allowPrivate, .allowReadWrite] //.allowReadOnly] // allowReadWrite   //DEVIL
     let _ = print("〽️〽️ coordinateur délégué du controleur", contrôleurDePartage.delegate) //context.coordinator)
     return contrôleurDePartage
@@ -45,6 +49,16 @@ struct VuePartageCloudKit: UIViewControllerRepresentable {
     
   func updateUIViewController(_ uiViewController: UICloudSharingController, context: Context) {
       let _ = print("〽️ MàJ fenêtre de partage (appel de updateUIViewController)")
+      let _ = print("〽️ MàJ" , context.environment.isPresented.voyant,  context.environment.scenePhase)
+      let d = context.environment.dismiss
+      /*
+       Lorsque l'état de l'application change,
+       SwiftUI met à jour les parties de l'interface affectées.
+       En appellant cette méthode pour toute modification affectant le contrôleur de vue AppKit correspondant.
+       Cette méthode doit mettre à jour la configuration du contrôleur de vue
+       afin de corresponde aux nouvelles informations d'état fournies dans le paramètre "context".
+       */
+      return
       }
     
   } //VuePartageCloudKit
@@ -65,13 +79,15 @@ final class DéléguéDuControleurDePartageChargéDeLaCoordination: NSObject, UI
     
     init(item: Item) {
         print("〽️ Initialisation du coordinateur/délégué du partage (CloudSharingCoordinator)", "pour",  item.titre ?? "...")
-        self.item = item }
+        self.item = item
+        print("〽️ OK")
+        }
 
     
   /// Fournir un titre par defaut à la fenêtre de réalisation  du partage
   func itemTitle(for csc: UICloudSharingController) -> String? {
-      print("〽️〽️〽️ ❓ Définition du titre du partage (", item.titre ?? "...", ")")
-      return "✅\(String(describing: item.titre) ) délégué" }
+      print("〽️〽️〽️ ❓ Définition du titre (par défaut ?) du partage (", item.titre ?? "...", ")")
+      return "✅\(String(describing: item.titre) ) délégué✅" }
 
     
   /// Fournir la vue miniature (par défaut ?) de l'invitation de partage.
@@ -121,37 +137,37 @@ final class DéléguéDuControleurDePartageChargéDeLaCoordination: NSObject, UI
         
     }
     
-    func tester() { print("〽️") } //, self, "Item :", item.leTitre) }
+    func tester() { print("〽️ test") } //, self, "Item :", item.leTitre) }
     
     
 }// CloudSharingCoordinator
 
 
 private func fournirUnPartageCK(_ item: Item, conteneur: NSPersistentCloudKitContainer)  async -> CKShare? {
-  var _partage:CKShare? //= nil
+  
+  var _partage:CKShare?
     
   do {
       // Associer un item à un (nouveau ou existant) partage
-      print("〽️ 🔆 Création d'un partage pour", item.leTitre)
-      let (_, _partageTmp, _) = try await conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
+      print("〽️ 🔆🔆🔆 Récupération ou Création d'un partage pour <", item.leTitre, ">")
+      let (_objets, _partageTmp, _conteneurCK) = try await conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
       let nbParticipants = _partageTmp.participants.count
-      _partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) Participer à l'événement\n\"\(item.titre ?? "...")\"\n(Création de la collaboration)"
-         let image = UIImage(named: "CreationPartage")
-         let donnéesImage = image?.pngData()
+      let objectif = item.principal?.objectif
+      _partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) Participer à l'événement\n\"\(item.titre ?? "...")\"n \(objectif ?? "")\n(Création de la collaboration)"
+      let image = UIImage(named: "CreationPartage")
+      let donnéesImage = image?.pngData()
       _partageTmp[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
-//      if coordinateurPartage.DonnéesMiniature() == donnéesImage {
-//          print("〽️〽️〽️〽️〽️〽️ Mêmes données ! ")
-//          }
-      // Type UTI qui decrit le contenu partagé
-//      _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item"
       print("〽️...", nbParticipants, "participants")
       _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.fournir"
-      _partageTmp.setValue("FOURNIR", forKey: "NIMBUS_PARTAGE_ORIGINE")
+      _partageTmp.setValue("FOURNIR",             forKey: "NIMBUS_PARTAGE_ORIGINE")
       _partageTmp.setValue(item.id?.uuidString,   forKey: "NIMBUS_PARTAGE_ITEM_ID")
+      _partageTmp.setValue("❗️", forKey: "NIMBUS_PARTAGE_GROUPE_NOM")
+      _partageTmp.setValue("❗️", forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF")
 
       _partage = _partageTmp
+      print("〽️ 🔆🔆🔆 Fin création d'un partage CK")
       }
   catch { print("❗️Impossible de créer un partage CloudKit") }
+  print("〽️ 🔆🔆🔆 Fin fournir un partage CK")
   return _partage
-
   }
