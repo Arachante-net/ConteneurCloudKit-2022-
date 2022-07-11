@@ -280,7 +280,7 @@ struct ListeGroupe: View {
                                   action: abandoner
                               ),
                   secondaryButton: .destructive(Text("OUI, j'ai même pas peur !"), action: {
-                      supprimerVraimentGroupes(positions: jeuIndices, mode: .simulation)
+                      supprimerVraimentGroupes(positions: jeuIndices, mode: .défaut)
                   })
                   )
 
@@ -340,13 +340,13 @@ struct ListeGroupe: View {
         }
     
 
-    private func supprimerVraimentGroupes(positions: IndexSet, mode: Suppression = .simulation) {
+    private func supprimerVraimentGroupes(positions: IndexSet, mode: Suppression = .défaut) {
         let lesGroupes = positions.map { groupes[$0] }
         let lesNoms    = lesGroupes.map {$0.leNom}
-        l.info("🔘 Suppression confirmée (\(mode.hashValue)) de : \(lesNoms) ")
+        l.info("🔘 Suppression confirmée (\(mode.rawValue)) de : \(lesNoms) ")
         Groupe.supprimerAdhérences(groupes: lesGroupes, mode:mode)
         withAnimation {
-            l.info("\t🔘 Suppression (\(mode.hashValue) ) du(des) groupe(s) : \(lesNoms)") //groupes[$0].leNom )
+            l.info("\t🔘 Suppression (\(mode.rawValue) ) du(des) groupe(s) : \(lesNoms)") //groupes[$0].leNom )
             persistance.supprimerObjets(lesGroupes, mode: .brut) //mode) //positions.map { groupes[$0] })
             }
         }

@@ -24,6 +24,7 @@ extension Groupe {
     @NSManaged public var nom: String?
     @NSManaged public var nombre: Int64
     @NSManaged public var ordre: Int64
+    @NSManaged public var etat: Int32
     @NSManaged public var valide: Bool
     @NSManaged public var objectif: String?
     @NSManaged public var icone: String?

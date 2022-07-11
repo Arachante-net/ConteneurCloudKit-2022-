@@ -248,6 +248,8 @@ extension Item {
 //MARK: Adaptation et proprietées supplementaires
 extension Item {
     
+    var désignation:String {leTitre}
+
     /// Pour le Fun
     var signature: String      { return "arach" }
     
@@ -334,7 +336,8 @@ extension Item {
     
     //MARK: Vie de l'Item
     func notifierDemission(_ groupe:Groupe, mode: Suppression) {
-        print("\t🔘 L'item", leTitre, "recoit une notification (", mode, ") de la disparition du groupe :", groupe.leNom)
+        print("\t🔘 L'item", leTitre, "recoit une notification ((", mode, ")) de la disparition du groupe :", groupe.leNom)
+        groupe.statut = .démissionNotifiée
         }
     
     

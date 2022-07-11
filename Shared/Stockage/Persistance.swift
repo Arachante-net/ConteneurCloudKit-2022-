@@ -475,34 +475,60 @@ extension ControleurPersistance {
         */
 
 func estPartagé(objet: NSManagedObject) -> Bool {
-    print("〽️ l'objet \(objet) est partagé ? ")
+//    \Groupe.leNom
+//    \Item.leTitre désignation
+//    let TG:Groupe? = objet.self as? Groupe //as Groupe
+//    let TI = objet.self as? Item
+//    let TT = type(of: objet)
+    guard type(of: objet) == Item.self else {return false}
+    print("〽️〽️🗯 L'item \( (objet as! Item).leTitre) est-il partagé ? ")
     return estPartagé(idObjet: objet.objectID)
     }
 
 private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
-    print("〽️ l'objet (id \(idObjet) ) est partagé ?")
+    print("〽️ 🗯 l'objet (id \(idObjet.uriRepresentation()) ) est-il partagé ?")
     var _estPartagé = false
-    // vérifier si le magasin persistant de l'Objet transmis est bien le magasinPersistant de l'appli
+    // Vérifier si le magasin persistant de l'Objet transmis est bien le magasinPersistant de l'appli
     if let magasinPersistant = idObjet.persistentStore {
-        print("❗️ make le magasin persistant de l'item à partager :", magasinPersistant.description , idObjet.persistentStore?.description ?? "...")
+        print("🗯 Le magasin persistant de l'item à partager :", magasinPersistant.description , "(", idObjet.persistentStore?.description ?? "..." ,")")
         
         if magasinPersistant == _magasinPersistantPartagé {//}  magasinPartagé {
             // l'objet est déjà partagé
-            print("❗️make c'est le magasinPersistant partagé", _magasinPersistantPartagé?.description ?? "...")  /// // a creuser
+            print("🗯 Le magasin persistant partagé déja existant :", _magasinPersistantPartagé?.description ?? "...", "est identique a celui de l'item à partager")  /// // a creuser
+                                                                                                                         ///
             _estPartagé = true
             }
         else {
             // Sinon, utiliser fetchShares(matching:) afin de verifier si nous avons des objets partagés correspondant à l'idObjet transmis
-            print("❗️n'est pas le magasinPersistant partagé", magasinPersistant.description)  ///// a creuser
-            let _conteneur = conteneur //persistentContainer  ///// DIRECT ??
-            print("〽️ Obtention du conteneur CK :", _conteneur.name)
+            print("🗯❗️Le magasin persistant partagé déja existant :", _magasinPersistantPartagé?.description ?? "..." , "n'est pas celui de l'item à partager" , magasinPersistant.description)  ///// a creuser
+            let _conteneur = conteneur
+            
+            //NSPersistentCloudKitContainer(name: nomConteneur)
+
+//            conteneur //persistentContainer  ///// DIRECT ??
+            print("〽️🗯 Cherchons dans le conteneur CK :", _conteneur.name)
             do {
                 let partages = try _conteneur.fetchShares(matching: [idObjet])
-                print("〽️ le conteneur a \(partages.count) partages.")
+                print("〽️🗯 Le conteneur", _conteneur.name, "contient \(partages.count) partages.")
                 if partages.first != nil {
                     // S'il y-a une correspondance, c'est que l'objet transmis est déjà partagé.
-                    let _partage = partages.first
-                    print("〽️ le premier partage existe son proprietaire est :", _partage!.value.owner.userIdentity.nameComponents ?? "...")
+//                    let v = idObjet.value(forKey: "coin")
+//                    let _partage = partages.first
+//                    let _participation = _partage!.value.participants.count
+//                    print("〽️🗯 Le premier partage existe son proprietaire est :", _partage!.value.owner.userIdentity.nameComponents ?? "...", " participation de", _participation)
+                    partages.forEach() {_p in
+                        let _pv = _p.value // CKShare
+                        let id = _pv.recordID
+                        let k = _pv.allKeys()
+
+                        print("〽️🗯 Partage , proprietaire :", _pv.owner.userIdentity.nameComponents ?? "...",
+                              " participation de", _pv.participants.count,
+//                              " " , cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF") ) //
+                              " id :"     , _pv.recordID ,
+//                              " id_ :"    , _pv.recordID.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM") ?? "..." ,
+                              " NOM_ :"   , _pv.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM") ?? "..." ,
+                              " clefs_ :" , _pv.allKeys() ) // ["cloudkit.title", ...]
+                        }
                     _estPartagé = true
                 }
                 }
@@ -511,7 +537,7 @@ private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
             }
         }
     }
-    print("〽️ retour de estPartagé : \(_estPartagé.voyant) ")
+    print("〽️〽️🗯 retour de estPartagé : \(_estPartagé ? "✅" : "❌") ")
     return _estPartagé
 }
 
@@ -524,11 +550,14 @@ private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
     guard estPartagé(objet: item) else {
         print("〽️ Pas de partage déjà existant pour :",  item.leTitre)
         return nil }
+        
     guard let dicoDesPartages = try? conteneur.fetchShares(matching: [item.objectID]),
     let partage = dicoDesPartages[item.objectID] else {
-        print(" Impossible d'obtenir un partage CloudKit pour :", item.leTitre)
+        print(" 〽️ Impossible d'obtenir un partage CloudKit pour :", item.leTitre)
         return nil
         }
+    
+    print(" 〽️ ON GO")
     let nbParticipants = partage.participants.count
     partage[CKShare.SystemFieldKey.title] = "\(nbParticipants) Inviter à participer à l'événement \n \"\(item.titre ?? "...")\" "
     partage[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.obtenir"
@@ -556,7 +585,7 @@ private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
     var _partage : CKShare?
   do {
       // Associer un item à un partage (nouveau ou préexistant)
-      print("〽️ 🔆 Associer un partage CK avec <", item.leTitre, ">")
+      print("〽️ 🔱 🔆 Associer un partage CK avec <", item.leTitre, ">")
       let (_, _partageTmp, _) = try await conteneur.share([item], to: nil)
       let nbParticipants = _partageTmp.participants.count
       _partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) \(message)" //"Participer à l'événement\n\"\(item.titre ?? "...")\"\n(Création de la collaboration)"
@@ -569,10 +598,7 @@ private func estPartagé(idObjet: NSManagedObjectID) -> Bool {
       _partageTmp.setValue(nom,                 forKey: "NIMBUS_PARTAGE_GROUPE_NOM")
       _partageTmp.setValue(objectif,            forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF")
 
-
-
-
-      print("〽️ 🔆 Nb de participants au partage :" , nbParticipants)
+      print("〽️ 🔱 🔆 Nb de participants au partage :" , nbParticipants, ", ID :", _partageTmp.recordID, ", Type :", _partageTmp.recordType)
     _partage = _partageTmp
     }
   catch { print("❗️Impossible de creer un partage") }

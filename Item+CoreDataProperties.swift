@@ -29,6 +29,7 @@ extension Item {
     @NSManaged public var titre: String?
     @NSManaged public var valeur: Int64
     @NSManaged public var valide: Bool
+//    @NSManaged public var nuageux: Bool
     @NSManaged public var message: String?
     @NSManaged public var integration: Bool
     @NSManaged public var groupes: NSSet?

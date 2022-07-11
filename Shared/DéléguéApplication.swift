@@ -36,7 +36,9 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
         
         @Environment(\.managedObjectContext) var viewContext  // Utile ??
 
-      let id = cloudKitShareMetadata.share.recordID
+        let _p = cloudKitShareMetadata.share // CKShare
+        let id = _p.recordID
+
       print("🔱 ⇢ 〽️⚜️ Délégué de Scène, fenêtre d'acceptation des invitations de partage de" , cloudKitShareMetadata.share.owner.userIdentity.nameComponents?.givenName ?? "...") // PHILIPPE
       print("〽️⚜️ type :" , cloudKitShareMetadata.share.recordType ) // cloudkit.share
       print("〽️⚜️ nom zone :" , cloudKitShareMetadata.share.recordID.zoneID.zoneName )
@@ -55,7 +57,7 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
       let portée = (cloudKitShareMetadata.share.recordID.recordName == CKRecordNameZoneWideShare)
         print("〽️⚜️ portée         :", portée ? "zone d'enregistrement partagée" : "hiérarchie d'enregistrements partagés")
 
-      print("〽️⚜️ clefs      :" , cloudKitShareMetadata.share.allKeys() ) // ["cloudkit.title", ...]
+      print("〽️⚜️ clefs      :" , _p.allKeys() ) // ["cloudkit.title", ...]
       print("〽️⚜️  ° titre   :" , cloudKitShareMetadata.share.value(forKey: "cloudkit.title"        ) ?? "...")
       print("〽️⚜️  ° origine :" , cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ORIGINE") ?? "...") // nimbus.fournir .creer .obtenir
       let idItem = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID"        )  //
@@ -110,6 +112,7 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
         
       print("〽️⚜️ ID à rechercher :", cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID") ?? "...")
       let objectif = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF")
+        
         if let _itemID = idItem { //cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_ITEM_ID") {
           let itemEnPartage_ = recupererItem(identifié:  _itemID  as! String, contexte: _contexte)
           print("〽️⚜️ Récupération effective de" , itemEnPartage_?.leTitre ?? "•••")
@@ -217,7 +220,8 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
         do {
             let item  = try contexte.fetch(extractionItem).first
 
-            print("〽️⚜️ Récupération de l'item :" , item?.leTitre ?? "...")
+            print("〽️⚜️ Récupération de l'item id :" , item?.id)
+            print("〽️⚜️ Récupération de l'item titre :" , item?.leTitre ?? "...")
             print("〽️⚜️ Orphelin :" , (item?.principal == nil).voyant    )
             return item
             }

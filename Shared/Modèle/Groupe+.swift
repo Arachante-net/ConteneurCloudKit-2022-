@@ -79,7 +79,6 @@ extension Groupe {
 
 //MARK: - Cycle de vie -
 extension Groupe {
-
     
     /// Fournir un groupe prérempli sans sauver le contexte
     /// - Parameters:
@@ -233,53 +232,111 @@ extension Groupe {
         Logger.modélisationDonnées.info("\t🔘accord de suppression pour : \(self.leNom)")
         }
     
-    func notifierDemission(_ groupe:Groupe, mode: Suppression) {
-        Logger.modélisationDonnées.info("\t🔘 Le groupe \(self.leNom) recoit une notification ( \(mode.hashValue) de la démission de : \(groupe.leNom)")
+    func notifierDemission(_ démissionnaire:Groupe, mode: Suppression) {
+        Logger.modélisationDonnées.info("\t🔘 Le groupe \(self.leNom) recoit une notification (\(mode.rawValue) de la démission de : \(démissionnaire.leNom)")
         }
     
-    func notifierAbdication(_ groupe:Groupe, mode: Suppression) {
-        Logger.modélisationDonnées.info("\t🔘 Le groupe \(self.leNom) recoit une notification ( \(mode.hashValue) de l'abdication de : \(groupe.leNom)")
+    func notifierDeMonAbdication(_ informé:Groupe, mode: Suppression) {
+        informé.statut = .abdicationNotifiée
+        Logger.modélisationDonnées.info("\t🔘 Le groupe \(informé.leNom) recoit une notification (\(mode.rawValue)) de l'abdication de : \(self.leNom)")
         }
     
-    func supprimerAdhérences(mode: Suppression = .simulation) {
-        print("🔘🔘 supprimerAdhérences de ", leNom, " ", lePrincipal.leTitre )
-        collaborateurs.forEach() {print("🔘 collaborateur" ,$0.leNom)}
-        lePrincipal.lesGroupes.forEach() {print("🔘 groupes" ,$0.leNom)}
-
+    /// Supprimer les adhérences du groupe
+    func supprimerAdhérences(mode: Suppression = .défaut) {
+        print("🔘🔘 Supprimer les adhérences du groupe", leNom, ", son item principal est :", lePrincipal.leTitre )
+        collaborateurs.forEach() {
+//            print(" 🔘  collaborateur" ,$0.leNom)
+            notifierDeMonAbdication($0, mode:mode)
+            }
+        lePrincipal.lesGroupes.forEach() {print(" 🔘🔘  groupes" ,$0.leNom)}
+        print(" 🔘  mode :", mode )
 
         switch mode {
-            case .brut:
-                // Enlever de son item principal la reference a ce groupe
+        
+            /// Suppression  du groupe ainsi que sa référence auprès de ses collaborateurs
+            case .standard, .défaut:
+
+                // Contacter les parents (groupes principaux) de mes items collaborateurs
+                items?.forEach()  {item in
+            //  items?.allObjects.forEach() {...}
+                    let _item = item as! Item
+                    print("🔘🔘🔘🔘 item collab :", _item.leTitre, " son groupe principal est :", _item.principal?.leNom ?? "...")
+                    // prevenir le parent du collaborateur
+                    _item.principal?.statut = .isolé
+                    // prevenir les collaborateurs du colloborateur lui même (sauf si c'est moi)
+                    _item.groupes?.forEach() { groupe in
+                        let _groupe = groupe as! Groupe
+                        if self != _groupe {
+//                            print("🔘🔘🔘🔘 groupe collaborateur :", _groupe.leNom)
+                            notifierDeMonAbdication(_groupe, mode:mode)
+                            }
+                        }
+                    
+                    // Informer les utilisateurs participants dans les nuages
+                    print("〽️ Informer les utilisateurs participants dans les nuages")
+                    if let _partageTmp = ControleurPersistance.shared.obtenirUnPartageCK(_item) {
+//                        _partageTmp.
+                        print("🔘💭 Message de disparition au proprietaire", _partageTmp.owner.userIdentity.nameComponents?.givenName ?? "...",    ", de  item :", _item.leTitre)
+                        _partageTmp.participants.forEach() {
+                            participant in
+                            print("🔘💭 Message de disparition au participant : \(participant.userIdentity.nameComponents?.formatted(.name(style: .short)) ?? "anonyme")")
+                            }
+                       }
+                    
+                    }
+                
+                
+                
+                // Enlever ma référence aupres de mes collaborateurs
                 removeFromItems(lePrincipal)
-                // Enlever aussi la referene, de la listes des items qui collaborent
-                if items != nil {removeFromItems(items!)}
-//                persistance.supprimerObjets(self)  // NON CAR UNIQUEMENT LES ADHERENCES
-            case .avecPrincipal, .défaut:
+                
+                // Supprimer mon item principal
+                ControleurPersistance.shared.supprimerObjets([lePrincipal])
+
+                
+                // Enlever aussi la référene, de la listes des items qui collaborent   ??????
+               // if items != nil {removeFromItems(items!)}
+                
+                // Me suicider
+                ControleurPersistance.shared.supprimerObjets([self])
+                
+            /// Suppression du groupe et de son item Principal
+            case .avecPrincipal :
+                print(" 🔘  AVEC PRINCIPAL" )
                 Logger.modélisationDonnées.info("🔘P: \(self.lePrincipal)")
                 lePrincipal.notifierDemission(self, mode: mode)
+                
+            /// Informer collaborateurs et autres parties prenantes de la suppression
             case .informer:
                 Logger.modélisationDonnées.info("🔘? \(self.collaborateurs)")
                 collaborateurs.forEach() {$0.demanderAccordSuppression()}
-            case .forcer:
-                Logger.modélisationDonnées.info("🔘! \(self.collaborateurs)")
-                collaborateurs.forEach() {$0.demanderAccordSuppression()}
+             
+            ///  Supprimer  le groupe sans réfléchir sans aviser ni demander l'avis des parties prenantes
+            case .forcer, .brut :
+                Logger.modélisationDonnées.info("🔘! suppression brute de \(self.leNom)")
+                ControleurPersistance.shared.supprimerObjets([self])
+
+            /// Faire uniquement semblant de supprimer
             case .simulation:
+                print("🔘 SIMULATION")
 //                print("🔘Les colaborateurs de", leNom, "sont :", collaborateurs.map {$0.leNom}.joined(separator: ", ") )
-                collaborateurs.forEach() {$0.notifierAbdication(self, mode: mode)}
+                collaborateurs.forEach() {$0.notifierDeMonAbdication(self, mode: mode)}
 //                print("🔘L'item principal de", leNom, "est :", lePrincipal.leTitre)
                 lePrincipal.notifierDemission(self, mode: mode)
 //                print("🔘", leNom, "Démissione des groupes :", lePrincipal.lesGroupes.map {$0.nom ?? "..."}.joined(separator: ", "), "auxquels il participe.")
-                lePrincipal.lesGroupes.forEach() {$0.notifierDemission(self, mode: mode)}
+//                lePrincipal.lesGroupes.forEach() {$0.notifierDemission(self, mode: mode)}
+                lePrincipal.lesGroupes.forEach() {notifierDemission($0, mode: mode)}
+
         }
     }
     
 
     
-    static func supprimerAdhérences(groupes: [Groupe], mode: Suppression = .simulation) {
-        Logger.modélisationDonnées.info("🔘 Suppression des adhérences (\(mode.hashValue)) de : \(groupes.map {$0.leNom}) ") //positions.map { groupes[$0].leNom} )
+    static func supprimerAdhérences(groupes: [Groupe], mode: Suppression = .défaut) {
+        Logger.modélisationDonnées.info("🔘 Suppression des adhérences (\(mode.rawValue)) de : \(groupes.map {$0.leNom}) ") //positions.map { groupes[$0].leNom} )
         
         groupes.forEach { leGroupe in
-            Logger.modélisationDonnées.info("\t🔘🔘 Suppression (\(mode.hashValue)) des adhérences du groupe : \(leGroupe.leNom)") //groupes[$0].leNom )
+            Logger.modélisationDonnées.info("\t🔘🔘 Suppression (\(mode.rawValue)) des adhérences du groupe : \(leGroupe.leNom)") //groupes[$0].leNom )
             leGroupe.supprimerAdhérences(mode: mode) //mode: .brut)
     //        persistance.sauverContexte()
             }
@@ -327,8 +384,15 @@ extension Groupe {
 
 extension Groupe {
     
+    var désignation:String {leNom}//    \Item.leTitre
+
     var vide:Groupe {
         Groupe()
+        }
+    
+    var statut: Statut {
+        get { return Statut(rawValue: self.etat)! }
+        set { self.etat = newValue.rawValue }
         }
     
     // principal: Item?

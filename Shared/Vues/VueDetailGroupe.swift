@@ -97,7 +97,7 @@ struct VueDetailGroupe: View {
     var body: some View {
     //let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
 //    let _ = groupe.groupesAuxquelsJeParticipe
-        let _ = print("❌ INIT VUE DETAIL GROUPE", groupe.leNom)
+        let _ = print("🔘❌ INIT VUE DETAIL GROUPE", groupe.leNom, ",  statut", groupe.statut)
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL", groupe.principal?.leTitre ?? "PAS DE PRINCIPAL")
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL RETOUR", groupe.principal?.principal?.nom ?? "PAS DE RETOUR")
 
@@ -108,6 +108,8 @@ struct VueDetailGroupe: View {
         // Si ce n'est pas un groupe isolé de son principal on présente la fiche
 //        Text("Indicateur : \(groupe.integration.voyant)")
     VStack {
+        BarreStatut(coherent: groupe.estCoherent, statut: groupe.statut, valide: groupe.valide)
+
     Form { //}(alignment: .leading, spacing: 2) {
         Section { //}(alignment: .leading, spacing: 2)  {
             let _ = print("❌ SECTION VUE DETAIL")
@@ -144,24 +146,22 @@ struct VueDetailGroupe: View {
                     .padding(.leading, 50)
                 }
              if voirDétailsCollaboration {
+                 let _ = print("〽️ voirDétailsCollaboration")
                  Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
                      ForEach(Array(groupe.tableauItemsTrié) ) { item in
 //                         Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre)   \(item.leMessage)" , valeur : Int(item.valeur))//.equatable()
-                         Text("° \(item.leTitre), \(item.principal?.nom ?? "orphelin"), CK:, \(persistance.estPartagé(objet: item).voyant ), Val: \(item.valeur)")
-
-
+//                         var noms:String=""
                          if let _partageTmp = persistance.obtenirUnPartageCK(item) {
-//                         if let _partageTmp = persistance.associerUnPartageCK(item) {  //obtenirUnPartageCK(item) {
-//                        Task { await _partageTmp = persistance.associerUnPartageCK(item)  }
-
-                             ForEach(_partageTmp.participants, id: \.self) { participant in
-                               VStack(alignment: .leading) {
-                                    Text("  > \(item.leTitre) | \(participant.userIdentity.nameComponents?.formatted(.name(style: .short)) ?? "anonyme")| ")
-                                    }
-                               .padding(.bottom, 8)
-                              } // for each partage
+                            let noms = _partageTmp.participants.compactMap {$0.userIdentity.nameComponents?.formatted(.name(style: .short))}.joined(separator: "|")
+                             let _ = print("〽️〽️", noms)
+                             if let _principal = item.principal {
+                                 Text("° \(_principal.nom ?? "anonyme") 💭 | \(noms) ")
+                                }
+//                                   Text("(\(noms))").font(.caption2)
                             } // partage existe
-                         else {Text(" * \(item.leTitre) non partagé CK.") }
+                         else {
+                             Text("° \(item.principal?.nom ?? "orphelin") ➖")
+                            }
 
 
                          } // if
@@ -239,7 +239,7 @@ struct VueDetailGroupe: View {
             }
         
         .sheet(isPresented: $feuillePartageAffichée, onDismiss: abandonnerPartage) { //}, content: {
-          let _ = print("〽️〽️ - Appel de VuePartageCloudKit depuis VueDetailGroupe")
+            let _ = print("〽️〽️ - Appel de VuePartageCloudKit depuis VueDetailGroupe, pour la recrue :", nouvelleRecrue?.leTitre)
           if let __share = partageEnCours {
               let _ = print("〽️〽️ Controleur de vue et son coordinateur", coordinateurPartage?.description ?? "...", "sont utilisés pour le groupe", groupe.leNom, ", ayant comme principal :", groupe.lePrincipal.leTitre)
 
@@ -270,13 +270,61 @@ struct VueDetailGroupe: View {
         
         }
         else {
-            let _ = print("❌ PAS DE d'item principal")
-            Text("❌ PAS DE item principal \(groupe.principal?.leTitre ?? "...") pour le groupe \(groupe.leNom)")
+            let _ = print("❌ Pas d'item principal")
+            Text("❌ PAS D'item principal \(groupe.principal?.leTitre ?? "...") pour le groupe \(groupe.leNom)")
         }
     } // body
         
+    
     func abandonnerPartage() {
-        print("〽️ Abandonner le partage de", groupe.leNom)
+        print("〽️🗯 Abandonner le partage de", groupe.leNom, nouvelleRecrue?.leTitre ?? "..." , partageEnCours ?? "...")
+
+//        nouvelleRecrue?.nuageux = false
+//        nouvelleRecrue?.valide = false
+        return
+    }
+
+    func _abandonnerPartage() {
+        print("〽️🗯 Abandonner le partage de", groupe.leNom, nouvelleRecrue?.leTitre ?? "..." , partageEnCours ?? "...")
+        let idObjet = nouvelleRecrue?.objectID
+        guard (idObjet != nil) else {return}
+        print("🗯🗯 idObjet :" , idObjet ?? "!!!")
+        ///////////////////////
+        if let magasinPersistant = idObjet?.persistentStore {
+            print("🗯🗯 Magasin persistant de l'item en cours de partage :", magasinPersistant.description , "(", idObjet?.persistentStore?.description ?? "..." ,")")
+                let _conteneur = NSPersistentCloudKitContainer( name: "ConteneurCloudKit")//persistentContainer  ///// DIRECT ??
+                do {
+                    let partages = try _conteneur.fetchShares(matching: [idObjet!])
+                    if partages.first != nil {
+                        partages.forEach() {_p in
+                            let _pv = _p.value // CKShare
+                            let id = _pv.recordID
+                            let k = _pv.allKeys()
+
+                            print("〽️🗯🗯 Partage , proprietaire :", _pv.owner.userIdentity.nameComponents ?? "...",
+                                  " participation de", _pv.participants.count,
+    //                              " " , cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_OBJECTIF") ) //
+                                  " id :"     , _pv.recordID ,
+    //                              " id_ :"    , _pv.recordID.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM") ?? "..." ,
+                                  " NOM_ :"   , _pv.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM") ?? "..." ,
+                                  " clefs_ :" , _pv.allKeys() ) // ["cloudkit.title", ...]
+                            } // foreach
+//                        _estPartagé = true
+                    } //first
+                    }
+                catch {
+                print("❗️Impossible de trouver un partage de \(idObjet): \(error)")
+                }
+        }
+        ///////////////////////
+        
+        
+        
+//        persistance.estPartagé(objet: nouvelleRecrue)
+//        CKShare.Participant
+        guard let dernier = partageEnCours?.participants.last else { return }
+        dernier.value(forKeyPath: "")
+        partageEnCours?.removeParticipant(dernier)//
         }
     
     var barreMenu: some View {
@@ -305,7 +353,7 @@ struct VueDetailGroupe: View {
             /// Partager
             Button(action: {
                 let _ = print("🔱 bouton de partage Cloud Kit de", groupe.leNom)
-                Recruter(pourLe : groupe)
+                recruter_(pourLe : groupe)
             }) {
                 VStack {
                     Image(systemName: "square.and.arrow.up")
@@ -343,8 +391,8 @@ struct VueDetailGroupe: View {
 
             Button(role: .destructive, action: {
                 //TODO: A mettre en // avec ListeItem
-                groupe.supprimerAdhérences(mode: .simulation)
-                persistance.supprimerObjets([groupe], mode: .simulation)
+                groupe.supprimerAdhérences(mode: .défaut)
+                persistance.supprimerObjets([groupe], mode: .défaut)
                 }) {
                 VStack {
 //                    Image(systemName: Icones.supprimer.rawValue)
@@ -432,16 +480,17 @@ extension VueDetailGroupe {
 
     /// Recruter un nouveau participant CK pour ce groupe
     /// càd: Ajouter un nouvel item aux items de ce groupe et ensuite le partager via Cloudkit
-    func Recruter(pourLe groupe : Groupe) {
+    func recruter_(pourLe groupe : Groupe) {
         
 //        let referenceRecrue = "◎ \(groupe.id?.uuidString ?? "...")_\(UUID().uuidString)"
 //        let referenceRecrue = "◎ \(groupe.leNom) \(Date())"
         let referenceRecrue = "\(groupe.leNom)_∂\(groupe.items?.count ?? 0)"
         // nouveauGroupe.items?.count ?? 0)"
-        print("🔱 Recruter l'Item :", referenceRecrue, "pour le groupe" , groupe.leNom)
+        print("🔱〽️ Former et recruter l'Item :", referenceRecrue, "pour le groupe" , groupe.leNom)
         print("🔱 Ce groupe a déjà :" , groupe.lesItems.count , "items participants (CK ou non).")
         // Créer une version locale de l'item qui sera partagé
         nouvelleRecrue = Item.fournirNouveau(contexte:contexte , titre: "\(referenceRecrue)")
+//        nouvelleRecrue?.nuageux = true
         nouvelleRecrue?.addToGroupes(groupe)
         groupe.addToItems(nouvelleRecrue!)
         persistance.sauverContexte()
@@ -453,10 +502,10 @@ extension VueDetailGroupe {
 //        coordinateurPartage = DéléguéDuControleurDePartageChargéDeLaCoordination(item: nouvelleRecrue!)
 
 //        Task { await self.partageEnCours = persistance.creerUnPartageCK(nouvelleRecrue)  }
-        let _ = print("🔱 Nouvelle recrue déjà partagée :", persistance.estPartagé(objet: nouvelleRecrue!).voyant)
+        let _ = print("🔱〽️ Nouvelle recrue déjà partagée :", persistance.estPartagé(objet: nouvelleRecrue!).voyant)
 //                 !persistance.isShared(object: item)
         if !persistance.estPartagé(objet: nouvelleRecrue!) {
-            let _ = print("🔱 \(nouvelleRecrue?.leTitre) n'est (EVIDEMENT) pas déjà partagé, donc création du partage.")
+            let _ = print("🔱 \(nouvelleRecrue?.leTitre) n'est (EVIDEMENT) pas déjà partagé, donc création de son partage.")
             //MARK: Création du partage
             let message = "Participation à l'évenement\n \(groupe.leNom) \n \(groupe.lesItems.count)"
             Task { await self.partageEnCours = persistance.associerUnPartageCK(nouvelleRecrue!, nom: groupe.leNom, objectif:groupe.lObjectif, message: message)  }

@@ -18,10 +18,10 @@ class Utilisateur : ObservableObject {
     let systeme     = UIDevice.current.systemName
     let nomAppareil = UIDevice.current.name
     let idAppareil  = UIDevice.current.identifierForVendor
-    
+
     init() {
-        
-        print("🌀", nom, nomComplet, systeme, nomAppareil, idAppareil?.uuidString ?? "...")
+    
+        print("🌀", nom, nomComplet, systeme, nomAppareil, idAppareil?.uuidString ?? "␀")
         
         
     //        let TT = UIDevice.current.identifierForVendor?.uuidString
