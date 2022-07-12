@@ -71,6 +71,7 @@ struct VueDetailGroupe: View {
     
     /// Passer l'argument groupe sans étiquette `ET` le déclarer private sans pour autant générer  l'erreur  "Vue initializer is inaccessible due to 'private' protection level" lors de la compilation
     init (_ leGroupe:Groupe) {
+        print ("⚙️ Init de la vue detail du groupe", leGroupe.leNom)
         _groupe       = StateObject<Groupe>(wrappedValue: leGroupe)
         _thePrincipal = StateObject<Item>  (wrappedValue: leGroupe.lePrincipal)
 
@@ -80,7 +81,7 @@ struct VueDetailGroupe: View {
 //        _nouvelleRecrue   = State(wrappedValue: nil )
 //        coordinateurPartage = DéléguéDuControleurDePartageChargéDeLaCoordination(item: leGroupe.lePrincipal)//ERREUR:
 //        coordinateurPartage?.tester()
-
+        print ("⚙️ init OK")
         }
     
     
@@ -97,13 +98,13 @@ struct VueDetailGroupe: View {
     var body: some View {
     //let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
 //    let _ = groupe.groupesAuxquelsJeParticipe
-        let _ = print("🔘❌ INIT VUE DETAIL GROUPE", groupe.leNom, ",  statut", groupe.statut)
+        let _ = print("🔘⚙️❌ INIT VUE DETAIL GROUPE", groupe.leNom, ",  statut", groupe.statut)
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL", groupe.principal?.leTitre ?? "PAS DE PRINCIPAL")
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL RETOUR", groupe.principal?.principal?.nom ?? "PAS DE RETOUR")
 
 
     if let lePrincipal = groupe.principal {
-        let _ = print("❌ BODY VUE DETAIL")
+        let _ = print("⚙️❌ BODY VUE DETAIL")
 
         // Si ce n'est pas un groupe isolé de son principal on présente la fiche
 //        Text("Indicateur : \(groupe.integration.voyant)")
@@ -120,12 +121,12 @@ struct VueDetailGroupe: View {
             Etiquette( "Identifiant"   , valeur: groupe.id?.uuidString)
             Etiquette( "Nb CloudKit"   , valeur: partageEnCours?.participants.count ?? 0)
             Etiquette( "Nb Participant" , valeur: groupe.lesItems.count)
-
-//            Etiquette( "Valide"        , valeur: groupe.valide)
-//            Etiquette( "Cohérent"      , valeur: groupe.estCoherent)
-
-//            Etiquette( "Suppression"   , valeur: groupe.isDeleted) //RQ: Mettre dans estCoherent ?
-//            Etiquette( "Status CoreData" , valeur: !groupe.isFault)
+//
+////            Etiquette( "Valide"        , valeur: groupe.valide)
+////            Etiquette( "Cohérent"      , valeur: groupe.estCoherent)
+//
+////            Etiquette( "Suppression"   , valeur: groupe.isDeleted) //RQ: Mettre dans estCoherent ?
+////            Etiquette( "Status CoreData" , valeur: !groupe.isFault)
             let _ = print("❌ FIN SECTION VUE DETAIL")
 
             }
@@ -179,6 +180,8 @@ struct VueDetailGroupe: View {
             }   // FIN SECTION
         
         }
+        
+        
         VStack {
             VueCarteGroupe(groupe)
                 .ignoresSafeArea()
@@ -191,9 +194,13 @@ struct VueDetailGroupe: View {
                 .onAppear() { }
             Spacer()
             let _ = print("❌ FIN CARTOGRAPHIE VUE DETAIL")
-
             }
+        
+        
+        
         }
+        
+        
 //        .isHidden(groupe.isDeleted || groupe.isFault ? true : false)
 //        .opacity(groupe.valide ? 1 : 0.1)
 //        .disabled(groupe.valide ? false : true)
@@ -270,7 +277,7 @@ struct VueDetailGroupe: View {
         
         }
         else {
-            let _ = print("❌ Pas d'item principal")
+            let _ = print("❌⚙️ Pas d'item principal")
             Text("❌ PAS D'item principal \(groupe.principal?.leTitre ?? "...") pour le groupe \(groupe.leNom)")
         }
     } // body

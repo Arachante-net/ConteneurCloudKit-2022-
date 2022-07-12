@@ -58,9 +58,11 @@ struct ConteneurCloudKitApp: App {
         
         .onChange(of: scenePhase) { phase in
           switch phase {
-              case .background:
-                  print("Rafraichir background")
+              case .background  : print("Rafraichir background")
 //                  controleurDePersistance.sauverContexte()
+              case .inactive    : print("Rafraichir inactive")
+              case .active      : print("Rafraichir active")
+
               break
           default:
             break

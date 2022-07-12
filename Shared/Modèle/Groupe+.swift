@@ -150,7 +150,7 @@ extension Groupe {
             let nsError = error as NSError
             if nsError.code == 0,
                   nsError.domain == "Foundation._GenericObjCError" {
-                  print("Erreur invalide depuis Objective-C ?")
+                  print("⚙️ Erreur invalide depuis Objective-C ?")
               }
               else {
                   fatalError("Erreur lors du '.save' du contexte \(nsError),\t \(nsError.userInfo) ! \(contexte.debugDescription) !!")

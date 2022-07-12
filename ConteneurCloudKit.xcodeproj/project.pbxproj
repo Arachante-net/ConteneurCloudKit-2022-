@@ -13,10 +13,10 @@
 		D009D6632806AEFC00AA5C32 /* Synthetisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009D6612806AEFC00AA5C32 /* Synthetisable.swift */; };
 		D018306B2742E567000889E2 /* ListeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306A2742E567000889E2 /* ListeItem.swift */; };
 		D018306C2742E567000889E2 /* ListeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306A2742E567000889E2 /* ListeItem.swift */; };
-		D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe.swift */; };
-		D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe.swift */; };
-		D01830712743BEEC000889E2 /* VueDetailGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe.swift */; };
-		D01830722743BEEC000889E2 /* VueDetailGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe.swift */; };
+		D018306E2743BB1C000889E2 /* ListeGroupe_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe_test.swift */; };
+		D018306F2743BB1C000889E2 /* ListeGroupe_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018306D2743BB1C000889E2 /* ListeGroupe_test.swift */; };
+		D01830712743BEEC000889E2 /* VueDetailGroupe_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe_test.swift */; };
+		D01830722743BEEC000889E2 /* VueDetailGroupe_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830702743BEEC000889E2 /* VueDetailGroupe_test.swift */; };
 		D01830742743C068000889E2 /* VueCarteGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCarteGroupe.swift */; };
 		D01830752743C068000889E2 /* VueCarteGroupe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830732743C068000889E2 /* VueCarteGroupe.swift */; };
 		D01830772743DDE4000889E2 /* VuePrincipale.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01830762743DDE4000889E2 /* VuePrincipale.swift */; };
@@ -55,6 +55,8 @@
 		D0385A3127724D010063E926 /* Voyant.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0385A2F27724D010063E926 /* Voyant.swift */; };
 		D04A0D562732DF2900EFDCAC /* Historien.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04A0D552732DF2900EFDCAC /* Historien.swift */; };
 		D04A0D572732DF2900EFDCAC /* Historien.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04A0D552732DF2900EFDCAC /* Historien.swift */; };
+		D04B15A5287C546200E04E51 /* ListeGroupe_original.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B15A4287C546200E04E51 /* ListeGroupe_original.swift */; };
+		D04B15A6287C546200E04E51 /* ListeGroupe_original.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B15A4287C546200E04E51 /* ListeGroupe_original.swift */; };
 		D04B1D34283902FD0000BEC4 /* Profil_de_provisionnement_NIMBUS.mobileprovision in Resources */ = {isa = PBXBuildFile; fileRef = D04B1D33283902FD0000BEC4 /* Profil_de_provisionnement_NIMBUS.mobileprovision */; };
 		D04B1D35283902FD0000BEC4 /* Profil_de_provisionnement_NIMBUS.mobileprovision in Resources */ = {isa = PBXBuildFile; fileRef = D04B1D33283902FD0000BEC4 /* Profil_de_provisionnement_NIMBUS.mobileprovision */; };
 		D04B259127747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04B258F27747C5800AD171D /* Groupe+CoreDataProperties.swift */; };
@@ -104,6 +106,8 @@
 		D0BD19C327317A6500E01EF5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BD19C227317A6500E01EF5 /* CloudKit.framework */; };
 		D0C9D9B7274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
 		D0C9D9B8274E452600388059 /* Horloge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9D9B6274E452600388059 /* Horloge.swift */; };
+		D0CB800C287C442B006A2BE6 /* VueDetailGroupe_original.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CB800B287C442B006A2BE6 /* VueDetailGroupe_original.swift */; };
+		D0CB800D287C442B006A2BE6 /* VueDetailGroupe_original.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CB800B287C442B006A2BE6 /* VueDetailGroupe_original.swift */; };
 		D0CF7719286F09C5004D0613 /* Statut.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF7718286F09C5004D0613 /* Statut.swift */; };
 		D0CF771A286F09C5004D0613 /* Statut.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF7718286F09C5004D0613 /* Statut.swift */; };
 		D0CF771C28702EA3004D0613 /* BarreStatut.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF771B28702EA3004D0613 /* BarreStatut.swift */; };
@@ -151,8 +155,8 @@
 		D002996C28644D8C005BF2AB /* CKShare+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CKShare+.swift"; sourceTree = "<group>"; };
 		D009D6612806AEFC00AA5C32 /* Synthetisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synthetisable.swift; sourceTree = "<group>"; };
 		D018306A2742E567000889E2 /* ListeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeItem.swift; sourceTree = "<group>"; };
-		D018306D2743BB1C000889E2 /* ListeGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeGroupe.swift; sourceTree = "<group>"; };
-		D01830702743BEEC000889E2 /* VueDetailGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueDetailGroupe.swift; sourceTree = "<group>"; };
+		D018306D2743BB1C000889E2 /* ListeGroupe_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeGroupe_test.swift; sourceTree = "<group>"; };
+		D01830702743BEEC000889E2 /* VueDetailGroupe_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueDetailGroupe_test.swift; sourceTree = "<group>"; };
 		D01830732743C068000889E2 /* VueCarteGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueCarteGroupe.swift; sourceTree = "<group>"; };
 		D01830762743DDE4000889E2 /* VuePrincipale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VuePrincipale.swift; sourceTree = "<group>"; };
 		D01830792743F98D000889E2 /* VueAjouterGroupe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VueAjouterGroupe.swift; sourceTree = "<group>"; };
@@ -181,6 +185,7 @@
 		D0385A2F27724D010063E926 /* Voyant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voyant.swift; sourceTree = "<group>"; };
 		D04A0D552732DF2900EFDCAC /* Historien.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Historien.swift; sourceTree = "<group>"; };
 		D04A0D5E2735563000EFDCAC /* VueDetailItem-OLD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VueDetailItem-OLD.swift"; sourceTree = "<group>"; };
+		D04B15A4287C546200E04E51 /* ListeGroupe_original.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListeGroupe_original.swift; sourceTree = "<group>"; };
 		D04B1D33283902FD0000BEC4 /* Profil_de_provisionnement_NIMBUS.mobileprovision */ = {isa = PBXFileReference; lastKnownFileType = file; path = Profil_de_provisionnement_NIMBUS.mobileprovision; sourceTree = "<group>"; };
 		D04B258F27747C5800AD171D /* Groupe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Groupe+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		D04B2595277869BD00AD171D /* Coordonnees+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Coordonnees+.swift"; path = "Shared/Coordonnees+.swift"; sourceTree = SOURCE_ROOT; };
@@ -216,6 +221,7 @@
 		D0BD19C227317A6500E01EF5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		D0BD19C427317A7500E01EF5 /* ConteneurCloudKit--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ConteneurCloudKit--iOS--Info.plist"; sourceTree = "<group>"; };
 		D0C9D9B6274E452600388059 /* Horloge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Horloge.swift; sourceTree = "<group>"; };
+		D0CB800B287C442B006A2BE6 /* VueDetailGroupe_original.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueDetailGroupe_original.swift; sourceTree = "<group>"; };
 		D0CF7718286F09C5004D0613 /* Statut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statut.swift; sourceTree = "<group>"; };
 		D0CF771B28702EA3004D0613 /* BarreStatut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarreStatut.swift; sourceTree = "<group>"; };
 		D0CF771E28702F65004D0613 /* Indicateur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Indicateur.swift; sourceTree = "<group>"; };
@@ -459,8 +465,10 @@
 		D0F187A9279AEF1C00FF9EAB /* Groupe */ = {
 			isa = PBXGroup;
 			children = (
-				D018306D2743BB1C000889E2 /* ListeGroupe.swift */,
-				D01830702743BEEC000889E2 /* VueDetailGroupe.swift */,
+				D018306D2743BB1C000889E2 /* ListeGroupe_test.swift */,
+				D04B15A4287C546200E04E51 /* ListeGroupe_original.swift */,
+				D01830702743BEEC000889E2 /* VueDetailGroupe_test.swift */,
+				D0CB800B287C442B006A2BE6 /* VueDetailGroupe_original.swift */,
 				D023489327B14B360055E7C4 /* VueModifGroupe.swift */,
 				D01830792743F98D000889E2 /* VueAjouterGroupe.swift */,
 				D0D76BA827A19B0A00898B6B /* VueAffectationGroupe.swift */,
@@ -647,6 +655,7 @@
 				D0203D0E2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
 				D0E8974E278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA427510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
+				D0CB800C287C442B006A2BE6 /* VueDetailGroupe_original.swift in Sources */,
 				D06D875927567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D002996D28644D8C005BF2AB /* CKShare+.swift in Sources */,
 				D04B259127747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
@@ -659,10 +668,10 @@
 				D0385A242771BEF10063E926 /* Vues+.swift in Sources */,
 				D0FFA916281D895700C44E5C /* DéléguéApplication.swift in Sources */,
 				D04A0D562732DF2900EFDCAC /* Historien.swift in Sources */,
-				D018306E2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
+				D018306E2743BB1C000889E2 /* ListeGroupe_test.swift in Sources */,
 				D0BA74D227CD0479000A9EEA /* Item+CoreDataProperties.swift in Sources */,
 				D0E897272789957B00A82214 /* Etat.swift in Sources */,
-				D01830712743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
+				D01830712743BEEC000889E2 /* VueDetailGroupe_test.swift in Sources */,
 				D018308627466129000889E2 /* Item+.swift in Sources */,
 				D0BA74C627CB8E35000A9EEA /* CGRect+.swift in Sources */,
 				D04B25D32779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
@@ -675,6 +684,7 @@
 				D055CA4927C24EDB008628C9 /* Icones.swift in Sources */,
 				D01830742743C068000889E2 /* VueCarteGroupe.swift in Sources */,
 				D0BA74BA27C3E2EC000A9EEA /* VueModifItemSimple.swift in Sources */,
+				D04B15A5287C546200E04E51 /* ListeGroupe_original.swift in Sources */,
 				D023489427B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
 				D0DFCA572791CC6600914ECF /* VueCarteItem.swift in Sources */,
 				D0345A7327F7508400B1A953 /* Edition.swift in Sources */,
@@ -714,6 +724,7 @@
 				D0203D0F2785BFC300C6A5A6 /* VueValeurItemPrincipal.swift in Sources */,
 				D0E8974F278ACD0600A82214 /* Binding+.swift in Sources */,
 				D05AFAA527510C83001CCA52 /* EtiquetteCoordonnees.swift in Sources */,
+				D0CB800D287C442B006A2BE6 /* VueDetailGroupe_original.swift in Sources */,
 				D06D875A27567DDA0038C955 /* Utilisateur.swift in Sources */,
 				D002996E28644D8C005BF2AB /* CKShare+.swift in Sources */,
 				D04B259227747C5800AD171D /* Groupe+CoreDataProperties.swift in Sources */,
@@ -726,10 +737,10 @@
 				D0385A252771BEF10063E926 /* Vues+.swift in Sources */,
 				D0FFA917281D895700C44E5C /* DéléguéApplication.swift in Sources */,
 				D04A0D572732DF2900EFDCAC /* Historien.swift in Sources */,
-				D018306F2743BB1C000889E2 /* ListeGroupe.swift in Sources */,
+				D018306F2743BB1C000889E2 /* ListeGroupe_test.swift in Sources */,
 				D0BA74D327CD0479000A9EEA /* Item+CoreDataProperties.swift in Sources */,
 				D0E897282789957B00A82214 /* Etat.swift in Sources */,
-				D01830722743BEEC000889E2 /* VueDetailGroupe.swift in Sources */,
+				D01830722743BEEC000889E2 /* VueDetailGroupe_test.swift in Sources */,
 				D018308727466129000889E2 /* Item+.swift in Sources */,
 				D0BA74C727CB8E35000A9EEA /* CGRect+.swift in Sources */,
 				D04B25D42779C4BC00AD171D /* VueEditionLieu.swift in Sources */,
@@ -742,6 +753,7 @@
 				D055CA4A27C24EDB008628C9 /* Icones.swift in Sources */,
 				D01830752743C068000889E2 /* VueCarteGroupe.swift in Sources */,
 				D0BA74BB27C3E2EC000A9EEA /* VueModifItemSimple.swift in Sources */,
+				D04B15A6287C546200E04E51 /* ListeGroupe_original.swift in Sources */,
 				D023489527B14B360055E7C4 /* VueModifGroupe.swift in Sources */,
 				D0DFCA582791CC6600914ECF /* VueCarteItem.swift in Sources */,
 				D0345A7427F7508400B1A953 /* Edition.swift in Sources */,

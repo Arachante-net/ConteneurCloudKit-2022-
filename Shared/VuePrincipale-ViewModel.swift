@@ -64,7 +64,7 @@ extension VueModifItemSimple {
 
 
 
-extension VueDetailGroupe {
+extension VueDetailGroupe_test {
     @MainActor class ViewModel: ObservableObject {
 //        init () {
 ////            self.groupe = groupe
@@ -79,6 +79,20 @@ extension VueDetailGroupe {
         }
 }
 
+extension VueDetailGroupe {
+    @MainActor class ViewModel: ObservableObject {
+//        init () {
+////            self.groupe = groupe
+//          }
+        
+        @Published var appError: ErrorType? = nil
+//        @Published var feuilleModificationItemPresentée   = false
+        @Published var groupe:Groupe? = nil
+        
+        func definirGroupe(groupe:Groupe) {self.groupe = groupe}
+        func obtenirGroupe() -> Groupe {self.groupe!}
+        }
+}
 
 
 //MARK: - Autres -

@@ -67,7 +67,7 @@ struct VuePrincipale: View {
 //          Text( utilisateur.obtenirID() ).font(.footnote).fontWeight(.thin) //.ultraLight)
           
           TabView {
-            ListeGroupe().tabItem {
+              ListeGroupe().tabItem {
                 VStack {
                     Image(systemName: "sparkles")
                         .symbolRenderingMode(.hierarchical)

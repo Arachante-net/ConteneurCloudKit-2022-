@@ -401,7 +401,7 @@ func sauverContexte( _ nom:String="ContexteParDefaut"  , auteur:String = UserDef
   guard conteneur.viewContext.hasChanges else { return }
 
   do {
-      l.debug("💰💰 Sauvegarde [\(self.conteneur.viewContext.registeredObjects.count) enregistrements], du contexte (depuis \(depuis), nom \(nom), auteur, \(auteur)) \(self.conteneur.viewContext.hasChanges ? "☑️" : "🟰"), \t \(self.conteneur.viewContext.updatedObjects.count) évolutions, \(self.conteneur.viewContext.insertedObjects.count) insertions, \(self.conteneur.viewContext.deletedObjects.count) suppressions.")
+      l.debug("💰💰⚙️ Sauvegarde [\(self.conteneur.viewContext.registeredObjects.count) enregistrements], du contexte (depuis \(depuis), nom \(nom), auteur, \(auteur)) \(self.conteneur.viewContext.hasChanges ? "☑️" : "🟰"), \t \(self.conteneur.viewContext.updatedObjects.count) évolutions, \(self.conteneur.viewContext.insertedObjects.count) insertions, \(self.conteneur.viewContext.deletedObjects.count) suppressions.")
 //          let lesEnregistrements = self.conteneur.viewContext.registeredObjects.compactMap(\.entity.name )
       l.info("💰- \( self.conteneur.viewContext.registeredObjects.compactMap(\.entity.name) )")
 
@@ -446,7 +446,7 @@ func supprimerObjets(_ objects: [NSManagedObject], mode:Suppression = .défaut) 
     else {
         conteneur.viewContext.perform { [context = conteneur.viewContext] in
             objects.forEach {objet in
-                self.l.info("🔘🔘 Supprimer objet \(objet.entity) \(objet.debugDescription)")
+                self.l.info("🔘🔘⚙️ Supprimer objet \(objet.entity) \(objet.debugDescription)")
 //              objet.prepareForDeletion() // automatique
                 context.delete(objet)
             }

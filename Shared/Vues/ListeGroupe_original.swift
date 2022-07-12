@@ -101,7 +101,9 @@ struct ListeGroupe: View {
 
   var body: some View {
     let _ = l.info("ListeGroupe BODY")
-      GeometryReader { g in
+    let _ = courant //FIXME: Bizard sans lecture bidon de courant (ici, dans init ou on appear ca marche pas) le premier Evenement créé a son NavigationLink (cf. selection) qui ne fonctionne pas
+
+    GeometryReader { g in
     NavigationView {
       List() {
           let _ = l.info("ListeGroupe LIST ######")
@@ -144,9 +146,9 @@ struct ListeGroupe: View {
                   NavigationLink(destination: VueDetailGroupe(groupe), //.equatable(),
                              tag: groupe.leNom,
                              selection: $courant) {
-                  EmptyView()
-                      let _ = print("⚙️", groupe.leNom)
-
+                      // La vue etiquette du lien est la Vue Cellule du dessus
+                      EmptyView()
+                      let _ = print("Vue vide bidon ⚙️", groupe.leNom)
                       }
                   
 //                             .frame(height: 100)
@@ -376,8 +378,10 @@ struct ListeGroupe: View {
     private func ajouterGroupe(nom: String, collaboratif:Bool) {
     withAnimation {
         Groupe.creer(contexte:viewContext, titre:nom, collaboratif:collaboratif)
+        persistance.sauverContexte()
     }
   }
+    
     func supprimer(positions: IndexSet) {
        }
     
