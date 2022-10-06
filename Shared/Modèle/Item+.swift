@@ -102,7 +102,7 @@ extension Item {
             nouvelItem.valeur           = 0
             nouvelItem.valide           = false
             nouvelItem.message          = "␀"
-
+ 
      return nouvelItem
         }
     
@@ -148,6 +148,7 @@ extension Item {
             nouvelItem.coloris   = .secondary // appel le 'setter' qui convertira Color en données binaires pour être stockées en CoreData
             nouvelItem.createur  = UserDefaults.standard.string(forKey: "UID") ?? "anonyme"
             nouvelItem.valide    = true
+            nouvelItem.nuageux   = false
             nouvelItem.message   = "Bonjour à tous"
          return nouvelItem
         }

@@ -79,7 +79,7 @@ struct ListeItem: View {
                 Text(item.leTitre)//.frame(alignment: .leading)
                 Text(item.leMessage)//.frame(alignment: .leading)
                 Spacer()
-                if persistance.estPartagé(objet: item) {
+                if persistance.estPartagéCK(objet: item) {
                   Image(systemName: "person.3.fill")
                     .resizable()
                     .scaledToFit()

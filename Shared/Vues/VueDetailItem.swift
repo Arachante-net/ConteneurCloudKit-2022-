@@ -276,9 +276,9 @@ struct VueDetailItem: View {
               }.buttonStyle(.borderedProminent)
             
               Button {
-                let _ = print("〽️ Bouton partage", persistance.estPartagé(objet: item).voyant)
+                let _ = print("〽️ Bouton partage", persistance.estPartagéCK(objet: item).voyant)
 //                 !persistance.isShared(object: item)
-                if !persistance.estPartagé(objet: item) {
+                if !persistance.estPartagéCK(objet: item) {
                     let _ = print("〽️ \(item.leTitre) n'est pas déjà partagé, donc création du partage.")
                     //MARK: Création du partage
 //                    Task { await creerUnPartageCK(item) } //////// 9/6/22

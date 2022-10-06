@@ -10,6 +10,9 @@ final class DéléguéApplication: NSObject, UIApplicationDelegate {
                    configurationForConnecting connectingSceneSession: UISceneSession,
                    options: UIScene.ConnectionOptions) -> UISceneConfiguration {
     print("〽️〽️⚜️ Délégué de l'application")
+      
+    surveillerAccèsInternet()
+      
     let    configurationScene = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
            configurationScene.delegateClass = DéléguéScene.self
     return configurationScene
@@ -40,7 +43,7 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
         let id = _p.recordID
 
       print("🔱 ⇢ 〽️⚜️ Délégué de Scène, fenêtre d'acceptation des invitations de partage de" , cloudKitShareMetadata.share.owner.userIdentity.nameComponents?.givenName ?? "...") // PHILIPPE
-      print("〽️⚜️ type :" , cloudKitShareMetadata.share.recordType ) // cloudkit.share
+      print("〽️⚜️ type     :" , cloudKitShareMetadata.share.recordType ) // cloudkit.share
       print("〽️⚜️ nom zone :" , cloudKitShareMetadata.share.recordID.zoneID.zoneName )
       print("〽️⚜️ proprio  :" , cloudKitShareMetadata.share.recordID.zoneID.ownerName )
 
@@ -53,9 +56,9 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
          - <NSManagedObjectContext: 0x28045c4e0>
          */
       print("〽️⚜️ enregistrement :" , cloudKitShareMetadata.share.recordID.recordName ) // cloudkit.zoneshare
-      print("〽️⚜️ type           :" , cloudKitShareMetadata.share[CKShare.SystemFieldKey.shareType] ?? "..."  ) // com.arachante.nimbus.item.fournir .obtenir .creer
+      print("〽️⚜️ type           :" , cloudKitShareMetadata.share[CKShare.SystemFieldKey.shareType] ?? "..."  ) // cloudkit.share// com.arachante.nimbus.item.fournir .obtenir .creer
       let portée = (cloudKitShareMetadata.share.recordID.recordName == CKRecordNameZoneWideShare)
-        print("〽️⚜️ portée         :", portée ? "zone d'enregistrement partagée" : "hiérarchie d'enregistrements partagés")
+      print("〽️⚜️ portée         :", portée ? "zone d'enregistrement partagée" : "hiérarchie d'enregistrements partagés")
 
       print("〽️⚜️ clefs      :" , _p.allKeys() ) // ["cloudkit.title", ...]
       print("〽️⚜️  ° titre   :" , cloudKitShareMetadata.share.value(forKey: "cloudkit.title"        ) ?? "...")
@@ -64,7 +67,6 @@ final class DéléguéScene: NSObject, UIWindowSceneDelegate {
       print("〽️⚜️  ° id item :" , idItem ?? "...") //
       let nomGroupe = cloudKitShareMetadata.share.value(forKey: "NIMBUS_PARTAGE_GROUPE_NOM"        )  //
       print("〽️⚜️  ° groupe :" , nomGroupe ?? "...") //
-        
         
       print("〽️⚜️ nom     :" , cloudKitShareMetadata.ownerIdentity.nameComponents?.givenName ?? "..." ) // PHILIPPE
       print("〽️⚜️ ID      :" , cloudKitShareMetadata.hierarchicalRootRecordID as Any ) // nil

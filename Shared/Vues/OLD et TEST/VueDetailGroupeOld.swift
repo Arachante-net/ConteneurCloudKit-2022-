@@ -105,7 +105,7 @@ struct VueDetailGroupeOld: View {
             ToolbarItemGroup() //placement: .navigationBarTrailing)
                 { barreMenu }
             }
-          .navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
+          .navigationTitle(Text("Test Évt: \(groupe.leNom)"))
     }
         
     

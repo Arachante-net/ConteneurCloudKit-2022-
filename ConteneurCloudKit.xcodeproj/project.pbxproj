@@ -89,6 +89,8 @@
 		D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0627E94275A412B00F51592 /* ListeCollaboratif.swift */; };
 		D06D875927567DDA0038C955 /* Utilisateur.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06D875827567DDA0038C955 /* Utilisateur.swift */; };
 		D06D875A27567DDA0038C955 /* Utilisateur.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06D875827567DDA0038C955 /* Utilisateur.swift */; };
+		D09EF5EA28A3E47E001AF92D /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09EF5E928A3E47E001AF92D /* Connection.swift */; };
+		D09EF5EB28A3E47E001AF92D /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09EF5E928A3E47E001AF92D /* Connection.swift */; };
 		D0A232AF27746649006A3320 /* Etiquette.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A232AE27746649006A3320 /* Etiquette.swift */; };
 		D0A232B027746649006A3320 /* Etiquette.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A232AE27746649006A3320 /* Etiquette.swift */; };
 		D0BA74BA27C3E2EC000A9EEA /* VueModifItemSimple.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BA74B927C3E2EC000A9EEA /* VueModifItemSimple.swift */; };
@@ -208,6 +210,7 @@
 		D06D875827567DDA0038C955 /* Utilisateur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilisateur.swift; sourceTree = "<group>"; };
 		D085AA2E276DC6A500535552 /* NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = NOTES.md; sourceTree = "<group>"; };
 		D085AA2F276DF88100535552 /* BarreOutilsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BarreOutilsItem.swift; path = "Shared/Vues/OLD et TEST/BarreOutilsItem.swift"; sourceTree = SOURCE_ROOT; };
+		D09EF5E928A3E47E001AF92D /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		D0A232AE27746649006A3320 /* Etiquette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Etiquette.swift; sourceTree = "<group>"; };
 		D0B84E412764A885000E6849 /* VueModifGroupeOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VueModifGroupeOld.swift; sourceTree = "<group>"; };
 		D0BA74B627C3C1A2000A9EEA /* VueModifItemSimple___.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VueModifItemSimple___.swift"; sourceTree = "<group>"; };
@@ -337,6 +340,7 @@
 				D0A7BB7C274978B900E2073D /* Stockage */,
 				D0A7BB7B274977DD00E2073D /* Modèle */,
 				D04EDA85273137F6009BB455 /* Assets.xcassets */,
+				D09EF5E928A3E47E001AF92D /* Connection.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -697,6 +701,7 @@
 				D055CA4627C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7027F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
 				D055CA4327BD049C008628C9 /* Modes.swift in Sources */,
+				D09EF5EA28A3E47E001AF92D /* Connection.swift in Sources */,
 				D0CF771F28702F65004D0613 /* Indicateur.swift in Sources */,
 				D0627E95275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CC27562E210054951E /* Groupe+.swift in Sources */,
@@ -766,6 +771,7 @@
 				D055CA4727C161F4008628C9 /* Bool+.swift in Sources */,
 				D0345A7127F46E6400B1A953 /* CelluleGabarit.swift in Sources */,
 				D055CA4427BD049C008628C9 /* Modes.swift in Sources */,
+				D09EF5EB28A3E47E001AF92D /* Connection.swift in Sources */,
 				D0CF772028702F65004D0613 /* Indicateur.swift in Sources */,
 				D0627E96275A412B00F51592 /* ListeCollaboratif.swift in Sources */,
 				D0E893CD27562E210054951E /* Groupe+.swift in Sources */,
@@ -944,7 +950,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "ConteneurCloudKit (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 44739DK98X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -977,7 +983,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "ConteneurCloudKit (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 44739DK98X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

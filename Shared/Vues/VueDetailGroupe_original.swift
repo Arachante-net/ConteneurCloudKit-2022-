@@ -98,7 +98,7 @@ struct VueDetailGroupe: View {
     var body: some View {
     //let _ = assert(groupe.principal != nil, "❌ Groupe isolé")
 //    let _ = groupe.groupesAuxquelsJeParticipe
-        let _ = print("🔘⚙️❌ INIT VUE DETAIL GROUPE", groupe.leNom, ",  statut", groupe.statut)
+        let _ = print("🔘⚙️❌ INIT VUE DETAIL GROUPE (original)", groupe.leNom, ",  statut", groupe.statut)
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL", groupe.principal?.leTitre ?? "PAS DE PRINCIPAL")
         let _ = print("❌ INIT VUE DETAIL GROUPE PRINCIPAL RETOUR", groupe.principal?.principal?.nom ?? "PAS DE RETOUR")
 
@@ -109,6 +109,16 @@ struct VueDetailGroupe: View {
         // Si ce n'est pas un groupe isolé de son principal on présente la fiche
 //        Text("Indicateur : \(groupe.integration.voyant)")
     VStack {
+//        Button(action: {
+//            let _ = print("🔱 bouton de TEST")
+//        }) {
+//            VStack {
+//                Image(systemName: "square.and.arrow.up")
+//                Text("Partager").font(.caption)
+//                }
+//          } .buttonStyle(.borderedProminent)
+//            .help("bouton")
+        barreMenu
         BarreStatut(coherent: groupe.estCoherent, statut: groupe.statut, valide: groupe.valide)
 
     Form { //}(alignment: .leading, spacing: 2) {
@@ -150,22 +160,24 @@ struct VueDetailGroupe: View {
                  let _ = print("〽️ voirDétailsCollaboration")
                  Section(header: Etiquette( "Collaborateurs", valeur: Int(groupe.nombre)) ) {
                      ForEach(Array(groupe.tableauItemsTrié) ) { item in
-//                         Etiquette("   ⚬ \(item.principal?.nom ?? "RIEN")  (\(item.leTitre)   \(item.leMessage)" , valeur : Int(item.valeur))//.equatable()
-//                         var noms:String=""
-                         if let _partageTmp = persistance.obtenirUnPartageCK(item) {
-                            let noms = _partageTmp.participants.compactMap {$0.userIdentity.nameComponents?.formatted(.name(style: .short))}.joined(separator: "|")
-                             let _ = print("〽️〽️", noms)
-                             if let _principal = item.principal {
-                                 Text("° \(_principal.nom ?? "anonyme") 💭 | \(noms) ")
-                                }
-//                                   Text("(\(noms))").font(.caption2)
-                            } // partage existe
-                         else {
-                             Text("° \(item.principal?.nom ?? "orphelin") ➖")
-                            }
+                         //FIXME: Bug de fetchshare ?
+//                         if let _partageTmp = persistance.obtenirUnPartageCK(item) {
+//
+//                            let noms = _partageTmp.participants.compactMap {$0.userIdentity.nameComponents?.formatted(.name(style: .short))}.joined(separator: "|")
+//                             let _ = print("〽️〽️", noms)
+//                             if let _principal = item.principal {
+//                                 Text("° \(_principal.nom ?? "anonyme") 💭 \(item.nuageux.voyant)| \(noms) ")
+//                                }
+////                                   Text("(\(noms))").font(.caption2)
+//                            } // partage existe
+//                         else {
+//                             Text("° \(item.principal?.nom ?? "orphelin") \(item.nuageux.voyant) ➖")
+//                            }
+                          //MARK: utilistion de nuageux
+                         Text("\(item.nuageux ? "💭" : "➖") \(item.principal?.nom ?? "...")")
 
 
-                         } // if
+                         } // forEach
                      }
                  Etiquette( "Valeur globale", valeur: groupe.valeur)
 
@@ -225,7 +237,8 @@ struct VueDetailGroupe: View {
             estCoherent      = groupe.estCoherent
             coherenceGroupe  = Coherence( err: groupe.verifierCohérence(depuis: "OnAppear de vueDetailGroupe") )
             
-//            partageEnCours = persistance.obtenirUnPartageCK(groupe.principal!) //lePrincipal)
+            // 3 oct
+            partageEnCours = persistance.obtenirUnPartageCK(groupe.principal!) //lePrincipal)
             print ("❌🔅 \(partageEnCours?.afficherParticipation()  ?? ".." ) ")
             }
 
@@ -265,15 +278,15 @@ struct VueDetailGroupe: View {
         }  // Sheet partage // )
 
         
-        .navigationBarTitleDisplayMode(.inline)
+//        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup() //placement: .navigationBarTrailing)
+            ToolbarItemGroup(placement: .automatic) //    .navigationBarTrailing)
                 { barreMenu }
             }
         
         
-        // 15 mars
-          //.navigationTitle(Text("Détails du groupe \(groupe.leNom)"))
+        // 15 mars // 27 septembre
+          .navigationTitle(Text("Évt: \(groupe.leNom)"))
         
         }
         else {
@@ -497,7 +510,7 @@ extension VueDetailGroupe {
         print("🔱 Ce groupe a déjà :" , groupe.lesItems.count , "items participants (CK ou non).")
         // Créer une version locale de l'item qui sera partagé
         nouvelleRecrue = Item.fournirNouveau(contexte:contexte , titre: "\(referenceRecrue)")
-//        nouvelleRecrue?.nuageux = true
+        nouvelleRecrue?.nuageux = true
         nouvelleRecrue?.addToGroupes(groupe)
         groupe.addToItems(nouvelleRecrue!)
         persistance.sauverContexte()
@@ -509,9 +522,9 @@ extension VueDetailGroupe {
 //        coordinateurPartage = DéléguéDuControleurDePartageChargéDeLaCoordination(item: nouvelleRecrue!)
 
 //        Task { await self.partageEnCours = persistance.creerUnPartageCK(nouvelleRecrue)  }
-        let _ = print("🔱〽️ Nouvelle recrue déjà partagée :", persistance.estPartagé(objet: nouvelleRecrue!).voyant)
+        let _ = print("🔱〽️ Nouvelle recrue déjà partagée :", persistance.estPartagéCK(objet: nouvelleRecrue!).voyant)
 //                 !persistance.isShared(object: item)
-        if !persistance.estPartagé(objet: nouvelleRecrue!) {
+        if !persistance.estPartagéCK(objet: nouvelleRecrue!) {
             let _ = print("🔱 \(nouvelleRecrue?.leTitre) n'est (EVIDEMENT) pas déjà partagé, donc création de son partage.")
             //MARK: Création du partage
             let message = "Participation à l'évenement\n \(groupe.leNom) \n \(groupe.lesItems.count)"

@@ -153,12 +153,12 @@ private func fournirUnPartageCK(_ item: Item, conteneur: NSPersistentCloudKitCon
       let (_objets, _partageTmp, _conteneurCK) = try await conteneur.share([item], to: nil)//    stack.persistentContainer.share([item], to: nil)
       let nbParticipants = _partageTmp.participants.count
       let objectif = item.principal?.objectif
-      _partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) Participer à l'événement\n\"\(item.titre ?? "...")\"n \(objectif ?? "")\n(Création de la collaboration)"
+      // 6/10/ 22 //_partageTmp[CKShare.SystemFieldKey.title] = "\(nbParticipants) Participer à l'événement\n\"\(item.titre ?? "...")\"n \(objectif ?? "")\n(Création de la collaboration)"
       let image = UIImage(named: "CreationPartage")
       let donnéesImage = image?.pngData()
-      _partageTmp[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
+      // 6/10/ 22 //_partageTmp[CKShare.SystemFieldKey.thumbnailImageData] = donnéesImage
       print("〽️...", nbParticipants, "participants")
-      _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item.fournir"
+      // 6/10/ 22 //     _partageTmp[CKShare.SystemFieldKey.shareType] = "com.arachante.nimbus.item" // cloudkit.share//.fournir"
       _partageTmp.setValue("FOURNIR",             forKey: "NIMBUS_PARTAGE_ORIGINE")
       _partageTmp.setValue(item.id?.uuidString,   forKey: "NIMBUS_PARTAGE_ITEM_ID")
       _partageTmp.setValue("❗️", forKey: "NIMBUS_PARTAGE_GROUPE_NOM")
